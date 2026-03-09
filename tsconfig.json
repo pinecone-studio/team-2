@@ -8,6 +8,12 @@
     },
     {
       "path": "./apps/web"
+    },
+    {
+      "path": "./apps/dash-e2e"
+    },
+    {
+      "path": "./apps/dash"
     }
   ]
 }
