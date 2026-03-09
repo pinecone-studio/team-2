@@ -137,13 +137,13 @@ export default [
 
       'no-secrets/no-secrets': 'error',
 
-      'max-lines': ['error', { max: 250 }],
+      'max-lines': ['error', { max: 180 }],
 
       'max-nested-callbacks': ['error', 3],
 
       'max-depth': ['error', 4],
 
-      complexity: ['error', { max: 5 }],
+      complexity: ['error', { max: 4 }],
     },
   },
 
