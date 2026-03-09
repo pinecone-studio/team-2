@@ -1,3 +1,5 @@
-// Use this file to export React client components (e.g. those with 'use client' directive) or other non-server utilities
+// Export utilities
+export * from './lib/utils';
 
-export * from './lib/shadcn';
+// Export components
+export * from './components';
