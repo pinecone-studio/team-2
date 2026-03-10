@@ -57,25 +57,29 @@ export default [
 
   {
     ignores: [
-      '.next/**/*',
-      'node_modules',
-      'dist',
-      '.cache',
+      '**/.next/**',
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/.cache/**',
+      '**/coverage/**',
+
       '**/components/ui/**/*',
-      '*.config.js',
-      '*.config.ts',
-      '*.config.cjs',
-      '*.config.mjs',
-      'next.config.js',
-      'postcss.config.js',
-      'tailwind.config.js',
-      'jest.config.ts',
-      'cypress.config.js',
-      'rollup.config.cjs',
+
+      '**/*.config.js',
+      '**/*.config.ts',
+      '**/*.config.cjs',
+      '**/*.config.mjs',
+
+      '**/next.config.js',
+      '**/postcss.config.js',
+      '**/tailwind.config.js',
+      '**/jest.config.ts',
+      '**/cypress.config.js',
+      '**/rollup.config.cjs',
+
       '**/*.d.ts',
       '**/cypress/**/*',
-      '**/dist',
-      '**/out-tsc',
+      '**/out-tsc/**',
     ],
   },
 

@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "prepare": "husky",
-    "lint:prepush": "nx run-many -t lint --outputStyle=static --parallel=1"
+    "lint:prepush": "nx affected -t lint --base=origin/main --head=HEAD --outputStyle=static --parallel=1"
   },
   "dependencies": {
     "@cloudflare/workers-types": "^4.20260307.1",
