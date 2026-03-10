@@ -80,6 +80,7 @@ export default [
       '**/*.d.ts',
       '**/cypress/**/*',
       '**/out-tsc/**',
+      '**/libs/ui/src/components/**/*.{ts,tsx,js,jsx}',
     ],
   },
 
