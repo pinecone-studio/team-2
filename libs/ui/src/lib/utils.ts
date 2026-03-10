@@ -7,28 +7,36 @@ type ClassValue =
   | Record<string, boolean | undefined | null>
   | ClassValue[];
 
+const isStringOrNumber = (input: ClassValue): input is string | number =>
+  typeof input === 'string' || typeof input === 'number';
+
+const isFalsyOrBoolean = (
+  input: ClassValue,
+): input is boolean | null | undefined => !input || typeof input === 'boolean';
+
+const toClassNameFromObject = (
+  input: Record<string, boolean | undefined | null>,
+): string[] =>
+  Object.entries(input)
+    .filter(([, enabled]) => Boolean(enabled))
+    .map(([className]) => className);
+
 function toClassName(input: ClassValue): string[] {
-  if (!input) {
+  if (isFalsyOrBoolean(input)) {
     return [];
   }
 
-  if (typeof input === 'string' || typeof input === 'number') {
+  if (isStringOrNumber(input)) {
     return [String(input)];
   }
 
   if (Array.isArray(input)) {
-    return input.flatMap((value) => toClassName(value));
+    return input.flatMap(toClassName);
   }
 
-  if (typeof input === 'object') {
-    return Object.entries(input)
-      .filter(([, enabled]) => Boolean(enabled))
-      .map(([className]) => className);
-  }
-
-  return [];
+  return toClassNameFromObject(input);
 }
 
 export function cn(...inputs: ClassValue[]) {
-  return inputs.flatMap((input) => toClassName(input)).join(' ');
+  return inputs.flatMap(toClassName).join(' ');
 }
