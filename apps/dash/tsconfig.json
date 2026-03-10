@@ -1,6 +1,7 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    "moduleResolution": "bundler",
     "jsx": "preserve",
     "noEmit": true,
     "emitDeclarationOnly": false,
@@ -21,7 +22,6 @@
       "@team/source-ui": ["../../libs/ui/src/index.ts"],
       "@team/source-ui/*": ["../../libs/ui/src/*"]
     },
-    "types": ["jest", "node"],
     "outDir": "dist",
     "rootDir": "src",
     "tsBuildInfoFile": "dist/tsconfig.tsbuildinfo"
