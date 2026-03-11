@@ -2,8 +2,8 @@ import {
   checkAllBenefits,
   checkBenefitEligibility,
   getEligibleBenefits,
-} from '../../lib/benefits-eligibility';
-import type { Employee } from '../../types/benefits.types';
+} from '../lib/benefits-eligibility';
+import type { Employee } from '../types/benefits.types';
 
 const employee: Employee = {
   id: 1,
