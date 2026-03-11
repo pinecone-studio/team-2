@@ -9,9 +9,9 @@
     "db:migrate": "wrangler d1 migrations apply team-db"
   },
   "dependencies": {
+    "drizzle-orm": "^0.30.0",
     "graphql": "^16.0.0",
     "graphql-yoga": "^5.0.0",
-    "drizzle-orm": "^0.30.0",
     "next": "~16.0.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

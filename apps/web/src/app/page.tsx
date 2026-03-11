@@ -1,10 +1,30 @@
-import { Button } from '@team/source-ui';
+import { BenefitsFilter } from "./_components/benefits/Benefits-filter";
+import { BenefitsGrid } from "./_components/benefits/Benefits-grid";
+import { BenefitsStats } from "./_components/benefits/Benefits-stats";
+import { Header } from "./_components/layout/Header";
+import { Sidebar } from "./_components/layout/SideBar";
 
-export default function Index() {
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-4 p-6">
-      <h1 className="text-3xl font-semibold tracking-tight">Web App</h1>
-      <Button>Shared shadcn Button</Button>
-    </main>
-  );
+export default function Page(){
+
+  return(
+
+    <div className="flex">
+
+      <Sidebar/>
+
+      <main className="flex-1 p-8">
+
+        <Header/>
+
+        <BenefitsStats/>
+
+        <BenefitsFilter/>
+
+        <BenefitsGrid/>
+
+      </main>
+
+    </div>
+
+  )
 }
