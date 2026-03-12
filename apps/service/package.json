@@ -6,19 +6,19 @@
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "wrangler d1 migrations apply team-db"
+    "db:migrate": "wrangler d1 migrations apply team-benefit"
   },
   "dependencies": {
-    "drizzle-orm": "^0.30.0",
-    "graphql": "^16.0.0",
-    "graphql-yoga": "^5.0.0",
+    "drizzle-kit": "^0.31.9",
+    "drizzle-orm": "^0.45.1",
+    "graphql": "^16.13.1",
+    "graphql-yoga": "^5.18.1",
     "next": "~16.0.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.0.0",
-    "drizzle-kit": "^0.20.0",
     "wrangler": "^3.0.0"
   }
 }

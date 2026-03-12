@@ -1,7 +1,9 @@
-import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
+export { employees } from './employees';
+export { benefits } from './benefits';
+export { eligibilityRules } from './eligibility-rules';
 
-export const users = sqliteTable('users', {
-  id: integer('id').primaryKey({ autoIncrement: true }),
-  name: text('name').notNull(),
-  email: text('email').notNull().unique(),
-});
+import { employees } from './employees';
+import { benefits } from './benefits';
+import { eligibilityRules } from './eligibility-rules';
+
+export const schema = { employees, benefits, eligibilityRules };
