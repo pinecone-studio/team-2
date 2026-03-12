@@ -1,5 +1,8 @@
 import './global.css';
 import { ClerkProvider } from '@clerk/nextjs';
+import Sidebar from './Sidebar/page';
+
+export const runtime = 'edge';
 
 export const metadata = {
   title: 'Welcome to web',
@@ -14,7 +17,14 @@ export default async function RootLayout({
   return (
     <ClerkProvider afterSignOutUrl="/sign-in">
       <html lang="en">
-        <body>{children}</body>
+        <body>
+          <div className="flex h-screen bg-gray-50">
+            <Sidebar />
+            <main className="flex-1 overflow-y-auto p-8 text-gray-900">
+              {children}
+            </main>
+          </div>
+        </body>
       </html>
     </ClerkProvider>
   );
