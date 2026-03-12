@@ -1,0 +1,99 @@
+import React from 'react';
+
+interface ProcessedRequest {
+  id: number;
+  employeeName: string;
+  benefit: string;
+  requestDate: string;
+  reviewDate: string;
+  status: 'Approved' | 'Rejected';
+}
+
+const PROCESSED_DATA: ProcessedRequest[] = [
+  {
+    id: 1,
+    employeeName: 'Emily Watson',
+    benefit: 'Gym Membership',
+    requestDate: '1/15/2024',
+    reviewDate: '1/16/2024',
+    status: 'Approved',
+  },
+  {
+    id: 2,
+    employeeName: 'Emily Watson',
+    benefit: 'Gym Membership',
+    requestDate: '1/15/2024',
+    reviewDate: '1/17/2024',
+    status: 'Rejected',
+  },
+];
+
+export const ProcessedRequests = () => {
+  return (
+    <div className="p-5 bg-white rounded-lg w-full border border-gray-100 shadow-sm">
+      <div className="mb-6 px-4">
+        <h2 className="text-gray-900 text-xl font-bold leading-10">
+          Processed requests
+        </h2>
+        <p className="text-gray-500 text-sm">Previously reviewed questions</p>
+      </div>
+
+      <div className="overflow-x-auto w-full">
+        <table className="w-full text-left border-collapse min-w-[1000px] table-fixed">
+          <thead>
+            <tr className="border-b border-black/10">
+              <th className="w-[20%] px-4 py-3 text-slate-900 text-base font-bold">
+                Employee
+              </th>
+              <th className="w-[25%] px-4 py-3 text-slate-900 text-base font-bold">
+                Benefit
+              </th>
+              <th className="w-[20%] px-4 py-3 text-slate-900 text-base font-bold">
+                Request Date
+              </th>
+              <th className="w-[20%] px-4 py-3 text-slate-900 text-base font-bold">
+                Review Date
+              </th>
+              <th className="w-[15%] px-4 py-3 text-slate-900 text-base font-bold">
+                Status
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {PROCESSED_DATA.map((request) => (
+              <tr
+                key={request.id}
+                className="border-b border-black/10 hover:bg-gray-50 transition-colors h-14"
+              >
+                <td className="px-4 py-2 text-black text-sm font-semibold">
+                  {request.employeeName}
+                </td>
+                <td className="px-4 py-2 text-black/50 text-sm font-semibold">
+                  {request.benefit}
+                </td>
+                <td className="px-4 py-2 text-black/50 text-sm font-semibold">
+                  {request.requestDate}
+                </td>
+                <td className="px-4 py-2 text-black/50 text-sm font-semibold">
+                  {request.reviewDate}
+                </td>
+                <td className="px-4 py-2">
+                  <div
+                    className={`w-[90px] h-[29px] rounded-lg flex justify-center items-center font-semibold text-xs tracking-tight
+                    ${
+                      request.status === 'Approved'
+                        ? 'bg-green-50 text-green-500 outline outline-1 outline-emerald-100'
+                        : 'bg-rose-100 text-rose-700'
+                    }`}
+                  >
+                    {request.status}
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
