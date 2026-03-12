@@ -1,17 +1,16 @@
 import { Button, Badge } from '@team/source-ui';
-import {Pencil} from "lucide-react";
-import { Trash2 } from 'lucide-react';
+import { Trash2,Pencil} from 'lucide-react';
 
 interface Benefit {
   id: number;
   name: string;
   category: string;
   description: string;
-  subsidy_percent: number;
-  vendor_name?: string | null;
-  requires_contract: boolean;
-  is_active: boolean;
-  active_contract_id?: number | null;
+  subsidyPercent: number;
+  vendorName?: string | null;
+  requiresContract: boolean;
+  isActive: boolean;
+  activeContractId?: number | null;
 }
 
 const benefitsData: Benefit[] = [
@@ -20,22 +19,22 @@ const benefitsData: Benefit[] = [
     name: 'Gym Membership',
     category: 'Health',
     description: 'Access to premium gym facilities and fitness classes.',
-    subsidy_percent: 50,
-    vendor_name: 'PineFit',
-    requires_contract: true,
-    is_active: true,
-    active_contract_id: 101,
+    subsidyPercent: 50,
+    vendorName: 'PineFit',
+    requiresContract: true,
+    isActive: true,
+    activeContractId: 101,
   },
   {
     id: 3,
     name: 'Travel to Tokyo',
     category: 'Travel',
     description: '30% sale',
-    subsidy_percent: 30,
-    vendor_name: 'PineTour',
-    requires_contract: true,
-    is_active: false,
-    active_contract_id: 101,
+    subsidyPercent: 30,
+    vendorName: 'PineTour',
+    requiresContract: true,
+    isActive: false,
+    activeContractId: 101,
   },
 ];
 
@@ -98,20 +97,20 @@ export default function BenefitsManagement() {
                   </Badge>
                 </td>
                 <td className="p-5 text-sm text-gray-600 font-medium">
-                  {benefit.vendor_name || 'N/A'}
+                  {benefit.vendorName || 'N/A'}
                 </td>
                 <td className="p-5 text-sm font-bold text-gray-900">
-                  {benefit.subsidy_percent}%
+                  {benefit.subsidyPercent}%
                 </td>
                 <td className="p-5">
                   <Badge
                     className={`bg-transparent px-3 py-1 rounded-full text-xs font-semibold border ${
-                      benefit.is_active
-                        ? 'bg-green-200 text-green-600 border-emerald-100'
+                      benefit.isActive
+                        ? 'bg-[#EDF7EC] text-[#59AF4F] border-emerald-100'
                         : 'bg-red-50 text-red-600 border-red-100'
                     }`}
                   >
-                    {benefit.is_active ? 'Active' : 'Inactive'}
+                    {benefit.isActive ? 'Active' : 'Inactive'}
                   </Badge>
                 </td>
                 <td className="p-5">
