@@ -1,7 +1,5 @@
 import './global.css';
 import { ClerkProvider } from '@clerk/nextjs';
-import { auth } from '@clerk/nextjs/server';
-import { Header } from './_components/Header';
 
 export const metadata = {
   title: 'Welcome to web',
@@ -13,15 +11,10 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { userId } = await auth();
-
   return (
     <ClerkProvider afterSignOutUrl="/sign-in">
       <html lang="en">
-        <body>
-          {userId && <Header />}
-          {children}
-        </body>
+        <body>{children}</body>
       </html>
     </ClerkProvider>
   );
