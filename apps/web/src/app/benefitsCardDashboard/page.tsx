@@ -1,11 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { BenefitFilter } from './_components/BenefitFilter';
-import { BenefitCard } from './_components/BenefitCard';
-import { benefits } from '../lib/mockdata';
 
-export default function Benefits() {
+import { benefits } from '../lib/mockdata';
+import { BenefitCard, BenefitFilter } from './_components';
+
+export default function BenefitsCardDashboard() {
   const [filter, setFilter] = useState('All');
 
   const filteredBenefits =

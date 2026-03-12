@@ -29,6 +29,12 @@ export const eligibilityConfig: EligibilityConfig = {
           value: 3,
           errorMessage: 'Attendance threshold exceeded this month.',
         },
+        {
+          type: 'days_since_hire',
+          operator: 'gte',
+          value: 500,
+          errorMessage: 'Available after 3 months of employment.',
+        },
       ],
     },
     private_insurance: {
