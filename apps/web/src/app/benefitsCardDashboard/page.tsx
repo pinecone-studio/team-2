@@ -12,7 +12,7 @@ export default function BenefitsCardDashboard() {
     filter === 'All' ? benefits : benefits.filter((b) => b.status === filter);
 
   return (
-    <div className="m-[30px]">
+    <div className="mx-auto max-w-7xl px-4 py-8 ">
       <BenefitFilter onChange={setFilter} />
       <div className="mt-[38px]">
         <div className="grid 2xl:grid-cols-4 xl:grid-cols-3 md:grid-cols-2 sm:grid-cols1  gap-9">
