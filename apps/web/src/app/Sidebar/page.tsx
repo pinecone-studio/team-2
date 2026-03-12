@@ -1,14 +1,14 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { usePathname } from 'next/navigation';
 import { Gift } from 'lucide-react';
 import { NavItem } from './_components/NavItem';
 import { SidebarFooter } from './_components/SidebarFooter';
 import { MenuItems } from './_components/MenuItems';
 
 const Sidebar = () => {
-  const location = useLocation();
+  const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -42,7 +42,7 @@ const Sidebar = () => {
           <NavItem
             key={item.path}
             item={item}
-            isActive={location.pathname === item.path}
+            isActive={pathname === item.path}
           />
         ))}
       </nav>
