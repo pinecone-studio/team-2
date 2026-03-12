@@ -59,7 +59,8 @@
 
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { Gift } from 'lucide-react';
 import { NavItem } from './_components/NavItem';
 import { SidebarFooter } from './_components/SidebarFooter';
@@ -68,6 +69,13 @@ import { usePathname } from 'next/navigation';
 
 const Sidebar = () => {
   const pathname = usePathname();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
 
   return (
     <div className="w-72 bg-white border-r border-gray-100 flex flex-col h-screen">
