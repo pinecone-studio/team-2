@@ -36,6 +36,7 @@ const Page = () => {
   return (
     <div className="p-6 max-w-2xl mx-auto">
       <h1 className="text-2xl font-bold mb-6">Benefits for {employee.name}</h1>
+      <p className='text-2xl font-semibold text-green-700'>CHECKINGGGGGG</p>
 
       {/* Single benefit check */}
       <section className="mb-8">
