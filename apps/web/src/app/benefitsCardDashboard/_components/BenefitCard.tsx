@@ -73,7 +73,7 @@ export function BenefitCard({ benefit }: { benefit: Benefit }) {
       </CardContent>
 
       <CardFooter>
-        <Button className="w-full !bg-[#137FEC] rounded-[16px] hover:shadow-[2px_4px_3.8px_rgba(19,127,236,0.25)] transition-shadow duration-300">
+        <Button className="w-full !bg-[#137FEC] !rounded-[16px] hover:shadow-[2px_4px_3.8px_rgba(19,127,236,0.25)] transition-shadow duration-300">
           View Details
         </Button>
       </CardFooter>
