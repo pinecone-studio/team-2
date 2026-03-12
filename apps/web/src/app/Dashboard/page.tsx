@@ -1,9 +1,11 @@
 import React from 'react';
 import BenefitsCardDashboard from '../benefitsCardDashboard/page';
+import DashboardCard from '../dashboardCard/page';
 
 const Dashboard = () => {
   return (
     <div>
+      <DashboardCard />
       <BenefitsCardDashboard />
     </div>
   );
