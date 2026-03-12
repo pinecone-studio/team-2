@@ -1,7 +1,8 @@
 import './global.css';
 import { ClerkProvider } from '@clerk/nextjs';
-import { auth } from '@clerk/nextjs/server';
-import { Header } from './_components/Header';
+import { ConditionalSidebar } from './_components/main';
+
+export const runtime = 'edge';
 
 export const metadata = {
   title: 'Welcome to web',
@@ -13,14 +14,17 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { userId } = await auth();
-
+ 
   return (
     <ClerkProvider afterSignOutUrl="/sign-in">
-      <html lang="en">
+      <html lang="en" suppressHydrationWarning>
         <body>
-          {userId && <Header />}
-          {children}
+          <div className="flex h-screen bg-gray-50">
+<ConditionalSidebar/>
+            <main className="flex-1 overflow-y-auto p-8 text-gray-900">
+              {children}
+            </main>
+          </div>
         </body>
       </html>
     </ClerkProvider>
