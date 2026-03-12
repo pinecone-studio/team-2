@@ -26,7 +26,7 @@ const statusStyles: Record<string, string> = {
 
 export function BenefitCard({ benefit }: { benefit: Benefit }) {
   return (
-    <Card className="w-[320px] rounded-3xl shadow-sm flex flex-col gap-[20px]">
+    <Card className="w-[280px] rounded-3xl border-[#E2E8F0] shadow-[0_1px_2px_rgba(0,0,0,0.25)] flex flex-col justify-between">
       <CardHeader>
         <div className="flex flex-row justify-between ">
           <div className="w-12 h-12 rounded-lg bg-[#DBEAFE] flex items-center justify-center">
@@ -40,30 +40,40 @@ export function BenefitCard({ benefit }: { benefit: Benefit }) {
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-2 flex flex-col gap-[20px]">
+      <CardContent className="space-y-2 flex flex-col justify-between flex-1">
         <div>
-          <h3 className="font-semibold">{benefit.title}</h3>
+          <h3 className="font-semibold text-lg text-[#0F172B] leading-[27px]">
+            {benefit.title}
+          </h3>
 
-          <p className="text-sm text-muted-foreground">{benefit.description}</p>
+          <p className="text-xs leading-5 text-[#45556C]">
+            {benefit.description}
+          </p>
         </div>
 
         <div>
-          <div className="flex justify-between text-sm mt-3">
-            <span className="text-[#64748B] leading-4 text-xs">Subsidy</span>
-            <span className="font-medium text-[#137FEC]">
+          <div className="flex justify-between text-xs ">
+            <span className="text-[#64748B] leading-4 text-xs font-normal">
+              Subsidy
+            </span>
+            <span className="font-bold text-[#137FEC] text-xs leading-4">
               {benefit.subsidy}%
             </span>
           </div>
           <Separator className="my-2" />
-          <div className="flex justify-between text-sm">
-            <span className="text-[#64748B] leading-4 text-xs">Vendor</span>
-            <span className="font-medium">{benefit.vendor}</span>
+          <div className="flex justify-between text-xs">
+            <span className="text-[#64748B] leading-4 text-xs font-normal">
+              Vendor
+            </span>
+            <span className="font-medium text-xs leading-4">
+              {benefit.vendor}
+            </span>
           </div>
         </div>
       </CardContent>
 
       <CardFooter>
-        <Button className="w-full !bg-[#137FEC] rounded-2xl shadow-[2px_4px_0_rgba(19,127,236,0.25)]">
+        <Button className="w-full !bg-[#137FEC] rounded-2xl hover:shadow-[2px_4px_3.8px_rgba(19,127,236,0.25)]">
           View Details
         </Button>
       </CardFooter>
