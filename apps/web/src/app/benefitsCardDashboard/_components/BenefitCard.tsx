@@ -26,7 +26,7 @@ const statusStyles: Record<string, string> = {
 
 export function BenefitCard({ benefit }: { benefit: Benefit }) {
   return (
-    <Card className="w-[280px] rounded-[24px] border-[#E2E8F0] shadow-[0_1px_2px_rgba(0,0,0,0.25)] flex flex-col justify-between">
+    <Card className="w-[280px] !rounded-[24px] border-[#E2E8F0] shadow-[0_1px_2px_rgba(0,0,0,0.25)] flex flex-col justify-between">
       <CardHeader>
         <div className="flex flex-row justify-between ">
           <div className="w-12 h-12 rounded-lg bg-[#DBEAFE] flex items-center justify-center">
