@@ -15,7 +15,7 @@ export const MenuItems = [
   },
   {
     name: 'My Benefits',
-    path: '/my-benefits',
+    path: '/myBenefits',
     icon: React.createElement(Gift, { size: 18 }),
   },
   {
