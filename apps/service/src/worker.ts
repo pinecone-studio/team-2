@@ -74,6 +74,6 @@ export default {
       return new Response(object.body as ReadableStream, { headers });
     }
 
-    return yoga.fetch(request, env, ctx);
+    return yoga.fetch(request, env);
   },
 } satisfies ExportedHandler<Env>;
