@@ -1,13 +1,13 @@
 "use client"
 
-import React, {useState, useEffect} from 'react';
-import {Card, Header} from '../DashboardCard/_components';
+import React, { useState, useEffect } from 'react';
+import { Card, Header } from '../DashboardCard/_components';
 
-const DashboardCard=() => {
+const DashboardCard = () => {
   const [loading, setLoading] = useState(true);
 
-  useEffect(()=> {
-    const timer = setTimeout(() => setLoading(false), 2000);
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 1500);
     return () => clearTimeout(timer);
   }, []);
 
