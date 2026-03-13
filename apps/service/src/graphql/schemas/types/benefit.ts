@@ -1,6 +1,6 @@
 export const benefitTypeDefs = /* GraphQL */ `
   type Benefit {
-    id: ID!
+    id: Int!
     name: String!
     category: String
     description: String
@@ -8,7 +8,9 @@ export const benefitTypeDefs = /* GraphQL */ `
     vendorName: String
     requiresContract: Boolean
     isActive: Boolean
-    activeContractId: Int
+    r2ObjectKey: String
+    contractUploadedAt: String
+    contractExpiryDate: String
   }
 
   input CreateBenefitInput {
@@ -19,6 +21,8 @@ export const benefitTypeDefs = /* GraphQL */ `
     vendorName: String
     requiresContract: Boolean
     isActive: Boolean
-    activeContractId: Int
+    r2ObjectKey: String
+    contractUploadedAt: String
+    contractExpiryDate: String
   }
 `;
