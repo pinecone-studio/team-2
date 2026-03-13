@@ -20,17 +20,17 @@ export const MenuItems = [
   },
   {
     name: 'Requests',
-    path: '/requests',
+    path: '/Requests',
     icon: React.createElement(ClipboardList, { size: 18 }),
   },
   {
     name: 'Contracts',
-    path: '/contracts',
+    path: '/Contracts',
     icon: React.createElement(FileText, { size: 18 }),
   },
   {
     name: 'Settings',
-    path: '/settings',
+    path: '/Settings',
     icon: React.createElement(Settings, { size: 18 }),
   },
 ];
