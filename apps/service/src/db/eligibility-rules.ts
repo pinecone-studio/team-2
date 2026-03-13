@@ -1,20 +1,17 @@
 import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
-import { nanoid } from 'nanoid';
+import { benefits } from './benefits';
 
 export const eligibilityRules = sqliteTable('eligibility_rules', {
-  id: text('id')
-    .primaryKey()
-    .$defaultFn(() => nanoid()),
+  id: integer('id').primaryKey({ autoIncrement: true }),
 
-  benefitId: text('benefit_id').notNull(),
+  benefitId: integer('benefit_id')
+    .notNull()
+    .references(() => benefits.id),
 
   ruleType: text('rule_type'),
-
-  operator: text('operator'),
-
-  value: text('value'),
-
   errorMessage: text('error_message'),
+  operator: text('operator'),
+  value: text('value'),
 
   isActive: integer('is_active', { mode: 'boolean' }).default(true),
 });

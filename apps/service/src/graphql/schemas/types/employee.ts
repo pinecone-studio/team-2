@@ -1,11 +1,11 @@
 export const employeeTypeDefs = /* GraphQL */ `
   type Employee {
-    id: ID!
+    id: Int!
     email: String
     name: String
-    role: String
+    employeeRole: String
     department: String
-    responsibilityLevel: Int
+    responsibilityLevel: String
     employmentStatus: String
     hireDate: String
     okrSubmitted: Boolean
@@ -17,9 +17,23 @@ export const employeeTypeDefs = /* GraphQL */ `
   input CreateEmployeeInput {
     email: String
     name: String
-    role: String
+    employeeRole: String
     department: String
-    responsibilityLevel: Int
+    responsibilityLevel: String
+    employmentStatus: String
+    hireDate: String
+    okrSubmitted: Boolean
+    lateArrivalCount: Int
+    createdAt: String
+    clerkUserId: String
+  }
+
+  input UpdateEmployeeInput {
+    email: String
+    name: String
+    employeeRole: String
+    department: String
+    responsibilityLevel: String
     employmentStatus: String
     hireDate: String
     okrSubmitted: Boolean

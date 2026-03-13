@@ -1,7 +1,7 @@
 export const eligibilityRuleTypeDefs = /* GraphQL */ `
   type EligibilityRule {
-    id: ID!
-    benefitId: ID!
+    id: Int!
+    benefitId: Int!
     ruleType: String
     operator: String
     value: String
@@ -10,7 +10,7 @@ export const eligibilityRuleTypeDefs = /* GraphQL */ `
   }
 
   input CreateEligibilityRuleInput {
-    benefitId: ID!
+    benefitId: Int!
     ruleType: String
     operator: String
     value: String

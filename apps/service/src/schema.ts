@@ -21,6 +21,11 @@ import { eligibilityRuleQueryResolvers } from './graphql/resolvers/query/eligibi
 import { employeeMutationResolvers } from './graphql/resolvers/mutation/employee';
 import { benefitMutationResolvers } from './graphql/resolvers/mutation/benefit';
 import { eligibilityRuleMutationResolvers } from './graphql/resolvers/mutation/eligibility-rule';
+import { benefitRequestMutationTypeDefs } from './graphql/schemas/mutation/benefit-request';
+import { benefitRequestQueryTypeDefs } from './graphql/schemas/query/benefit-request';
+import { benefitRequestQueryResolvers } from './graphql/resolvers/query/benefit-request';
+import { benefitRequestMutationResolvers } from './graphql/resolvers/mutation/benefit-request';
+import { benefitRequestTypeDefs } from './graphql/schemas/types/benefit-request';
 
 type GraphQLContext = Env & YogaInitialContext;
 
@@ -46,6 +51,9 @@ export const schema = createSchema<GraphQLContext>({
     employeeMutationTypeDefs,
     benefitMutationTypeDefs,
     eligibilityRuleMutationTypeDefs,
+    benefitRequestTypeDefs,
+    benefitRequestQueryTypeDefs,
+    benefitRequestMutationTypeDefs,
   ],
   resolvers: {
     Query: {
@@ -53,11 +61,13 @@ export const schema = createSchema<GraphQLContext>({
       ...employeeQueryResolvers,
       ...benefitQueryResolvers,
       ...eligibilityRuleQueryResolvers,
+      ...benefitRequestQueryResolvers,
     },
     Mutation: {
       ...employeeMutationResolvers,
       ...benefitMutationResolvers,
       ...eligibilityRuleMutationResolvers,
+      ...benefitRequestMutationResolvers,
     },
   },
 });

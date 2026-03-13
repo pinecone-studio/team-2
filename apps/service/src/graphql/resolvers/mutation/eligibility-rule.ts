@@ -27,4 +27,16 @@ export const eligibilityRuleMutationResolvers = {
     if (!created) throw new Error('EligibilityRule insert failed');
     return created;
   },
+
+  deleteEligibilityRule: async (
+    _: unknown,
+    args: { id: number },
+    ctx: { DB: D1Database },
+  ) => {
+    const db = getDB(ctx);
+    const result = await db
+      .delete(eligibilityRules)
+      .where(eq(eligibilityRules.id, args.id));
+    return Number(result.meta.changes ?? 0) > 0;
+  },
 };
