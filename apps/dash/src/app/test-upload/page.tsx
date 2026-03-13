@@ -2,6 +2,48 @@
 
 import { useState } from 'react';
 
+async function performUpload(file: File): Promise<string> {
+  const formData = new FormData();
+  formData.append('file', file);
+  const response = await fetch('http://localhost:8787/api/upload', {
+    method: 'POST',
+    body: formData,
+  });
+  if (!response.ok) {
+    throw new Error(`Upload failed with status ${response.status}`);
+  }
+  const data = await response.json();
+  return `http://localhost:8787${data.url}`;
+}
+
+function UploadResult({
+  error,
+  uploadedUrl,
+}: {
+  error: string | null;
+  uploadedUrl: string | null;
+}) {
+  if (error) {
+    return (
+      <div className="mt-4 p-3 bg-red-100 text-red-700 rounded-md text-sm">
+        {error}
+      </div>
+    );
+  }
+  if (!uploadedUrl) return null;
+  return (
+    <div className="mt-6 border-t pt-6">
+      <h2 className="text-lg font-medium text-gray-800 mb-4">
+        Upload Successful!
+      </h2>
+      <div className="rounded-lg overflow-hidden border border-gray-200">
+        <img src={uploadedUrl} alt="Uploaded" className="w-full h-auto" />
+      </div>
+      <p className="mt-2 text-xs text-gray-500 break-all">{uploadedUrl}</p>
+    </div>
+  );
+}
+
 export default function TestUploadPage() {
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -9,9 +51,8 @@ export default function TestUploadPage() {
   const [error, setError] = useState<string | null>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
-    }
+    const first = e.target.files?.[0];
+    if (first) setFile(first);
   };
 
   const handleUpload = async () => {
@@ -19,33 +60,15 @@ export default function TestUploadPage() {
       setError('Please select a file first.');
       return;
     }
-
     setUploading(true);
     setError(null);
-
-    const formData = new FormData();
-    formData.append('file', file);
-
     try {
-      // Typically, worker runs on 8787 locally.
-      const response = await fetch('http://localhost:8787/api/upload', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error(`Upload failed with status ${response.status}`);
-      }
-
-      const data = await response.json();
-
-      // The API returns { key, url }.
-      // Use the full URL to load the image.
-      setUploadedUrl(`http://localhost:8787${data.url}`);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
+      const url = await performUpload(file);
+      setUploadedUrl(url);
+    } catch (err: unknown) {
       console.error(err);
-      setError(err.message || 'Error uploading file');
+      const message = err instanceof Error ? err.message : 'Error uploading file';
+      setError(message);
     } finally {
       setUploading(false);
     }
@@ -83,25 +106,7 @@ export default function TestUploadPage() {
           {uploading ? 'Uploading...' : 'Upload Image'}
         </button>
 
-        {error && (
-          <div className="mt-4 p-3 bg-red-100 text-red-700 rounded-md text-sm">
-            {error}
-          </div>
-        )}
-
-        {uploadedUrl && (
-          <div className="mt-6 border-t pt-6">
-            <h2 className="text-lg font-medium text-gray-800 mb-4">
-              Upload Successful!
-            </h2>
-            <div className="rounded-lg overflow-hidden border border-gray-200">
-              <img src={uploadedUrl} alt="Uploaded" className="w-full h-auto" />
-            </div>
-            <p className="mt-2 text-xs text-gray-500 break-all">
-              {uploadedUrl}
-            </p>
-          </div>
-        )}
+        <UploadResult error={error} uploadedUrl={uploadedUrl} />
       </div>
     </div>
   );

@@ -46,35 +46,32 @@ export default function Employees() {
     if (file) setAvatarFile(file);
   };
 
+  // Upload avatar to API; returns URL or null if no file.
+  const uploadAvatar = async (file: File): Promise<string | null> => {
+    const formData = new FormData();
+    formData.append('file', file);
+    const res = await fetch('http://localhost:8787/api/upload', {
+      method: 'POST',
+      body: formData,
+    });
+    if (!res.ok) throw new Error('Failed to upload image');
+    const data = await res.json();
+    return `http://localhost:8787${data.url}`;
+  };
+
   // "Add Employee" дарахад — одоогоор API дуудлага болгож file-г хуулна
   const handleSubmit = async () => {
     setIsSubmitting(true);
     try {
-      let uploadedUrl = null;
-
-      if (avatarFile) {
-        const formData = new FormData();
-        formData.append('file', avatarFile);
-
-        const uploadRes = await fetch('http://localhost:8787/api/upload', {
-          method: 'POST',
-          body: formData,
-        });
-
-        if (!uploadRes.ok) {
-          throw new Error('Failed to upload image');
-        }
-
-        const data = await uploadRes.json();
-        uploadedUrl = `http://localhost:8787${data.url}`;
-      }
-
+      const uploadedUrl = avatarFile ? await uploadAvatar(avatarFile) : null;
       console.log('Employee data:', { avatar: uploadedUrl, ...form });
       alert('Employee added successfully! Check console for data.');
       handleCancel();
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
-      alert(err.message || 'An error occurred during employee creation.');
+      const message =
+        err instanceof Error ? err.message : 'An error occurred during employee creation.';
+      alert(message);
     } finally {
       setIsSubmitting(false);
     }
