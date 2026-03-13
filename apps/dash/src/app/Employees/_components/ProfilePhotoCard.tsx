@@ -6,7 +6,7 @@ import { useRef } from 'react';
 
 interface Props {
   avatarSrc: string | null; // Сонгогдсон зургийн base64 URL — null бол зураг байхгүй
-  onPhotoChange: (src: string) => void; // Зураг сонгоход page.tsx-д мэдэгдэх функц
+  onPhotoChange: (src: string, file?: File) => void; // Зураг сонгоход page.tsx-д мэдэгдэх функц
 }
 
 export function ProfilePhotoCard({ avatarSrc, onPhotoChange }: Props) {
@@ -20,7 +20,7 @@ export function ProfilePhotoCard({ avatarSrc, onPhotoChange }: Props) {
 
     // FileReader — файлыг base64 текст болгон уншина (браузерт зураг харуулахад хэрэгтэй)
     const reader = new FileReader();
-    reader.onload = (ev) => onPhotoChange(ev.target?.result as string);
+    reader.onload = (ev) => onPhotoChange(ev.target?.result as string, file);
     reader.readAsDataURL(file);
   };
 

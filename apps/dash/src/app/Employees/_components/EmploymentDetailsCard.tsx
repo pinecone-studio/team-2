@@ -30,6 +30,7 @@ interface Props {
   onSelectChange: (e: React.ChangeEvent<HTMLSelectElement>) => void; // <select> өөрчлөгдөхөд
   onSubmit: () => void; // "Add Employee" дарахад
   onCancel: () => void; // "Cancel" дарахад
+  isSubmitting?: boolean;
 }
 
 export function EmploymentDetailsCard({
@@ -38,6 +39,7 @@ export function EmploymentDetailsCard({
   onSelectChange,
   onSubmit,
   onCancel,
+  isSubmitting,
 }: Props) {
   return (
     <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-7 mb-4">
@@ -96,7 +98,8 @@ export function EmploymentDetailsCard({
         {/* Cancel — форм цэвэрлэнэ */}
         <button
           onClick={onCancel}
-          className="px-5 py-2.5 text-sm font-medium text-gray-500 bg-transparent border border-gray-200 rounded-lg hover:border-gray-300 hover:text-gray-700 transition-all"
+          disabled={isSubmitting}
+          className="px-5 py-2.5 text-sm font-medium text-gray-500 bg-transparent border border-gray-200 rounded-lg hover:border-gray-300 hover:text-gray-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Cancel
         </button>
@@ -104,9 +107,10 @@ export function EmploymentDetailsCard({
         {/* Add Employee — submit хийнэ */}
         <button
           onClick={onSubmit}
-          className="px-5 py-2.5 text-sm font-medium text-white bg-indigo-500 rounded-lg hover:bg-indigo-600 shadow-md shadow-indigo-200 hover:-translate-y-px transition-all"
+          disabled={isSubmitting}
+          className="px-5 py-2.5 text-sm font-medium text-white bg-indigo-500 rounded-lg hover:bg-indigo-600 shadow-md shadow-indigo-200 hover:-translate-y-px transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Add Employee
+          {isSubmitting ? 'Adding...' : 'Add Employee'}
         </button>
       </div>
     </div>
