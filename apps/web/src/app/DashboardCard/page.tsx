@@ -1,11 +1,20 @@
-import React from 'react';
-import { Card, Header } from '../DashboardCard/_components';
+"use client"
 
-const DashboardCard = () => {
+import React, {useState, useEffect} from 'react';
+import {Card, Header} from '../DashboardCard/_components';
+
+const DashboardCard=() => {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(()=> {
+    const timer = setTimeout(() => setLoading(false), 2000);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
-    <div>
-      <Header />
-      <Card />
+    <div className="p-6">
+      <Header isLoading={loading} />
+      <Card isLoading={loading} />
     </div>
   );
 };
