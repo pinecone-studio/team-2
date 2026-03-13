@@ -1,6 +1,6 @@
 import './global.css';
 import { ClerkProvider } from '@clerk/nextjs';
-import { ConditionalSidebar } from './_components/main';
+import Sidebar from './Sidebar/page';
 
 export const runtime = 'edge';
 
@@ -14,13 +14,12 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
- 
   return (
     <ClerkProvider afterSignOutUrl="/sign-in">
       <html lang="en" suppressHydrationWarning>
         <body>
           <div className="flex h-screen bg-gray-50">
-<ConditionalSidebar/>
+            <Sidebar />
             <main className="flex-1 overflow-y-auto p-8 text-gray-900">
               {children}
             </main>

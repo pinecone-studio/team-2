@@ -1,2 +1,1 @@
-export * from "./ConditionalSidebar"
-export * from "./Header"
+export * from './Header';
