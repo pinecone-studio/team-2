@@ -1,5 +1,7 @@
-import { Button, Badge } from '@team/source-ui';
-import { Trash2, Pencil, Plus } from 'lucide-react';
+import { Badge } from '@team/source-ui';
+import AddBenefitDialog from './_components/AddBenefitDialog';
+import EditBenefitDialog from './_components/EditBenefitDialog';
+import DeleteBenefitDialog from './_components/DeleteBenefitDialog';
 
 interface Benefit {
   id: number;
@@ -51,10 +53,7 @@ export default function BenefitsManagement() {
             Configure and manage company benefits
           </p>
         </div>
-        <Button className="bg-[#1D4ED8] hover:bg-[#1E40AF] text-white px-4 py-2 rounded-lg flex items-center justify-center gap-2 h-10">
-          <Plus />
-          <span className="font-semibold text-sm">Add Benefit</span>
-        </Button>
+        <AddBenefitDialog />
       </div>
 
       {/* Table */}
@@ -123,20 +122,10 @@ export default function BenefitsManagement() {
                 </td>
                 <td className="p-4">
                   <div className="flex justify-center gap-1">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 text-gray-600 hover:text-gray-900 hover:bg-gray-100"
-                    >
-                      <Pencil size={16} />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 text-[#EF4444] hover:text-red-700 hover:bg-red-50"
-                    >
-                      <Trash2 size={16} />
-                    </Button>
+                    {/* <EditBenefitDialog benefit={benefit} /> */}
+                    <EditBenefitDialog />
+
+                    <DeleteBenefitDialog />
                   </div>
                 </td>
               </tr>

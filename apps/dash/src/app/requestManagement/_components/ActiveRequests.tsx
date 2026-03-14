@@ -1,5 +1,6 @@
 import React from 'react';
-import { CircleCheck, XCircle } from 'lucide-react';
+import ApproveRequestDialog from './ApproveRequestsDialog';
+import RejectRequestDialog from './RejectRequestDialog';
 
 interface BenefitRequest {
   id: number;
@@ -90,12 +91,8 @@ export const ActiveRequests = () => {
                 </td>
                 <td className="px-4 py-2">
                   <div className="flex gap-2">
-                    <button className="px-3 py-1 bg-green-50 text-green-500 hover:bg-green-100 rounded-lg flex items-center gap-1.5 transition-colors text-xs font-semibold">
-                      <CircleCheck size={16} /> Approve
-                    </button>
-                    <button className="px-3 py-1 bg-rose-100 text-rose-700 hover:bg-rose-200 rounded-lg flex items-center gap-1.5 transition-colors text-xs font-semibold">
-                      <XCircle size={16} /> Reject
-                    </button>
+                    <ApproveRequestDialog />
+                    <RejectRequestDialog />
                   </div>
                 </td>
               </tr>

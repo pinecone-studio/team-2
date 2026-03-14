@@ -1,7 +1,9 @@
 import './global.css';
 import { ClerkProvider } from '@clerk/nextjs';
-import { auth } from '@clerk/nextjs/server';
-import { Header } from './_components/Header';
+// import { auth } from '@clerk/nextjs/server';
+// import { Header } from './_components/Header';
+import { SidebarProvider } from '@team/source-ui';
+import { SideBarDash } from './_components/sideBar/SideBarDash';
 
 export const metadata = {
   title: 'Welcome to dash',
@@ -13,16 +15,19 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { userId } = await auth();
+  // const { userId } = await auth();
 
   return (
     <ClerkProvider afterSignOutUrl="/sign-in">
-      <html lang="en">
-        <body>
-          {userId && <Header />}
-          {children}
-        </body>
-      </html>
+      <SidebarProvider>
+        <SideBarDash />
+        <html lang="en">
+          <body>
+            {/* {userId && <Header />} */}
+            {children}
+          </body>
+        </html>
+      </SidebarProvider>
     </ClerkProvider>
   );
 }
