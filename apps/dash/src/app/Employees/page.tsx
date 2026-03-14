@@ -31,6 +31,10 @@ const INITIAL_FORM = {
 
 export default function Employees() {
   const [avatarSrc, setAvatarSrc] = useState<string | null>(null);
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // form — бүх input талбарын утгуудыг нэг объектод хадгална
   const [form, setForm] = useState(INITIAL_FORM);
   const [errors, setErrors] = useState<FormErrors>({});
 
@@ -48,6 +52,40 @@ export default function Employees() {
     if (errors[name]) setErrors((prev) => ({ ...prev, [name]: '' }));
   };
 
+  const handlePhotoChange = (src: string, file?: File) => {
+    setAvatarSrc(src);
+    if (file) setAvatarFile(file);
+  };
+
+  // Upload avatar to API; returns URL or null if no file.
+  const uploadAvatar = async (file: File): Promise<string | null> => {
+    const formData = new FormData();
+    formData.append('file', file);
+    const res = await fetch('http://localhost:8787/api/upload', {
+      method: 'POST',
+      body: formData,
+    });
+    if (!res.ok) throw new Error('Failed to upload image');
+    const data = await res.json();
+    return `http://localhost:8787${data.url}`;
+  };
+
+  // "Add Employee" дарахад — одоогоор API дуудлага болгож file-г хуулна
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+    try {
+      const uploadedUrl = avatarFile ? await uploadAvatar(avatarFile) : null;
+      console.log('Employee data:', { avatar: uploadedUrl, ...form });
+      alert('Employee added successfully! Check console for data.');
+      handleCancel();
+    } catch (err: unknown) {
+      console.error(err);
+      const message =
+        err instanceof Error ? err.message : 'An error occurred during employee creation.';
+      alert(message);
+    } finally {
+      setIsSubmitting(false);
+    }
   const handleSubmit = () => {
     const validationErrors = validateForm(form);
     if (Object.keys(validationErrors).length > 0) {
@@ -62,6 +100,7 @@ export default function Employees() {
   const handleCancel = () => {
     setForm(INITIAL_FORM);
     setAvatarSrc(null);
+    setAvatarFile(null);
     setErrors({});
   };
 
@@ -76,7 +115,20 @@ export default function Employees() {
             Fill in the employee details to add them to your organization
           </p>
         </div>
-        <ProfilePhotoCard avatarSrc={avatarSrc} onPhotoChange={setAvatarSrc} />
+
+        {/* 3 card дараалан — state-г props-оор дамжуулна */}
+        <ProfilePhotoCard avatarSrc={avatarSrc} onPhotoChange={handlePhotoChange} />
+
+        <PersonalInfoCard values={form} onChange={handleInputChange} />
+
+        <EmploymentDetailsCard
+          values={form}
+          onInputChange={handleInputChange}
+          onSelectChange={handleSelectChange}
+          onSubmit={handleSubmit}
+          onCancel={handleCancel}
+          isSubmitting={isSubmitting}
+<!--         <ProfilePhotoCard avatarSrc={avatarSrc} onPhotoChange={setAvatarSrc} />
         <PersonalInfoCard
           values={form}
           onChange={handleInput}
@@ -93,7 +145,7 @@ export default function Employees() {
           values={form}
           onChange={handleInput}
           errors={errors}
-        />
+        /> -->
         <AdditionalNotesCard value={form.notes} onChange={handleInput} />
       </div>
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg px-6 py-4 flex justify-end gap-3 z-50">

@@ -23,8 +23,13 @@ interface EmploymentInfo {
 
 interface Props {
   values: EmploymentInfo;
-  onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onSelectChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void; // <input> өөрчлөгдөхөд
+  onSelectChange: (e: React.ChangeEvent<HTMLSelectElement>) => void; // <select> өөрчлөгдөхөд
+  onSubmit: () => void; // "Add Employee" дарахад
+  onCancel: () => void; // "Cancel" дарахад
+  isSubmitting?: boolean;
+//   onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+//   onSelectChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   errors: FormErrors;
 }
 
@@ -32,6 +37,9 @@ export function EmploymentDetailsCard({
   values,
   onInputChange,
   onSelectChange,
+  onSubmit,
+  onCancel,
+  isSubmitting,
   errors,
 }: Props) {
   return (
@@ -80,6 +88,27 @@ export function EmploymentDetailsCard({
           Icon={Mail}
           error={errors.departmentEmail}
         />
+      </div>
+
+      {/* Доод товчнууд — border-t нь дээрх grid-ийг тусгаарлана */}
+      <div className="flex justify-end gap-3 mt-6 pt-5 border-t border-gray-100">
+        {/* Cancel — форм цэвэрлэнэ */}
+        <button
+          onClick={onCancel}
+          disabled={isSubmitting}
+          className="px-5 py-2.5 text-sm font-medium text-gray-500 bg-transparent border border-gray-200 rounded-lg hover:border-gray-300 hover:text-gray-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Cancel
+        </button>
+
+        {/* Add Employee — submit хийнэ */}
+        <button
+          onClick={onSubmit}
+          disabled={isSubmitting}
+          className="px-5 py-2.5 text-sm font-medium text-white bg-indigo-500 rounded-lg hover:bg-indigo-600 shadow-md shadow-indigo-200 hover:-translate-y-px transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {isSubmitting ? 'Adding...' : 'Add Employee'}
+        </button>
       </div>
     </div>
   );

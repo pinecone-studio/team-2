@@ -1,8 +1,8 @@
 import { UploadCloud } from 'lucide-react';
 import { useRef } from 'react';
 interface Props {
-  avatarSrc: string | null;
-  onPhotoChange: (src: string) => void;
+  avatarSrc: string | null; // Сонгогдсон зургийн base64 URL — null бол зураг байхгүй
+  onPhotoChange: (src: string, file?: File) => void; // Зураг сонгоход page.tsx-д мэдэгдэх функц
 }
 export function ProfilePhotoCard({ avatarSrc, onPhotoChange }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -10,7 +10,7 @@ export function ProfilePhotoCard({ avatarSrc, onPhotoChange }: Props) {
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = (ev) => onPhotoChange(ev.target?.result as string);
+    reader.onload = (ev) => onPhotoChange(ev.target?.result as string, file);
     reader.readAsDataURL(file);
   };
   return (
