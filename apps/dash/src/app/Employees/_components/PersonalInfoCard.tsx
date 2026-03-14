@@ -1,10 +1,7 @@
-// PersonalInfoCard.tsx
-// Ажилтны хувийн мэдээлэл — нэр, имэйл, утас
-
 import { User, Mail, Phone } from 'lucide-react';
-import { InputField } from './FormField';
+import { InputField } from './InputField';
+import type { FormErrors } from './validation';
 
-// Энэ card-д хэрэгтэй утгуудын төрөл
 interface PersonalInfo {
   firstName: string;
   lastName: string;
@@ -13,11 +10,12 @@ interface PersonalInfo {
 }
 
 interface Props {
-  values: PersonalInfo; // Form-ийн одоогийн утгууд
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void; // Аль ч талбар өөрчлөгдөхөд дуудагдана
+  values: PersonalInfo;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  errors: FormErrors;
 }
 
-export function PersonalInfoCard({ values, onChange }: Props) {
+export function PersonalInfoCard({ values, onChange, errors }: Props) {
   return (
     <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-7 mb-4">
       <h2 className="text-sm font-semibold text-gray-900">
@@ -26,10 +24,7 @@ export function PersonalInfoCard({ values, onChange }: Props) {
       <p className="text-xs text-gray-500 mt-1 mb-5">
         Basic employee details and contact information
       </p>
-
-      {/* grid-cols-2 — 2 баганад байрлана: нэр | овог, имэйл | утас */}
       <div className="grid grid-cols-2 gap-x-5 gap-y-4">
-        {/* InputField-д Icon prop-оор lucide icon дамжуулна */}
         <InputField
           label="First Name"
           name="firstName"
@@ -37,6 +32,7 @@ export function PersonalInfoCard({ values, onChange }: Props) {
           onChange={onChange}
           placeholder="John"
           Icon={User}
+          error={errors.firstName}
         />
         <InputField
           label="Last Name"
@@ -45,6 +41,7 @@ export function PersonalInfoCard({ values, onChange }: Props) {
           onChange={onChange}
           placeholder="Doe"
           Icon={User}
+          error={errors.lastName}
         />
         <InputField
           label="Email Address"
@@ -54,6 +51,7 @@ export function PersonalInfoCard({ values, onChange }: Props) {
           placeholder="john.doe@company.com"
           type="email"
           Icon={Mail}
+          error={errors.email}
         />
         <InputField
           label="Phone Number"
@@ -63,6 +61,7 @@ export function PersonalInfoCard({ values, onChange }: Props) {
           placeholder="+1 (555) 000-0000"
           type="tel"
           Icon={Phone}
+          error={errors.phone}
         />
       </div>
     </div>
