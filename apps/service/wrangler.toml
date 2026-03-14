@@ -9,7 +9,3 @@ database_name = "team-benefit"
 database_id = "4003d717-a41b-4f18-862f-0bd680da038f"
 migrations_dir = "drizzle"
 
-[[r2_buckets]]
-binding = "BUCKET"
-bucket_name = "team-r2-bucket"
-preview_bucket_name = "team-r2-bucket-preview"

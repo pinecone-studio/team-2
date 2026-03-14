@@ -1,46 +1,22 @@
 'use client';
 
 import { useState } from 'react';
+import { gqlRequest } from '../../graphql/helpers/graphql-client';
+import {
+  CreateEmployeeDocument,
+  GetEmployeesDocument,
+  type CreateEmployeeMutationVariables,
+  type GetEmployeesQuery,
+} from '../../graphql/generated/graphql';
 
-const GRAPHQL_URL =
-  process.env.NEXT_PUBLIC_GRAPHQL_URL ??
-  'https://team-service.nbhishgee22.workers.dev/api/graphql';
+export default function Page() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [employees, setEmployees] = useState<GetEmployeesQuery['employees']>(
+    [],
+  );
 
-type CreateEmployeeInput = {
-  email?: string;
-  name?: string;
-  employeeRole?: string;
-  department?: string;
-  responsibilityLevel?: string;
-  employmentStatus?: string;
-  hireDate?: string;
-  okrSubmitted?: boolean;
-  lateArrivalCount?: number;
-  createdAt?: string;
-  clerkUserId?: string;
-};
-
-const CREATE_EMPLOYEE_MUTATION = `
-  mutation CreateEmployee($input: CreateEmployeeInput!) {
-    createEmployee(input: $input) {
-      id
-      email
-      name
-      employeeRole
-      department
-      responsibilityLevel
-      employmentStatus
-      hireDate
-      okrSubmitted
-      lateArrivalCount
-      createdAt
-      clerkUserId
-    }
-  }
-`;
-
-export default function EmployeeCreateForm() {
-  const [form, setForm] = useState<CreateEmployeeInput>({
+  const [form, setForm] = useState<CreateEmployeeMutationVariables['input']>({
     email: '',
     name: '',
     employeeRole: '',
@@ -51,60 +27,54 @@ export default function EmployeeCreateForm() {
     okrSubmitted: false,
     lateArrivalCount: 0,
     clerkUserId: '',
+    createdAt: '',
   });
 
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<any>(null);
-  const [error, setError] = useState('');
-
-  function update<K extends keyof CreateEmployeeInput>(
+  function update<K extends keyof typeof form>(
     key: K,
-    value: CreateEmployeeInput[K],
+    value: (typeof form)[K],
   ) {
     setForm((prev) => ({ ...prev, [key]: value }));
+  }
+
+  async function loadEmployees() {
+    setLoading(true);
+    setError('');
+    try {
+      const data = await gqlRequest(GetEmployeesDocument);
+      setEmployees(data.employees);
+    } catch (e: any) {
+      setError(e.message ?? 'Failed to fetch employees');
+    } finally {
+      setLoading(false);
+    }
   }
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     setError('');
-    setResult(null);
-
     try {
-      const input: CreateEmployeeInput = {
-        ...form,
-        lateArrivalCount: Number(form.lateArrivalCount ?? 0),
-        createdAt: new Date().toISOString(),
-      };
-
-      const res = await fetch(GRAPHQL_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          query: CREATE_EMPLOYEE_MUTATION,
-          variables: { input },
-        }),
+      const data = await gqlRequest(CreateEmployeeDocument, {
+        input: {
+          ...form,
+          createdAt: new Date().toISOString(),
+        },
       });
 
-      const json = await res.json();
-
-      if (!res.ok || json.errors?.length) {
-        throw new Error(json.errors?.[0]?.message ?? 'Create employee failed');
-      }
-
-      setResult(json.data.createEmployee);
-    } catch (err: any) {
-      setError(err.message ?? 'Unknown error');
+      // хүсвэл list-д локал нэмнэ (GET дуудахгүй)
+      setEmployees((prev) => [data.createEmployee, ...prev]);
+    } catch (e: any) {
+      setError(e.message ?? 'Create failed');
     } finally {
       setLoading(false);
     }
   }
-
   return (
     <div
-      style={{ maxWidth: 520, margin: '24px auto', fontFamily: 'sans-serif' }}
+      style={{ maxWidth: 700, margin: '24px auto', fontFamily: 'sans-serif' }}
     >
-      <h2>Create Employee</h2>
+      <h2>Employee Create (Codegen)</h2>
 
       <form onSubmit={onSubmit} style={{ display: 'grid', gap: 10 }}>
         <input
@@ -120,7 +90,7 @@ export default function EmployeeCreateForm() {
           required
         />
         <input
-          placeholder="Role (employeeRole)"
+          placeholder="Employee Role"
           value={form.employeeRole ?? ''}
           onChange={(e) => update('employeeRole', e.target.value)}
         />
@@ -130,7 +100,7 @@ export default function EmployeeCreateForm() {
           onChange={(e) => update('department', e.target.value)}
         />
         <input
-          placeholder="Responsibility Level (e.g. L1)"
+          placeholder="Responsibility Level"
           value={form.responsibilityLevel ?? ''}
           onChange={(e) => update('responsibilityLevel', e.target.value)}
         />
@@ -144,7 +114,7 @@ export default function EmployeeCreateForm() {
           value={form.hireDate ?? ''}
           onChange={(e) => update('hireDate', e.target.value)}
         />
-        <label style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+        <label style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <input
             type="checkbox"
             checked={Boolean(form.okrSubmitted)}
@@ -159,32 +129,33 @@ export default function EmployeeCreateForm() {
           onChange={(e) => update('lateArrivalCount', Number(e.target.value))}
         />
         <input
-          placeholder="Clerk User Id"
+          placeholder="Clerk User ID"
           value={form.clerkUserId ?? ''}
           onChange={(e) => update('clerkUserId', e.target.value)}
         />
 
-        <button type="submit" disabled={loading}>
-          {loading ? 'Creating...' : 'Create Employee'}
-        </button>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button type="submit" disabled={loading}>
+            {loading ? 'Saving...' : 'Create Employee'}
+          </button>
+          <button type="button" onClick={loadEmployees} disabled={loading}>
+            Refresh Employees
+          </button>
+        </div>
       </form>
 
-      {error ? (
-        <p style={{ color: 'red', marginTop: 12 }}>Error: {error}</p>
-      ) : null}
+      {error ? <p style={{ color: 'red' }}>{error}</p> : null}
 
-      {result ? (
-        <pre
-          style={{
-            marginTop: 12,
-            background: '#f5f5f5',
-            padding: 12,
-            borderRadius: 8,
-          }}
-        >
-          {JSON.stringify(result, null, 2)}
-        </pre>
-      ) : null}
+      <pre
+        style={{
+          marginTop: 16,
+          background: '#f5f5f5',
+          padding: 12,
+          borderRadius: 8,
+        }}
+      >
+        {JSON.stringify(employees, null, 2)}
+      </pre>
     </div>
   );
 }

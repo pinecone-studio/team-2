@@ -41,4 +41,38 @@ export const eligibilityRuleMutationResolvers = {
       .where(eq(eligibilityRules.id, args.id));
     return Number(result.meta.changes ?? 0) > 0;
   },
+  updateEligibilityRule: async (
+    _: unknown,
+    args: { id: number; input: Partial<EligibilityRuleInput> },
+    ctx: { DB: D1Database },
+  ) => {
+    const db = getDB(ctx);
+
+    // benefitId-ийг update хийвэл FK check хийнэ
+    if (args.input.benefitId != null) {
+      const [benefitExists] = await db
+        .select({ id: benefits.id })
+        .from(benefits)
+        .where(eq(benefits.id, args.input.benefitId))
+        .limit(1);
+
+      if (!benefitExists) {
+        throw new Error(`Benefit not found: ${args.input.benefitId}`);
+      }
+    }
+
+    await db
+      .update(eligibilityRules)
+      .set(args.input)
+      .where(eq(eligibilityRules.id, args.id));
+
+    const [updated] = await db
+      .select()
+      .from(eligibilityRules)
+      .where(eq(eligibilityRules.id, args.id))
+      .limit(1);
+
+    if (!updated) throw new Error(`EligibilityRule not found: ${args.id}`);
+    return updated;
+  },
 };

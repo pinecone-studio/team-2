@@ -2,6 +2,10 @@
   "name": "@team/dash",
   "version": "0.0.1",
   "private": true,
+  "scripts": {
+    "codegen": "graphql-codegen",
+    "codegen:watch": "graphql-codegen --watch"
+  },
   "dependencies": {
     "@cloudflare/next-on-pages": "^1.13.16",
     "@hookform/resolvers": "^5.2.2",
