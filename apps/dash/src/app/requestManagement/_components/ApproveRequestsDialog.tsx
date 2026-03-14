@@ -7,7 +7,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-  Button,
 } from '@team/source-ui';
 import { CircleCheck } from 'lucide-react';
 import React from 'react';
@@ -31,12 +30,9 @@ export const ApproveRequestDialog = () => {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <Button
-              variant={'default'}
-              className="bg-green-600 text-white hover:bg-green-700"
-            >
+            <button className="bg-green-600 text-white hover:bg-green-700  px-4 py-1 rounded-lg">
               Approve
-            </Button>
+            </button>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

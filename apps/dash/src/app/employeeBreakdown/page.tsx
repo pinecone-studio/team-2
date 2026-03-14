@@ -12,7 +12,7 @@ const data = [
   { name: 'HR', value: 7, color: '#6B7280' },
 ];
 
-export default function EmployeeBreakdown() {
+export function EmployeeBreakdown() {
   return (
     <Card className="w-[538px] h-[389px] rounded-xl">
       <CardHeader>
