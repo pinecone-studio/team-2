@@ -19,15 +19,15 @@ export default async function RootLayout({
 
   return (
     <ClerkProvider afterSignOutUrl="/sign-in">
-      <SidebarProvider>
-        <SideBarDash />
-        <html lang="en">
-          <body>
+      <html lang="en">
+        <body>
+          <SidebarProvider>
+            <SideBarDash />
             {/* {userId && <Header />} */}
             {children}
-          </body>
-        </html>
-      </SidebarProvider>
+          </SidebarProvider>
+        </body>
+      </html>
     </ClerkProvider>
   );
 }
