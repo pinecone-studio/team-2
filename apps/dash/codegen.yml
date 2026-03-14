@@ -1,11 +1,10 @@
 schema: https://team-service.nbhishgee22.workers.dev/api/graphql
 documents:
-  - apps/dash/src/**/*.{graphql,gql}
-  - apps/dash/src/**/*.{ts,tsx}
+  - src/graphql/documents/**/*.{graphql,gql}
 generates:
-  apps/dash/src/generated/graphql.ts:
+  src/graphql/generated/graphql.ts:
     plugins:
       - typescript
       - typescript-operations
       - typed-document-node
-ignoreNoDocuments: true
+ignoreNoDocuments: false

@@ -17,4 +17,12 @@ export const eligibilityRuleTypeDefs = /* GraphQL */ `
     errorMessage: String
     isActive: Boolean
   }
+  input UpdateEligibilityRuleInput {
+    benefitId: Int
+    ruleType: String
+    operator: String
+    value: String
+    errorMessage: String
+    isActive: Boolean
+  }
 `;
