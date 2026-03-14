@@ -12,7 +12,7 @@ export const eligibilityRuleQueryResolvers = {
   },
   eligibilityRulesByBenefit: async (
     _: unknown,
-    args: { benefitId: string },
+    args: { benefitId: number },
     ctx: { DB: D1Database },
   ) => {
     return getDB(ctx)
