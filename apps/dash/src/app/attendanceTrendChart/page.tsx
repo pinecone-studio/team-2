@@ -31,7 +31,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export default function ChartAreaAxes() {
+export default function AttendanceTrendChart() {
   return (
     <Card className="w-[620px] h-[330px]">
       <CardHeader>
