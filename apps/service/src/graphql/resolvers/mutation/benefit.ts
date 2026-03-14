@@ -19,10 +19,12 @@ import { eq } from 'drizzle-orm';
 import { benefits } from '../../../db/schema';
 import { getDB } from '../../../db';
 
+type BenefitInput = (typeof benefits)['$inferInsert'];
+
 export const benefitMutationResolvers = {
   createBenefit: async (
     _: unknown,
-    args: { input: any },
+    args: { input: BenefitInput },
     ctx: { DB: D1Database },
   ) => {
     const db = getDB(ctx);
