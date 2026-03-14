@@ -2,10 +2,12 @@ import { eq } from 'drizzle-orm';
 import { benefits, eligibilityRules } from '../../../db/schema';
 import { getDB } from '../../../db';
 
+type EligibilityRuleInput = (typeof eligibilityRules)['$inferInsert'];
+
 export const eligibilityRuleMutationResolvers = {
   createEligibilityRule: async (
     _: unknown,
-    args: { input: any },
+    args: { input: EligibilityRuleInput },
     ctx: { DB: D1Database },
   ) => {
     const db = getDB(ctx);
