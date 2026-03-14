@@ -1,6 +1,6 @@
 import React from 'react';
-import ApproveRequestDialog from './ApproveRequestsDialog';
-import RejectRequestDialog from './RejectRequestDialog';
+import { ApproveRequestDialog } from './ApproveRequestsDialog';
+import { RejectRequestDialog } from './RejectRequestDialog';
 
 interface BenefitRequest {
   id: number;

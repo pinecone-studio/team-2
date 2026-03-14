@@ -1,7 +1,7 @@
 import { Badge } from '@team/source-ui';
-import AddBenefitDialog from './_components/AddBenefitDialog';
-import EditBenefitDialog from './_components/EditBenefitDialog';
-import DeleteBenefitDialog from './_components/DeleteBenefitDialog';
+import { AddBenefitDialog } from './_components/AddBenefitDialog';
+import { EditBenefitDialog } from './_components/EditBenefitDialog';
+import { DeleteBenefitDialog } from './_components/DeleteBenefitDialog';
 
 interface Benefit {
   id: number;
