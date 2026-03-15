@@ -1,19 +1,16 @@
-"use client"
+'use client';
 
-import { Skeleton } from "libs/ui/src"
-import { Bell, MessageSquare } from "lucide-react"
-
+import { Skeleton } from '@team/source-ui';
+import { Bell, MessageSquare } from 'lucide-react';
 
 type HeaderProps = {
-  isLoading?: boolean
-}
+  isLoading?: boolean;
+};
 
 export function Header({ isLoading = false }: HeaderProps) {
-
   if (isLoading) {
     return (
       <div className="flex items-center justify-between mb-6 animate-[pulse_1.5s_infinite]">
-
         {/* Left */}
         <div className="space-y-2">
           <Skeleton className="h-8 w-64 rounded" />
@@ -33,9 +30,8 @@ export function Header({ isLoading = false }: HeaderProps) {
             <Skeleton className="w-9 h-9 rounded-full" />
           </div>
         </div>
-
       </div>
-    )
+    );
   }
 
   return (
@@ -56,9 +52,13 @@ export function Header({ isLoading = false }: HeaderProps) {
             <p className="text-sm font-semibold text-gray-900">Alex Rivera</p>
             <p className="text-xs text-gray-500">Senior Engineer</p>
           </div>
-          <img src="/avatar.png" className="w-9 h-9 rounded-full" alt="avatar" />
+          <img
+            src="/avatar.png"
+            className="w-9 h-9 rounded-full"
+            alt="avatar"
+          />
         </div>
       </div>
     </div>
-  )
+  );
 }
