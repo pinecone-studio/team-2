@@ -1,0 +1,15 @@
+query GetBenefits {
+  benefits {
+    id
+    name
+    category
+    description
+    subsidyPercent
+    vendorName
+    requiresContract
+    isActive
+    r2ObjectKey
+    contractUploadedAt
+    contractExpiryDate
+  }
+}

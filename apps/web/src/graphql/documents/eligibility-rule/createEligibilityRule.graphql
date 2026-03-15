@@ -1,0 +1,11 @@
+mutation CreateEligibilityRule($input: CreateEligibilityRuleInput!) {
+  createEligibilityRule(input: $input) {
+    id
+    benefitId
+    ruleType
+    operator
+    value
+    errorMessage
+    isActive
+  }
+}

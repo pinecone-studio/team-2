@@ -1,0 +1,11 @@
+mutation UpdateEligibilityRule($id: Int!, $input: UpdateEligibilityRuleInput!) {
+  updateEligibilityRule(id: $id, input: $input) {
+    id
+    benefitId
+    ruleType
+    operator
+    value
+    errorMessage
+    isActive
+  }
+}

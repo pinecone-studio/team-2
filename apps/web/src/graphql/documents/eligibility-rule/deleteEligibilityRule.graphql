@@ -1,0 +1,3 @@
+mutation DeleteEligibilityRule($id: Int!) {
+  deleteEligibilityRule(id: $id)
+}
