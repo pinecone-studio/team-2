@@ -1,0 +1,9 @@
+query GetBenefitRequestsByEmployee($employeeId: Int!) {
+  benefitRequestsByEmployee(employeeId: $employeeId) {
+    id
+    employeeId
+    benefitId
+    status
+    createdAt
+  }
+}

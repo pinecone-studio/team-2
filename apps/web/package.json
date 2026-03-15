@@ -11,6 +11,8 @@
   },
   "scripts": {
     "vercel-build": "next build",
-    "pages:build": "npx @cloudflare/next-on-pages"
+    "pages:build": "npx @cloudflare/next-on-pages",
+    "codegen": "graphql-codegen",
+    "codegen:watch": "graphql-codegen --watch"
   }
 }

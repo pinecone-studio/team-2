@@ -1,0 +1,11 @@
+query GetEligibilityRulesByBenefit($benefitId: Int!) {
+  eligibilityRulesByBenefit(benefitId: $benefitId) {
+    id
+    benefitId
+    ruleType
+    operator
+    value
+    errorMessage
+    isActive
+  }
+}
