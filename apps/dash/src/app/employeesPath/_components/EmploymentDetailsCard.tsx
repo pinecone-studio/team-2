@@ -1,18 +1,18 @@
-import { Briefcase, Building2, Mail } from 'lucide-react';
+import { Briefcase, Mail } from 'lucide-react';
 import { InputField } from './InputField';
-import { SelectField } from './SelectField';
+// import { SelectField } from './SelectField';
 import type { FormErrors } from './validation';
 
-const DEPARTMENTS = [
-  { value: '', label: 'Select Department' },
-  { value: 'engineering', label: 'Engineering' },
-  { value: 'product', label: 'Product' },
-  { value: 'design', label: 'Design' },
-  { value: 'marketing', label: 'Marketing' },
-  { value: 'sales', label: 'Sales' },
-  { value: 'hr', label: 'HR' },
-  { value: 'finance', label: 'Finance' },
-];
+// const DEPARTMENTS = [
+//   { value: '', label: 'Select Department' },
+//   { value: 'engineering', label: 'Engineering' },
+//   { value: 'product', label: 'Product' },
+//   { value: 'design', label: 'Design' },
+//   { value: 'marketing', label: 'Marketing' },
+//   { value: 'sales', label: 'Sales' },
+//   { value: 'hr', label: 'HR' },
+//   { value: 'finance', label: 'Finance' },
+// ];
 
 interface EmploymentInfo {
   employeeId: string;
@@ -28,8 +28,8 @@ interface Props {
   onSubmit: () => void; // "Add Employee" дарахад
   onCancel: () => void; // "Cancel" дарахад
   isSubmitting?: boolean;
-//   onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-//   onSelectChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  //   onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  //   onSelectChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   errors: FormErrors;
 }
 
@@ -69,7 +69,7 @@ export function EmploymentDetailsCard({
           Icon={Briefcase}
           error={errors.position}
         />
-        <SelectField
+        {/* <SelectField
           label="Department"
           name="department"
           value={values.department}
@@ -77,7 +77,7 @@ export function EmploymentDetailsCard({
           options={DEPARTMENTS}
           Icon={Building2}
           error={errors.department}
-        />
+        /> */}
         <InputField
           label="Department"
           name="departmentEmail"

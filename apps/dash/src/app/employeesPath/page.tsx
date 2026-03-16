@@ -13,7 +13,7 @@ import {
   Zap,
 } from 'lucide-react';
 import { InputField } from './_components/InputField';
-import { SelectField } from './_components/SelectField';
+// import { SelectField } from './_components/SelectField';
 import { ProfilePhotoCard } from './_components/ProfilePhotoCard';
 
 const INITIAL_FORM = {
@@ -82,7 +82,7 @@ export default function Employees() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 px-5 py-10">
+    <div className="w-full min-h-screen bg-[#F9FAFB] px-5 py-10">
       <div className="max-w-[800px] mx-auto">
         <header className="mb-8 flex justify-between items-end">
           <div>
@@ -96,10 +96,10 @@ export default function Employees() {
           <button
             type="button"
             onClick={handleDemo}
-            className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-indigo-600 bg-white border border-indigo-200 rounded-lg hover:bg-indigo-50 hover:border-indigo-300 transition-all shadow-sm active:scale-95"
+            className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-indigo-400 bg-white border border-indigo-200 rounded-lg hover:bg-indigo-50 hover:border-indigo-300 transition-all shadow-sm active:scale-95"
           >
-            <Zap size={14} className="fill-indigo-500" />
-            Try Demo
+            {/* <Zap size={14} className="fill-indigo-500" /> */}
+            Demo Button
           </button>
         </header>
 
@@ -152,7 +152,7 @@ export default function Employees() {
                   placeholder="e.g. Marketing"
                 />
 
-                <SelectField
+                {/* <SelectField
                   label="Responsibility Level"
                   name="responsibility_level"
                   value={form.responsibility_level}
@@ -177,7 +177,7 @@ export default function Employees() {
                     { value: 'probation', label: 'On Probation' },
                     { value: 'contract', label: 'Contractor' },
                   ]}
-                />
+                /> */}
               </div>
 
               <hr className="border-gray-100" />
@@ -242,7 +242,7 @@ export default function Employees() {
                 type="submit"
                 className="px-8 py-2.5 text-sm font-semibold text-white bg-indigo-600 rounded-xl hover:bg-indigo-700 shadow-lg shadow-indigo-100 active:scale-[0.98] transition-all"
               >
-                Add Employee Record
+                Add Employee
               </button>
             </div>
           </div>

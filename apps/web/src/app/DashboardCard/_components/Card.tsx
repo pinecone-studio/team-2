@@ -58,10 +58,7 @@ export function Card({ isLoading = false }: CardProps) {
       {stats.map((stat) => {
         const Icon = stat.icon;
         return (
-          <div
-            key={stat.title}
-            className="relative bg-white rounded-xl border border-gray-200 px-5 py-4 shadow-sm"
-          >
+          <div key={stat.title} className="relative rounded-xl  px-5 py-4 ">
             <div
               className={`absolute left-0 top-3 bottom-3 w-1 rounded-r-full ${stat.color}`}
             />

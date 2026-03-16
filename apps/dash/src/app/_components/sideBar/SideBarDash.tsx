@@ -22,7 +22,7 @@ import React from 'react';
 
 const menuItems = [
   { path: '/', label: 'Dashboard', icon: LayoutDashboard },
-  { path: '/Employees', label: 'Employees', icon: Users },
+  { path: '/employees', label: 'Employees', icon: Users },
   { path: '/benefitManagement', label: 'Benefits', icon: Gift },
   { path: '/requestManagement', label: 'Requests', icon: FileInput },
   { path: '/contracts', label: 'Contracts', icon: FileText },
