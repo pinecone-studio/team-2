@@ -10,13 +10,15 @@ import { Badge } from '@team/source-ui';
 import { Dumbbell } from 'lucide-react';
 
 type Benefit = {
-  id: string;
-  title: string;
-  description: string;
-  subsidy: number;
-  vendor: string;
-  status: string;
+  id: number;
+  name: string;
+  description?: string | null;
+  subsidyPercent?: number | null;
+  vendorName?: string | null;
+  isActive?: boolean | null;
+  category?: string | null;
 };
+
 const statusStyles: Record<string, string> = {
   Active: '!bg-green-100 !text-green-700 !rounded-full',
   Locked: '!bg-gray-100 !text-gray-500 !rounded-full',
@@ -25,6 +27,8 @@ const statusStyles: Record<string, string> = {
 };
 
 export function BenefitCard({ benefit }: { benefit: Benefit }) {
+  const status = benefit.isActive ? 'Active' : 'Locked';
+
   return (
     <Card className="w-[280px] !rounded-[24px] border-[#E2E8F0] shadow-[0_1px_2px_rgba(0,0,0,0.25)] flex flex-col justify-between">
       <CardHeader>
@@ -33,9 +37,7 @@ export function BenefitCard({ benefit }: { benefit: Benefit }) {
             <Dumbbell className="text-blue-500 text-xl" />
           </div>
           <div className="flex items-start ">
-            <Badge className={statusStyles[benefit.status]}>
-              {benefit.status}
-            </Badge>
+            <Badge className={statusStyles[status]}>{status}</Badge>
           </div>
         </div>
       </CardHeader>
@@ -43,7 +45,7 @@ export function BenefitCard({ benefit }: { benefit: Benefit }) {
       <CardContent className="space-y-2 flex flex-col justify-between flex-1">
         <div>
           <h3 className="font-semibold text-lg text-[#0F172B] leading-[27px]">
-            {benefit.title}
+            {benefit.name}
           </h3>
 
           <p className="text-xs leading-5 text-[#45556C]">
@@ -57,7 +59,7 @@ export function BenefitCard({ benefit }: { benefit: Benefit }) {
               Subsidy
             </span>
             <span className="font-bold text-[#137FEC] text-xs leading-4">
-              {benefit.subsidy}%
+              {benefit.subsidyPercent ?? 0}%
             </span>
           </div>
           <Separator className="my-2" />
@@ -66,7 +68,7 @@ export function BenefitCard({ benefit }: { benefit: Benefit }) {
               Vendor
             </span>
             <span className="font-medium text-xs leading-4">
-              {benefit.vendor}
+              {benefit.vendorName ?? '—'}
             </span>
           </div>
         </div>
