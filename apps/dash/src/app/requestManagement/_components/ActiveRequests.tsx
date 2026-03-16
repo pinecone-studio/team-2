@@ -1,33 +1,39 @@
+'use client';
+
 import React from 'react';
 import { ApproveRequestDialog } from './ApproveRequestsDialog';
 import { RejectRequestDialog } from './RejectRequestDialog';
+import {
+  type GetBenefitRequestsQuery,
+  type GetBenefitsQuery,
+  type GetEmployeesQuery,
+} from 'apps/dash/src/graphql/generated/graphql';
 
-interface BenefitRequest {
-  id: number;
-  employeeName: string;
-  benefit: string;
-  requestDate: string;
-  status: 'Active' | 'Pending' | 'Inactive';
-}
+type BenefitRequest = GetBenefitRequestsQuery['benefitRequests'][number];
+type Benefit = GetBenefitsQuery['benefits'][number];
+type Employee = GetEmployeesQuery['employees'][number];
 
-const MOCK_DATA: BenefitRequest[] = [
-  {
-    id: 1,
-    employeeName: 'Emily Watson',
-    benefit: 'Gym Membership',
-    requestDate: '1/15/2024',
-    status: 'Active',
-  },
-  {
-    id: 2,
-    employeeName: 'Joe Biden',
-    benefit: 'Golf Membership',
-    requestDate: '1/15/2023',
-    status: 'Inactive',
-  },
-];
+type Props = {
+  requests: BenefitRequest[];
+  benefits: Benefit[];
+  employees: Employee[];
+  onUpdated: (updated: BenefitRequest) => void;
+};
 
-export const ActiveRequests = () => {
+export const ActiveRequests = ({
+  requests = [],
+  benefits = [],
+  employees = [],
+  onUpdated,
+}: Props) => {
+  function getBenefitName(benefitId: number) {
+    return benefits.find((b) => b.id === benefitId)?.name ?? '—';
+  }
+
+  function getEmployeeName(employeeId: number) {
+    return employees.find((e) => e.id === employeeId)?.name ?? '—';
+  }
+
   return (
     <div className="p-5 bg-white rounded-lg w-full border border-gray-100 shadow-sm">
       <div className="mb-6 px-4">
@@ -35,7 +41,7 @@ export const ActiveRequests = () => {
           Active requests
         </h2>
         <p className="text-gray-500 text-sm">
-          {MOCK_DATA.length} requests awaiting review
+          {requests.length} requests awaiting review
         </p>
       </div>
 
@@ -61,42 +67,52 @@ export const ActiveRequests = () => {
             </tr>
           </thead>
           <tbody>
-            {MOCK_DATA.map((request) => (
-              <tr
-                key={request.id}
-                className="border-b border-black/10 hover:bg-gray-50 transition-colors h-14"
-              >
-                <td className="px-4 py-2 text-black text-sm font-semibold">
-                  {request.employeeName}
-                </td>
-                <td className="px-4 py-2 text-black/50 text-sm font-semibold">
-                  {request.benefit}
-                </td>
-                <td className="px-4 py-2 text-black/50 text-sm font-semibold">
-                  {request.requestDate}
-                </td>
-                <td className="px-4 py-2">
-                  <div
-                    className={`w-[90px] h-[29px] rounded-lg outline outline-1 outline-offset-[-1px] flex justify-center items-center font-semibold text-xs
-                    ${
-                      request.status === 'Active'
-                        ? 'bg-green-50 text-green-600 outline-emerald-100'
-                        : request.status === 'Inactive'
-                          ? 'bg-rose-50 text-rose-600 outline-rose-100'
-                          : 'bg-amber-50 text-amber-600 outline-amber-100'
-                    }`}
-                  >
-                    {request.status}
-                  </div>
-                </td>
-                <td className="px-4 py-2">
-                  <div className="flex gap-2">
-                    <ApproveRequestDialog />
-                    <RejectRequestDialog />
-                  </div>
+            {requests.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={5}
+                  className="px-4 py-8 text-center text-sm text-gray-400"
+                >
+                  No pending requests
                 </td>
               </tr>
-            ))}
+            ) : (
+              requests.map((request) => (
+                <tr
+                  key={request.id}
+                  className="border-b border-black/10 hover:bg-gray-50 transition-colors h-14"
+                >
+                  <td className="px-4 py-2 text-black text-sm font-semibold">
+                    {getEmployeeName(request.employeeId)}
+                  </td>
+                  <td className="px-4 py-2 text-black/50 text-sm font-semibold">
+                    {getBenefitName(request.benefitId)}
+                  </td>
+                  <td className="px-4 py-2 text-black/50 text-sm font-semibold">
+                    {request.createdAt
+                      ? new Date(request.createdAt).toLocaleDateString()
+                      : '—'}
+                  </td>
+                  <td className="px-4 py-2">
+                    <div className="w-[90px] h-[29px] rounded-lg outline outline-1 outline-offset-[-1px] flex justify-center items-center font-semibold text-xs capitalize bg-amber-50 text-amber-600 outline-amber-100">
+                      pending
+                    </div>
+                  </td>
+                  <td className="px-4 py-2">
+                    <div className="flex gap-2">
+                      <ApproveRequestDialog
+                        request={request}
+                        onUpdated={onUpdated}
+                      />
+                      <RejectRequestDialog
+                        request={request}
+                        onUpdated={onUpdated}
+                      />
+                    </div>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
