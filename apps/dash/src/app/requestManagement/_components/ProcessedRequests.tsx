@@ -12,9 +12,9 @@ type Benefit = GetBenefitsQuery['benefits'][number];
 type Employee = GetEmployeesQuery['employees'][number];
 
 type Props = {
-  requests: BenefitRequest[];
-  benefits: Benefit[];
-  employees: Employee[];
+  requests?: BenefitRequest[];
+  benefits?: Benefit[];
+  employees?: Employee[];
 };
 
 export const ProcessedRequests = ({
@@ -92,7 +92,6 @@ export const ProcessedRequests = ({
                         : '—'}
                     </td>
                     <td className="px-4 py-2 text-black/50 text-sm font-semibold">
-                      {/* No separate reviewDate in schema — using createdAt as fallback */}
                       {request.createdAt
                         ? new Date(request.createdAt).toLocaleDateString()
                         : '—'}

@@ -11,12 +11,11 @@ import {
   AlertDialogTrigger,
   Button,
 } from '@team/source-ui';
-import {
-  GetBenefitRequestsQuery,
-  UpdateBenefitRequestDocument,
-} from 'apps/dash/src/graphql/generated/graphql';
 import { gqlRequest } from 'apps/dash/src/graphql/helpers/graphql-client';
-
+import {
+  UpdateBenefitRequestDocument,
+  type GetBenefitRequestsQuery,
+} from 'apps/dash/src/graphql/generated/graphql';
 import { XCircle } from 'lucide-react';
 import { useState } from 'react';
 

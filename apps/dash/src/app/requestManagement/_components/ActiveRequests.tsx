@@ -21,9 +21,9 @@ type Props = {
 };
 
 export const ActiveRequests = ({
-  requests,
-  benefits,
-  employees,
+  requests = [],
+  benefits = [],
+  employees = [],
   onUpdated,
 }: Props) => {
   function getBenefitName(benefitId: number) {
