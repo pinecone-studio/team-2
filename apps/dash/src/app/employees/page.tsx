@@ -1,9 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { gqlRequest } from '../../graphql/helpers/graphql-client';
+import { CreateEmployeeDocument } from '../../graphql/generated/graphql';
 import { EmployeeForm } from './_components/EmployeeForm';
 import type { EmployeeFormData } from './_components/EmployeeForm';
-import { EmployeeFormSkeleton } from './_components/EmployeeFormSkeleton';
+import { SuccessDialog } from './_components/SuccessDialog';
 
 const INITIAL_FORM: EmployeeFormData = {
   email: '',
@@ -34,13 +36,13 @@ const DEMO_FORM: EmployeeFormData = {
 export default function Employees() {
   const [form, setForm] = useState<EmployeeFormData>(INITIAL_FORM);
   const [avatarSrc, setAvatarSrc] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [mounted, setMounted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 1500);
-    return () => clearTimeout(timer);
+    setMounted(true);
   }, []);
 
   const handleChange = (
@@ -61,16 +63,33 @@ export default function Employees() {
   const handleReset = () => {
     setForm(INITIAL_FORM);
     setAvatarSrc(null);
+    setError(null);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Employee Data:', { ...form, profilePhoto: avatarSrc });
-    alert('Success!');
+    setSubmitting(true);
+    setError(null);
+
+    try {
+      await gqlRequest(CreateEmployeeDocument, {
+        input: {
+          ...form,
+          createdAt: new Date().toISOString(),
+        },
+      });
+      handleReset();
+      setSuccess(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Something went wrong');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
     <div className="w-full min-h-screen bg-[#F9FAFB] px-5 py-10">
+      <SuccessDialog open={success} onClose={() => setSuccess(false)} />
       <div className="max-w-[800px] mx-auto">
         <header className="mb-8 flex justify-between items-end">
           <div>
@@ -89,9 +108,14 @@ export default function Employees() {
             Demo Button
           </button>
         </header>
-        {loading ? (
-          <EmployeeFormSkeleton />
-        ) : (
+
+        {error && (
+          <div className="mb-4 px-4 py-3 bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl">
+            {error}
+          </div>
+        )}
+
+        {!mounted ? null : (
           <form onSubmit={handleSubmit}>
             <EmployeeForm
               form={form}
@@ -99,6 +123,7 @@ export default function Employees() {
               onPhotoChange={setAvatarSrc}
               onChange={handleChange}
               onReset={handleReset}
+              submitting={submitting}
             />
           </form>
         )}

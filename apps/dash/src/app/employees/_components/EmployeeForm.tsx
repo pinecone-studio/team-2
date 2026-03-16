@@ -22,6 +22,7 @@ interface Props {
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => void;
   onReset: () => void;
+  submitting?: boolean;
 }
 
 export function EmployeeForm({
@@ -30,6 +31,7 @@ export function EmployeeForm({
   onPhotoChange,
   onChange,
   onReset,
+  submitting = false,
 }: Props) {
   return (
     <>
@@ -42,15 +44,17 @@ export function EmployeeForm({
           <button
             type="button"
             onClick={onReset}
-            className="px-5 py-2 text-sm font-medium text-gray-400 hover:text-gray-600 transition-all"
+            disabled={submitting}
+            className="px-5 py-2 text-sm font-medium text-gray-400 hover:text-gray-600 disabled:opacity-50 transition-all"
           >
             Reset
           </button>
           <button
             type="submit"
-            className="px-8 py-2.5 text-sm font-semibold text-white bg-indigo-600 rounded-xl hover:bg-indigo-700 shadow-lg shadow-indigo-100 active:scale-[0.98] transition-all"
+            disabled={submitting}
+            className="px-8 py-2.5 text-sm font-semibold text-white bg-indigo-600 rounded-xl hover:bg-indigo-700 shadow-lg shadow-indigo-100 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed transition-all"
           >
-            Add Employee
+            {submitting ? 'Saving...' : 'Add Employee'}
           </button>
         </div>
       </div>

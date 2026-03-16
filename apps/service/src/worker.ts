@@ -9,10 +9,11 @@ export interface Env {
 const yoga = createYoga<Env>({
   schema,
   graphqlEndpoint: '/api/graphql',
+  maskedErrors: false,
   cors: {
     origin: '*',
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
-  }
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  },
 });
 
 const corsHeaders = {
@@ -27,25 +28,31 @@ async function handleUpload(request: Request, env: Env): Promise<Response> {
     const file = formData.get('file');
 
     if (!(file instanceof File)) {
-      return new Response('Missing file', { status: 400, headers: corsHeaders });
+      return new Response('Missing file', {
+        status: 400,
+        headers: corsHeaders,
+      });
     }
 
     const objectName = `uploads/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
 
     await env.BUCKET.put(objectName, file.stream(), {
-      httpMetadata: { contentType: file.type }
+      httpMetadata: { contentType: file.type },
     });
 
-    return new Response(JSON.stringify({
-      key: objectName,
-      url: `/api/images/${objectName}`
-    }), {
-      status: 200,
-      headers: {
-        ...corsHeaders,
-        'Content-Type': 'application/json'
-      }
-    });
+    return new Response(
+      JSON.stringify({
+        key: objectName,
+        url: `/api/images/${objectName}`,
+      }),
+      {
+        status: 200,
+        headers: {
+          ...corsHeaders,
+          'Content-Type': 'application/json',
+        },
+      },
+    );
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'Server Error';
     return new Response(message, { status: 500, headers: corsHeaders });
