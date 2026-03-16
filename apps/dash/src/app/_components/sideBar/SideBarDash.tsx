@@ -22,7 +22,7 @@ import React from 'react';
 
 const menuItems = [
   { path: '/', label: 'Dashboard', icon: LayoutDashboard },
-  { path: '/Employees', label: 'Employees', icon: Users },
+  { path: '/employees', label: 'Employees', icon: Users },
   { path: '/benefitManagement', label: 'Benefits', icon: Gift },
   { path: '/requestManagement', label: 'Requests', icon: FileInput },
   { path: '/contracts', label: 'Contracts', icon: FileText },
@@ -80,7 +80,7 @@ export const SideBarDash = () => {
               }}
             />
             <div className="">
-              <p className="text-lg leading-6 font-medium text-[#137FEC] ">
+              <p className="text-base leading-6 font-semibold  ">
                 {user?.firstName} {user?.lastName?.charAt(0)}.
               </p>
               <p className="text-sm leading-5 font-normal text-[#475569]">
