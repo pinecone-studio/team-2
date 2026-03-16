@@ -1,0 +1,15 @@
+mutation UpdateBenefit($id: Int!, $input: UpdateBenefitInput!) {
+  updateBenefit(id: $id, input: $input) {
+    id
+    name
+    category
+    description
+    subsidyPercent
+    vendorName
+    requiresContract
+    isActive
+    r2ObjectKey
+    contractUploadedAt
+    contractExpiryDate
+  }
+}

@@ -1,0 +1,3 @@
+mutation DeleteBenefit($id: Int!) {
+  deleteBenefit(id: $id)
+}

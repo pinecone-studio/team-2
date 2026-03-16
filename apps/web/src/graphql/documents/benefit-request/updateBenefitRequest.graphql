@@ -1,0 +1,9 @@
+mutation UpdateBenefitRequest($id: Int!, $input: UpdateBenefitRequestInput!) {
+  updateBenefitRequest(id: $id, input: $input) {
+    id
+    employeeId
+    benefitId
+    status
+    createdAt
+  }
+}

@@ -1,0 +1,9 @@
+mutation CreateBenefitRequest($input: CreateBenefitRequestInput!) {
+  createBenefitRequest(input: $input) {
+    id
+    employeeId
+    benefitId
+    status
+    createdAt
+  }
+}

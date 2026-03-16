@@ -1,0 +1,11 @@
+query GetEligibilityRules {
+  eligibilityRules {
+    id
+    benefitId
+    ruleType
+    operator
+    value
+    errorMessage
+    isActive
+  }
+}
