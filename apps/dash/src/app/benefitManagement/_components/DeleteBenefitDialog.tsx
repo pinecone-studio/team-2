@@ -1,3 +1,5 @@
+'use client';
+
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -9,13 +11,44 @@ import {
   AlertDialogTrigger,
   Button,
 } from '@team/source-ui';
-import { Trash2 } from 'lucide-react';
-import React from 'react';
+import {
+  DeleteBenefitDocument,
+  GetBenefitsQuery,
+} from 'apps/dash/src/graphql/generated/graphql';
+import { gqlRequest } from 'apps/dash/src/graphql/helpers/graphql-client';
 
-export const DeleteBenefitDialog = () => {
+import { Trash2 } from 'lucide-react';
+import { useState } from 'react';
+
+type Benefit = GetBenefitsQuery['benefits'][number];
+
+type Props = {
+  benefit: Benefit;
+  onDeleted: (id: number) => void;
+};
+
+export const DeleteBenefitDialog = ({ benefit, onDeleted }: Props) => {
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  async function handleDelete() {
+    setLoading(true);
+    setError('');
+    try {
+      await gqlRequest(DeleteBenefitDocument, { id: benefit.id });
+      onDeleted(benefit.id);
+      setOpen(false);
+    } catch (e: any) {
+      setError(e.message ?? 'Failed to delete benefit');
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <div>
-      <AlertDialog>
+      <AlertDialog open={open} onOpenChange={setOpen}>
         <AlertDialogTrigger asChild>
           <Button
             variant="ghost"
@@ -29,14 +62,20 @@ export const DeleteBenefitDialog = () => {
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete your
-              benefit.
+              This will permanently delete <strong>{benefit.name}</strong>. This
+              action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
+          {error && <p className="text-red-500 text-sm px-1">{error}</p>}
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-
-            <Button variant={'destructive'}>Delete</Button>
+            <AlertDialogCancel disabled={loading}>Cancel</AlertDialogCancel>
+            <Button
+              variant="destructive"
+              onClick={handleDelete}
+              disabled={loading}
+            >
+              {loading ? 'Deleting...' : 'Delete'}
+            </Button>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

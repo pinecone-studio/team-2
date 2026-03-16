@@ -1,15 +1,44 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
-import { benefits } from '../lib/mockdata';
 import { BenefitCard, BenefitFilter } from './_components';
+import {
+  GetBenefitsDocument,
+  GetBenefitsQuery,
+} from '../../graphql/generated/graphql';
+import { gqlRequest } from '../../graphql/helpers/graphql-client';
 
 export default function BenefitsCardDashboard() {
   const [filter, setFilter] = useState('All');
+  const [benefits, setBenefits] = useState<GetBenefitsQuery['benefits']>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    async function fetchBenefits() {
+      setLoading(true);
+      setError('');
+      try {
+        const data = await gqlRequest(GetBenefitsDocument);
+        setBenefits(data.benefits);
+      } catch (e: any) {
+        setError(e.message ?? 'Failed to fetch benefits');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchBenefits();
+  }, []);
 
   const filteredBenefits =
-    filter === 'All' ? benefits : benefits.filter((b) => b.status === filter);
+    filter === 'All'
+      ? benefits
+      : benefits.filter((b) => b.isActive === (filter === 'Active'));
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p style={{ color: 'red' }}>{error}</p>;
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 ">
