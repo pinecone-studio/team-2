@@ -1,4 +1,11 @@
 export const employeeTypeDefs = /* GraphQL */ `
+  enum EmploymentStatus {
+    ACTIVE
+    PROBATION
+    LEAVE
+    TERMINATED
+  }
+
   type Employee {
     id: Int!
     email: String
@@ -6,7 +13,7 @@ export const employeeTypeDefs = /* GraphQL */ `
     employeeRole: String
     department: String
     responsibilityLevel: String
-    employmentStatus: String
+    employmentStatus: EmploymentStatus
     hireDate: String
     okrSubmitted: Boolean
     lateArrivalCount: Int
@@ -20,7 +27,7 @@ export const employeeTypeDefs = /* GraphQL */ `
     employeeRole: String
     department: String
     responsibilityLevel: String
-    employmentStatus: String
+    employmentStatus: EmploymentStatus
     hireDate: String
     okrSubmitted: Boolean
     lateArrivalCount: Int
@@ -34,7 +41,7 @@ export const employeeTypeDefs = /* GraphQL */ `
     employeeRole: String
     department: String
     responsibilityLevel: String
-    employmentStatus: String
+    employmentStatus: EmploymentStatus
     hireDate: String
     okrSubmitted: Boolean
     lateArrivalCount: Int
