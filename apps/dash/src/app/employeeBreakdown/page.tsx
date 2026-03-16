@@ -3,16 +3,41 @@
 import { PieChart, Pie, Cell } from 'recharts';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@team/source-ui';
-
-const data = [
-  { name: 'Engineering', value: 42, color: '#3B82F6' },
-  { name: 'Product', value: 20, color: '#10B981' },
-  { name: 'Design', value: 17, color: '#8B5CF6' },
-  { name: 'Marketing', value: 14, color: '#F59E0B' },
-  { name: 'HR', value: 7, color: '#6B7280' },
-];
+import { useEmployeeBreakdown } from './hooks/useEmployeeBreakdown';
 
 export function EmployeeBreakdown() {
+  const { data, loading, error } = useEmployeeBreakdown();
+
+  if (loading) {
+    return (
+      <Card className="w-[538px] h-[389px] rounded-xl">
+        <CardHeader>
+          <CardTitle>Employee Breakdown</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex h-full items-center justify-center text-sm text-gray-500">
+            Loading...
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (error) {
+    return (
+      <Card className="w-[538px] h-[389px] rounded-xl">
+        <CardHeader>
+          <CardTitle>Employee Breakdown</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex h-full items-center justify-center text-sm text-red-500">
+            {error}
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <Card className="w-[538px] h-[389px] rounded-xl">
       <CardHeader>
@@ -38,7 +63,6 @@ export function EmployeeBreakdown() {
             </Pie>
           </PieChart>
 
-          {/* Legend */}
           <div className="space-y-2 w-[453px] h-[132px]">
             {data.map((item) => (
               <div
