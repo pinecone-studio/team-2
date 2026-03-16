@@ -1,46 +1,55 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import { Badge } from '@team/source-ui';
 import { AddBenefitDialog } from './_components/AddBenefitDialog';
 import { EditBenefitDialog } from './_components/EditBenefitDialog';
 import { DeleteBenefitDialog } from './_components/DeleteBenefitDialog';
+import { BenefitDetailsDialog } from './_components/BenefitDetailsDialog';
+import {
+  GetBenefitsDocument,
+  GetBenefitsQuery,
+} from '../../graphql/generated/graphql';
+import { gqlRequest } from '../../graphql/helpers/graphql-client';
 
-interface Benefit {
-  id: number;
-  name: string;
-  category: string;
-  description: string;
-  subsidyPercent: number;
-  vendorName?: string | null;
-  requiresContract: boolean;
-  isActive: boolean;
-  activeContractId?: number | null;
-}
-
-const benefitsData: Benefit[] = [
-  {
-    id: 1,
-    name: 'Gym Membership',
-    category: 'Health',
-    description: 'Access to premium gym facilities and fitness classes.',
-    subsidyPercent: 50,
-    vendorName: 'PineFit',
-    requiresContract: true,
-    isActive: true,
-    activeContractId: 101,
-  },
-  {
-    id: 3,
-    name: 'Travel to Tokyo',
-    category: 'Travel',
-    description: '30% sale',
-    subsidyPercent: 30,
-    vendorName: 'PineTour',
-    requiresContract: true,
-    isActive: false,
-    activeContractId: 101,
-  },
-];
+type Benefit = GetBenefitsQuery['benefits'][number];
 
 export default function BenefitsManagement() {
+  const [benefits, setBenefits] = useState<Benefit[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    async function fetchBenefits() {
+      setLoading(true);
+      setError('');
+      try {
+        const data = await gqlRequest(GetBenefitsDocument);
+        setBenefits(data.benefits);
+      } catch (e: any) {
+        setError(e.message ?? 'Failed to fetch benefits');
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchBenefits();
+  }, []);
+
+  function handleCreated(benefit: Benefit) {
+    setBenefits((prev) => [benefit, ...prev]);
+  }
+
+  function handleUpdated(updated: Benefit) {
+    setBenefits((prev) => prev.map((b) => (b.id === updated.id ? updated : b)));
+  }
+
+  function handleDeleted(id: number) {
+    setBenefits((prev) => prev.filter((b) => b.id !== id));
+  }
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p className="text-red-500">{error}</p>;
+
   return (
     <div className="w-full min-h-screen bg-[#F9FAFB] p-12">
       {/* Header */}
@@ -53,36 +62,36 @@ export default function BenefitsManagement() {
             Configure and manage company benefits
           </p>
         </div>
-        <AddBenefitDialog />
+        <AddBenefitDialog onCreated={handleCreated} />
       </div>
 
       {/* Table */}
       <div className="max-w-[1215px] mx-auto bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="border-b border-gray-100 ">
+            <tr className="border-b border-gray-100">
               <th className="p-4 pb-1 font-semibold text-[#1E293B] text-xs tracking-wider">
                 Name
               </th>
               <th className="p-4 pb-1 font-semibold text-[#1E293B] text-xs tracking-wider">
                 Category
               </th>
-              <th className="p-4 pb-1 font-semibold text-[#1E293B] text-xs  tracking-wider">
+              <th className="p-4 pb-1 font-semibold text-[#1E293B] text-xs tracking-wider">
                 Vendor
               </th>
-              <th className="p-4 pb-1 font-semibold text-[#1E293B] text-xs  tracking-wider">
+              <th className="p-4 pb-1 font-semibold text-[#1E293B] text-xs tracking-wider">
                 Subsidy
               </th>
-              <th className="p-4 pb-1 font-semibold text-[#1E293B] text-xs  tracking-wider">
+              <th className="p-4 pb-1 font-semibold text-[#1E293B] text-xs tracking-wider">
                 Status
               </th>
-              <th className="p-4 pb-1 font-semibold text-[#1E293B] text-xs  tracking-wider text-center">
+              <th className="p-4 pb-1 font-semibold text-[#1E293B] text-xs tracking-wider text-center">
                 Actions
               </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
-            {benefitsData.map((benefit: Benefit) => (
+            {benefits.map((benefit) => (
               <tr
                 key={benefit.id}
                 className="hover:bg-gray-50/50 transition-colors"
@@ -98,7 +107,7 @@ export default function BenefitsManagement() {
                 <td className="p-4">
                   <Badge
                     variant="secondary"
-                    className="px-[10px] py-1 bg-[#F1F5F9] text-[#475569] px-2.5 py-0.5 rounded-md text-[11px] font-medium border-none shadow-none"
+                    className="bg-[#F1F5F9] text-[#475569] px-2.5 py-0.5 rounded-md text-[11px] font-medium border-none shadow-none"
                   >
                     {benefit.category}
                   </Badge>
@@ -121,11 +130,16 @@ export default function BenefitsManagement() {
                   </span>
                 </td>
                 <td className="p-4">
-                  <div className="flex justify-center gap-1">
-                    {/* <EditBenefitDialog benefit={benefit} /> */}
-                    <EditBenefitDialog />
-
-                    <DeleteBenefitDialog />
+                  <div className="flex justify-center items-center gap-1">
+                    <BenefitDetailsDialog benefit={benefit} />
+                    <EditBenefitDialog
+                      benefit={benefit}
+                      onUpdated={handleUpdated}
+                    />
+                    <DeleteBenefitDialog
+                      benefit={benefit}
+                      onDeleted={handleDeleted}
+                    />
                   </div>
                 </td>
               </tr>
