@@ -37,9 +37,6 @@ export function InputField({
   error,
   required = true,
 }: InputFieldProps) {
-  // Утга бичигдсэн эсэхийг шалгах (саарал эсвэл тод харагдахыг шийднэ)
-  const textColorClass = value ? 'text-gray-900' : 'text-gray-400';
-
   return (
     <div className="flex flex-col gap-1.5">
       <label className="text-sm font-medium text-gray-800">
@@ -49,8 +46,7 @@ export function InputField({
       <div className="relative flex items-center">
         <Icon
           size={14}
-          // Айкон нь бас утга байхгүй үед саарал, утга орвол бага зэрэг тодорч болно
-          className={`absolute left-3 transition-colors ${value ? 'text-gray-400' : 'text-gray-400'} pointer-events-none`}
+          className="absolute left-3 text-gray-400 pointer-events-none"
         />
         <input
           name={name}
@@ -58,7 +54,7 @@ export function InputField({
           value={value}
           onChange={onChange}
           placeholder={placeholder}
-          className={`w-full pl-9 pr-3 py-2.5 border rounded-lg text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 transition-all ${getBorderClass(error)} ${textColorClass}`}
+          className={`w-full pl-9 pr-3 py-2.5 border rounded-lg text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 transition-all ${getBorderClass(error)}`}
         />
       </div>
       <FieldError error={error} />
