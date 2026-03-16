@@ -26,7 +26,7 @@ const menuItems = [
   { path: '/benefitManagement', label: 'Benefits', icon: Gift },
   { path: '/requestManagement', label: 'Requests', icon: FileInput },
   { path: '/contracts', label: 'Contracts', icon: FileText },
-  { path: '/rules', label: 'Rules', icon: FileCheck },
+  // { path: '/rules', label: 'Rules', icon: FileCheck },
   { path: '/settings', label: 'Settings', icon: Settings },
 ];
 
