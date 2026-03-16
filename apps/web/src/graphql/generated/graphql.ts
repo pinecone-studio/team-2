@@ -26,6 +26,7 @@ export type Benefit = {
   name: Scalars['String']['output'];
   r2ObjectKey?: Maybe<Scalars['String']['output']>;
   requiresContract?: Maybe<Scalars['Boolean']['output']>;
+  status?: Maybe<BenefitStatus>;
   subsidyPercent?: Maybe<Scalars['Int']['output']>;
   vendorName?: Maybe<Scalars['String']['output']>;
 };
@@ -36,8 +37,15 @@ export type BenefitRequest = {
   createdAt?: Maybe<Scalars['String']['output']>;
   employeeId: Scalars['Int']['output'];
   id: Scalars['Int']['output'];
-  status?: Maybe<Scalars['String']['output']>;
+  status?: Maybe<RequestStatus>;
 };
+
+export enum BenefitStatus {
+  Active = 'ACTIVE',
+  Eligible = 'ELIGIBLE',
+  Locked = 'LOCKED',
+  Pending = 'PENDING'
+}
 
 export type CreateBenefitInput = {
   category?: InputMaybe<Scalars['String']['input']>;
@@ -48,6 +56,7 @@ export type CreateBenefitInput = {
   name: Scalars['String']['input'];
   r2ObjectKey?: InputMaybe<Scalars['String']['input']>;
   requiresContract?: InputMaybe<Scalars['Boolean']['input']>;
+  status?: InputMaybe<BenefitStatus>;
   subsidyPercent?: InputMaybe<Scalars['Int']['input']>;
   vendorName?: InputMaybe<Scalars['String']['input']>;
 };
@@ -56,7 +65,7 @@ export type CreateBenefitRequestInput = {
   benefitId: Scalars['Int']['input'];
   createdAt?: InputMaybe<Scalars['String']['input']>;
   employeeId: Scalars['Int']['input'];
-  status?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<RequestStatus>;
 };
 
 export type CreateEligibilityRuleInput = {
@@ -74,7 +83,7 @@ export type CreateEmployeeInput = {
   department?: InputMaybe<Scalars['String']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
   employeeRole?: InputMaybe<Scalars['String']['input']>;
-  employmentStatus?: InputMaybe<Scalars['String']['input']>;
+  employmentStatus?: InputMaybe<EmploymentStatus>;
   hireDate?: InputMaybe<Scalars['String']['input']>;
   lateArrivalCount?: InputMaybe<Scalars['Int']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
@@ -100,7 +109,7 @@ export type Employee = {
   department?: Maybe<Scalars['String']['output']>;
   email?: Maybe<Scalars['String']['output']>;
   employeeRole?: Maybe<Scalars['String']['output']>;
-  employmentStatus?: Maybe<Scalars['String']['output']>;
+  employmentStatus?: Maybe<EmploymentStatus>;
   hireDate?: Maybe<Scalars['String']['output']>;
   id: Scalars['Int']['output'];
   lateArrivalCount?: Maybe<Scalars['Int']['output']>;
@@ -108,6 +117,13 @@ export type Employee = {
   okrSubmitted?: Maybe<Scalars['Boolean']['output']>;
   responsibilityLevel?: Maybe<Scalars['String']['output']>;
 };
+
+export enum EmploymentStatus {
+  Active = 'ACTIVE',
+  Leave = 'LEAVE',
+  Probation = 'PROBATION',
+  Terminated = 'TERMINATED'
+}
 
 export type Mutation = {
   __typename?: 'Mutation';
@@ -217,6 +233,13 @@ export type QueryEligibilityRulesByBenefitArgs = {
   benefitId: Scalars['Int']['input'];
 };
 
+export enum RequestStatus {
+  Approved = 'APPROVED',
+  Cancelled = 'CANCELLED',
+  Pending = 'PENDING',
+  Rejected = 'REJECTED'
+}
+
 export type UpdateBenefitInput = {
   category?: InputMaybe<Scalars['String']['input']>;
   contractExpiryDate?: InputMaybe<Scalars['String']['input']>;
@@ -226,6 +249,7 @@ export type UpdateBenefitInput = {
   name?: InputMaybe<Scalars['String']['input']>;
   r2ObjectKey?: InputMaybe<Scalars['String']['input']>;
   requiresContract?: InputMaybe<Scalars['Boolean']['input']>;
+  status?: InputMaybe<BenefitStatus>;
   subsidyPercent?: InputMaybe<Scalars['Int']['input']>;
   vendorName?: InputMaybe<Scalars['String']['input']>;
 };
@@ -234,7 +258,7 @@ export type UpdateBenefitRequestInput = {
   benefitId?: InputMaybe<Scalars['Int']['input']>;
   createdAt?: InputMaybe<Scalars['String']['input']>;
   employeeId?: InputMaybe<Scalars['Int']['input']>;
-  status?: InputMaybe<Scalars['String']['input']>;
+  status?: InputMaybe<RequestStatus>;
 };
 
 export type UpdateEligibilityRuleInput = {
@@ -252,7 +276,7 @@ export type UpdateEmployeeInput = {
   department?: InputMaybe<Scalars['String']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
   employeeRole?: InputMaybe<Scalars['String']['input']>;
-  employmentStatus?: InputMaybe<Scalars['String']['input']>;
+  employmentStatus?: InputMaybe<EmploymentStatus>;
   hireDate?: InputMaybe<Scalars['String']['input']>;
   lateArrivalCount?: InputMaybe<Scalars['Int']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
@@ -265,7 +289,7 @@ export type CreateBenefitRequestMutationVariables = Exact<{
 }>;
 
 
-export type CreateBenefitRequestMutation = { __typename?: 'Mutation', createBenefitRequest: { __typename?: 'BenefitRequest', id: number, employeeId: number, benefitId: number, status?: string | null, createdAt?: string | null } };
+export type CreateBenefitRequestMutation = { __typename?: 'Mutation', createBenefitRequest: { __typename?: 'BenefitRequest', id: number, employeeId: number, benefitId: number, status?: RequestStatus | null, createdAt?: string | null } };
 
 export type DeleteBenefitRequestMutationVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -277,21 +301,21 @@ export type DeleteBenefitRequestMutation = { __typename?: 'Mutation', deleteBene
 export type GetBenefitRequestsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetBenefitRequestsQuery = { __typename?: 'Query', benefitRequests: Array<{ __typename?: 'BenefitRequest', id: number, employeeId: number, benefitId: number, status?: string | null, createdAt?: string | null }> };
+export type GetBenefitRequestsQuery = { __typename?: 'Query', benefitRequests: Array<{ __typename?: 'BenefitRequest', id: number, employeeId: number, benefitId: number, status?: RequestStatus | null, createdAt?: string | null }> };
 
 export type GetBenefitRequestsByBenefitQueryVariables = Exact<{
   benefitId: Scalars['Int']['input'];
 }>;
 
 
-export type GetBenefitRequestsByBenefitQuery = { __typename?: 'Query', benefitRequestsByBenefit: Array<{ __typename?: 'BenefitRequest', id: number, employeeId: number, benefitId: number, status?: string | null, createdAt?: string | null }> };
+export type GetBenefitRequestsByBenefitQuery = { __typename?: 'Query', benefitRequestsByBenefit: Array<{ __typename?: 'BenefitRequest', id: number, employeeId: number, benefitId: number, status?: RequestStatus | null, createdAt?: string | null }> };
 
 export type GetBenefitRequestsByEmployeeQueryVariables = Exact<{
   employeeId: Scalars['Int']['input'];
 }>;
 
 
-export type GetBenefitRequestsByEmployeeQuery = { __typename?: 'Query', benefitRequestsByEmployee: Array<{ __typename?: 'BenefitRequest', id: number, employeeId: number, benefitId: number, status?: string | null, createdAt?: string | null }> };
+export type GetBenefitRequestsByEmployeeQuery = { __typename?: 'Query', benefitRequestsByEmployee: Array<{ __typename?: 'BenefitRequest', id: number, employeeId: number, benefitId: number, status?: RequestStatus | null, createdAt?: string | null }> };
 
 export type UpdateBenefitRequestMutationVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -299,7 +323,7 @@ export type UpdateBenefitRequestMutationVariables = Exact<{
 }>;
 
 
-export type UpdateBenefitRequestMutation = { __typename?: 'Mutation', updateBenefitRequest: { __typename?: 'BenefitRequest', id: number, employeeId: number, benefitId: number, status?: string | null, createdAt?: string | null } };
+export type UpdateBenefitRequestMutation = { __typename?: 'Mutation', updateBenefitRequest: { __typename?: 'BenefitRequest', id: number, employeeId: number, benefitId: number, status?: RequestStatus | null, createdAt?: string | null } };
 
 export type CreateBenefitMutationVariables = Exact<{
   input: CreateBenefitInput;
@@ -367,7 +391,7 @@ export type CreateEmployeeMutationVariables = Exact<{
 }>;
 
 
-export type CreateEmployeeMutation = { __typename?: 'Mutation', createEmployee: { __typename?: 'Employee', id: number, email?: string | null, name?: string | null, employeeRole?: string | null, department?: string | null, responsibilityLevel?: string | null, employmentStatus?: string | null, hireDate?: string | null, okrSubmitted?: boolean | null, lateArrivalCount?: number | null, createdAt?: string | null, clerkUserId?: string | null } };
+export type CreateEmployeeMutation = { __typename?: 'Mutation', createEmployee: { __typename?: 'Employee', id: number, email?: string | null, name?: string | null, employeeRole?: string | null, department?: string | null, responsibilityLevel?: string | null, employmentStatus?: EmploymentStatus | null, hireDate?: string | null, okrSubmitted?: boolean | null, lateArrivalCount?: number | null, createdAt?: string | null, clerkUserId?: string | null } };
 
 export type DeleteEmployeeMutationVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -379,7 +403,7 @@ export type DeleteEmployeeMutation = { __typename?: 'Mutation', deleteEmployee: 
 export type GetEmployeesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetEmployeesQuery = { __typename?: 'Query', employees: Array<{ __typename?: 'Employee', id: number, email?: string | null, name?: string | null, employeeRole?: string | null, department?: string | null, responsibilityLevel?: string | null, employmentStatus?: string | null, hireDate?: string | null, okrSubmitted?: boolean | null, lateArrivalCount?: number | null, createdAt?: string | null, clerkUserId?: string | null }> };
+export type GetEmployeesQuery = { __typename?: 'Query', employees: Array<{ __typename?: 'Employee', id: number, email?: string | null, name?: string | null, employeeRole?: string | null, department?: string | null, responsibilityLevel?: string | null, employmentStatus?: EmploymentStatus | null, hireDate?: string | null, okrSubmitted?: boolean | null, lateArrivalCount?: number | null, createdAt?: string | null, clerkUserId?: string | null }> };
 
 export type UpdateEmployeeMutationVariables = Exact<{
   id: Scalars['Int']['input'];
@@ -387,7 +411,7 @@ export type UpdateEmployeeMutationVariables = Exact<{
 }>;
 
 
-export type UpdateEmployeeMutation = { __typename?: 'Mutation', updateEmployee: { __typename?: 'Employee', id: number, email?: string | null, name?: string | null, employeeRole?: string | null, department?: string | null, responsibilityLevel?: string | null, employmentStatus?: string | null, hireDate?: string | null, okrSubmitted?: boolean | null, lateArrivalCount?: number | null, createdAt?: string | null, clerkUserId?: string | null } };
+export type UpdateEmployeeMutation = { __typename?: 'Mutation', updateEmployee: { __typename?: 'Employee', id: number, email?: string | null, name?: string | null, employeeRole?: string | null, department?: string | null, responsibilityLevel?: string | null, employmentStatus?: EmploymentStatus | null, hireDate?: string | null, okrSubmitted?: boolean | null, lateArrivalCount?: number | null, createdAt?: string | null, clerkUserId?: string | null } };
 
 
 export const CreateBenefitRequestDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"CreateBenefitRequest"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"CreateBenefitRequestInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createBenefitRequest"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"input"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"employeeId"}},{"kind":"Field","name":{"kind":"Name","value":"benefitId"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]}}]} as unknown as DocumentNode<CreateBenefitRequestMutation, CreateBenefitRequestMutationVariables>;

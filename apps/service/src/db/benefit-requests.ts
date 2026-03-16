@@ -11,8 +11,8 @@ export const benefitRequests = sqliteTable('benefit_requests', {
 
   benefitId: integer('benefit_id')
     .notNull()
-    .references(() => benefits.id),
+    .references(() => benefits.id, { onDelete: 'cascade' }),
 
-  status: text('status').default('pending'),
+  status: text('status').default('PENDING'),
   createdAt: text('created_at').$defaultFn(() => new Date().toISOString()),
 });

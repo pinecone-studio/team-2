@@ -14,6 +14,7 @@ import { gqlRequest } from 'apps/dash/src/graphql/helpers/graphql-client';
 import {
   UpdateBenefitRequestDocument,
   type GetBenefitRequestsQuery,
+  RequestStatus,
 } from 'apps/dash/src/graphql/generated/graphql';
 import { CircleCheck } from 'lucide-react';
 import { useState } from 'react';
@@ -36,7 +37,7 @@ export const ApproveRequestDialog = ({ request, onUpdated }: Props) => {
     try {
       const data = await gqlRequest(UpdateBenefitRequestDocument, {
         id: request.id,
-        input: { status: 'approved' },
+        input: { status: RequestStatus.Approved },
       });
       onUpdated(data.updateBenefitRequest);
       setOpen(false);

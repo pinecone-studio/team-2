@@ -2,10 +2,31 @@ import { benefitRequests, employees, benefits } from '../../../db/schema';
 import { getDB } from '../../../db';
 import { eq } from 'drizzle-orm';
 
+type BenefitRequestInput = {
+  employeeId: number;
+  benefitId: number;
+  status?: string | null;
+  createdAt?: string;
+};
+
+const normalizeStatus = (value?: string | null) => {
+  if (!value) return value;
+  const v = value.toUpperCase();
+  if (
+    v === 'PENDING' ||
+    v === 'APPROVED' ||
+    v === 'REJECTED' ||
+    v === 'CANCELLED'
+  ) {
+    return v;
+  }
+  return value;
+};
+
 export const benefitRequestMutationResolvers = {
   createBenefitRequest: async (
     _: unknown,
-    args: { input: any },
+    args: { input: BenefitRequestInput },
     ctx: { DB: D1Database },
   ) => {
     const db = getDB(ctx);
@@ -30,13 +51,24 @@ export const benefitRequestMutationResolvers = {
       throw new Error(`Benefit not found: ${args.input.benefitId}`);
     }
 
+    const createInput = {
+      ...args.input,
+      ...(args.input.status != null
+        ? { status: normalizeStatus(args.input.status) }
+        : {}),
+    };
+
     const [created] = await db
       .insert(benefitRequests)
-      .values(args.input)
+      .values(createInput)
       .returning();
 
     if (!created) throw new Error('BenefitRequest insert failed');
-    return created;
+
+    return {
+      ...created,
+      status: normalizeStatus(created.status),
+    };
   },
 
   deleteBenefitRequest: async (
@@ -50,6 +82,7 @@ export const benefitRequestMutationResolvers = {
       .where(eq(benefitRequests.id, args.id));
     return Number(result.meta.changes ?? 0) > 0;
   },
+
   updateBenefitRequest: async (
     _: unknown,
     args: {
@@ -88,9 +121,17 @@ export const benefitRequestMutationResolvers = {
         throw new Error(`Benefit not found: ${args.input.benefitId}`);
       }
     }
+
+    const updateInput = {
+      ...args.input,
+      ...(args.input.status != null
+        ? { status: normalizeStatus(args.input.status) }
+        : {}),
+    };
+
     await db
       .update(benefitRequests)
-      .set(args.input)
+      .set(updateInput)
       .where(eq(benefitRequests.id, args.id));
 
     const [updated] = await db
@@ -100,6 +141,10 @@ export const benefitRequestMutationResolvers = {
       .limit(1);
 
     if (!updated) throw new Error(`BenefitRequest not found: ${args.id}`);
-    return updated;
+
+    return {
+      ...updated,
+      status: normalizeStatus(updated.status),
+    };
   },
 };
