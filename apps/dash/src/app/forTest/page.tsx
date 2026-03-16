@@ -7,6 +7,7 @@ import {
   GetEmployeesDocument,
   type CreateEmployeeMutationVariables,
   type GetEmployeesQuery,
+  EmploymentStatus,
 } from '../../graphql/generated/graphql';
 
 export default function Page() {
@@ -22,7 +23,7 @@ export default function Page() {
     employeeRole: '',
     department: '',
     responsibilityLevel: 'L1',
-    employmentStatus: 'active',
+    employmentStatus: EmploymentStatus.Active,
     hireDate: '',
     okrSubmitted: false,
     lateArrivalCount: 0,
@@ -107,7 +108,9 @@ export default function Page() {
         <input
           placeholder="Employment Status"
           value={form.employmentStatus ?? ''}
-          onChange={(e) => update('employmentStatus', e.target.value)}
+          onChange={(e) =>
+            update('employmentStatus', e.target.value as EmploymentStatus)
+          }
         />
         <input
           placeholder="Hire Date (YYYY-MM-DD)"

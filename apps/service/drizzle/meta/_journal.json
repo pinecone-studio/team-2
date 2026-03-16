@@ -29,6 +29,20 @@
       "when": 1773381198119,
       "tag": "0003_silky_deathstrike",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1773649460613,
+      "tag": "0004_bumpy_green_goblin",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1773655395076,
+      "tag": "0005_puzzling_felicia_hardy",
+      "breakpoints": true
     }
   ]
 }

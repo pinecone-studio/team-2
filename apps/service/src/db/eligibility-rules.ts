@@ -6,7 +6,7 @@ export const eligibilityRules = sqliteTable('eligibility_rules', {
 
   benefitId: integer('benefit_id')
     .notNull()
-    .references(() => benefits.id),
+    .references(() => benefits.id, { onDelete: 'cascade' }),
 
   ruleType: text('rule_type'),
   errorMessage: text('error_message'),

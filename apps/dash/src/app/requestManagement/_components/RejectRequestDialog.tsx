@@ -15,6 +15,7 @@ import { gqlRequest } from 'apps/dash/src/graphql/helpers/graphql-client';
 import {
   UpdateBenefitRequestDocument,
   type GetBenefitRequestsQuery,
+  RequestStatus,
 } from 'apps/dash/src/graphql/generated/graphql';
 import { XCircle } from 'lucide-react';
 import { useState } from 'react';
@@ -37,7 +38,7 @@ export const RejectRequestDialog = ({ request, onUpdated }: Props) => {
     try {
       const data = await gqlRequest(UpdateBenefitRequestDocument, {
         id: request.id,
-        input: { status: 'rejected' },
+        input: { status: RequestStatus.Rejected },
       });
       onUpdated(data.updateBenefitRequest);
       setOpen(false);

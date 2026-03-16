@@ -36,6 +36,7 @@ import {
   type GetBenefitRequestsQuery,
   type GetBenefitsQuery,
   type GetEmployeesQuery,
+  RequestStatus,
 } from 'apps/dash/src/graphql/generated/graphql';
 import { gqlRequest } from 'apps/dash/src/graphql/helpers/graphql-client';
 
@@ -78,13 +79,13 @@ const RequestManagementPage = () => {
   }
 
   const activeRequests = requests.filter(
-    (r) => r.status?.toLowerCase() === 'pending',
+    (r) => r.status === RequestStatus.Pending,
   );
 
   const processedRequests = requests.filter(
     (r) =>
-      r.status?.toLowerCase() === 'approved' ||
-      r.status?.toLowerCase() === 'rejected',
+      r.status === RequestStatus.Approved ||
+      r.status === RequestStatus.Rejected,
   );
 
   if (loading) return <p>Loading...</p>;

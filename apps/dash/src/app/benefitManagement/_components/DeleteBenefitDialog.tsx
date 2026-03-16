@@ -35,8 +35,17 @@ export const DeleteBenefitDialog = ({ benefit, onDeleted }: Props) => {
   async function handleDelete() {
     setLoading(true);
     setError('');
+
     try {
-      await gqlRequest(DeleteBenefitDocument, { id: benefit.id });
+      const data = await gqlRequest(DeleteBenefitDocument, { id: benefit.id });
+
+      if (!data.deleteBenefit) {
+        setError(
+          'This benefit cannot be deleted because it is still linked to requests or eligibility rules.',
+        );
+        return;
+      }
+
       onDeleted(benefit.id);
       setOpen(false);
     } catch (e: any) {

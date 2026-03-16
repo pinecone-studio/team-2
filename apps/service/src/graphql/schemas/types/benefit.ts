@@ -1,4 +1,11 @@
 export const benefitTypeDefs = /* GraphQL */ `
+  enum BenefitStatus {
+    ACTIVE
+    ELIGIBLE
+    LOCKED
+    PENDING
+  }
+
   type Benefit {
     id: Int!
     name: String!
@@ -8,6 +15,7 @@ export const benefitTypeDefs = /* GraphQL */ `
     vendorName: String
     requiresContract: Boolean
     isActive: Boolean
+    status: BenefitStatus
     r2ObjectKey: String
     contractUploadedAt: String
     contractExpiryDate: String
@@ -21,6 +29,7 @@ export const benefitTypeDefs = /* GraphQL */ `
     vendorName: String
     requiresContract: Boolean
     isActive: Boolean
+    status: BenefitStatus
     r2ObjectKey: String
     contractUploadedAt: String
     contractExpiryDate: String
@@ -34,6 +43,7 @@ export const benefitTypeDefs = /* GraphQL */ `
     vendorName: String
     requiresContract: Boolean
     isActive: Boolean
+    status: BenefitStatus
     r2ObjectKey: String
     contractUploadedAt: String
     contractExpiryDate: String
