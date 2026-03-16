@@ -1,8 +1,12 @@
 import React from 'react';
-import BenefitsCardDashboard from '../benefitsCardDashboard/page';
+import MyBenefitsDashboard from './_components/MyBenefitsDashboard';
 
 const MyBenefits = () => {
-  return <div><BenefitsCardDashboard/></div>;
+  return (
+    <div>
+      <MyBenefitsDashboard />
+    </div>
+  );
 };
 
 export default MyBenefits;
