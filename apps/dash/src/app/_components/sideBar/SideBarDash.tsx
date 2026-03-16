@@ -9,7 +9,6 @@ import {
   SidebarMenuButton,
 } from '@team/source-ui';
 import {
-  FileCheck,
   FileInput,
   FileText,
   Gift,

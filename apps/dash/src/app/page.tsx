@@ -1,9 +1,9 @@
 'use client';
 import { AttendanceTrendChart } from './attendanceTrendChart/page';
 import { EmployeeBreakdown } from './employeeBreakdown/_components/EmployeeBreakdownChart';
-import { ProcessedRequests } from './requestManagement/_components';
 import { Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { ProcessedRequestsStandalone } from './requestManagement/_components/ProcessedRequestsStandalone';
 
 export default function Page() {
   const router = useRouter();
@@ -35,7 +35,7 @@ export default function Page() {
               <span className="font-semibold text-sm">Add Employee</span>
             </button>
           </div>
-          <ProcessedRequests />
+          <ProcessedRequestsStandalone />
         </div>
       </div>
     </div>
