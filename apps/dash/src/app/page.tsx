@@ -28,7 +28,7 @@ export default function Page() {
           <div className="flex justify-between items-center">
             <h1 className="text-xl font-bold">Recent Requests</h1>
             <button
-              onClick={() => router.push('./Employees')}
+              onClick={() => router.push('./employees')}
               className="bg-[#155DFC] hover:bg-[#1259f1] text-white  px-4 py-2  rounded-xl flex items-center justify-center gap-2 h-10"
             >
               <Plus />

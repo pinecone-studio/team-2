@@ -96,7 +96,7 @@ export default function Employees() {
           <button
             type="button"
             onClick={handleDemo}
-            className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-indigo-400 bg-white border border-indigo-200 rounded-lg hover:bg-indigo-50 hover:border-indigo-300 transition-all shadow-sm active:scale-95"
+            className="flex items-center gap-2 px-4 py-2 text-sm font-semibold bg-white  rounded-lg hover:bg-indigo-50 hover:border-indigo-300 transition-all active:scale-95"
           >
             {/* <Zap size={14} className="fill-indigo-500" /> */}
             Demo Button
