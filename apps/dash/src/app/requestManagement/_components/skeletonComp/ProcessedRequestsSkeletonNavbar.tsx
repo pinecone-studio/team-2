@@ -61,10 +61,14 @@ export function ProcessedRequestsSkeletonNavbar() {
     <div className="w-full min-h-screen bg-[#F9FAFB] py-8">
       <div className="max-w-[1215px] mx-auto">
         <div className="flex flex-col justify-start items-start">
-          {/* Page header */}
+          {/* Real header, no skeleton */}
           <div className="flex flex-col mb-8">
-            <Skeleton className="h-8 w-56" />
-            <Skeleton className="h-4 w-80 mt-1" />
+            <h1 className="text-[#0F172A] text-2xl font-bold tracking-tight">
+              Request Management
+            </h1>
+            <p className="text-[#64748B] text-sm mt-1">
+              Review and process employee benefit requests
+            </p>
           </div>
 
           {/* Tables */}
