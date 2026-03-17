@@ -1,9 +1,8 @@
 import './global.css';
 import { ClerkProvider } from '@clerk/nextjs';
-// import { auth } from '@clerk/nextjs/server';
-// import { Header } from './_components/Header';
+
 import { SidebarProvider } from '@team/source-ui';
-import { SideBarDash } from './_components/sideBar/SideBarDash';
+import { TopNavBar } from './_components/navBar/TopNavBar';
 
 export const metadata = {
   title: 'Welcome to dash',
@@ -22,9 +21,12 @@ export default async function RootLayout({
       <html suppressHydrationWarning lang="en">
         <body>
           <SidebarProvider>
-            <SideBarDash />
-            {/* {userId && <Header />} */}
-            {children}
+            <div className=" h-screen bg-gray-50">
+              <TopNavBar />
+              <main className="flex-1 overflow-y-auto p-8 text-gray-900">
+                {children}
+              </main>
+            </div>
           </SidebarProvider>
         </body>
       </html>
