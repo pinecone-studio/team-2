@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import {
   FileText,
@@ -6,7 +8,7 @@ import {
   Clock,
   CheckSquare,
   AlertCircle,
-} from 'lucide-react'; // Lucide icons ашиглав
+} from 'lucide-react';
 
 const QuickActions = () => {
   const timelineEvents = [
@@ -15,7 +17,7 @@ const QuickActions = () => {
       title: 'Remote Work Approved',
       description: 'Your remote work request has been approved for 3 days.',
       time: '2 hours ago',
-      icon: <CheckCircle2 className="w-4 h-4 text-emerald-500" />,
+      icon: <CheckCircle2 className="w-5 h-5 text-emerald-500" />,
       bgColor: 'bg-emerald-50',
     },
     {
@@ -23,7 +25,7 @@ const QuickActions = () => {
       title: 'Travel Subsidy Pending',
       description: 'Awaiting manager pre-approval for conference travel.',
       time: '1 day ago',
-      icon: <Clock className="w-4 h-4 text-amber-500" />,
+      icon: <Clock className="w-5 h-5 text-amber-500" />,
       bgColor: 'bg-amber-50',
     },
     {
@@ -31,7 +33,7 @@ const QuickActions = () => {
       title: 'PineFit Contract Signed',
       description: 'You accepted the gym membership contract.',
       time: '3 days ago',
-      icon: <CheckSquare className="w-4 h-4 text-indigo-500" />,
+      icon: <CheckSquare className="w-5 h-5 text-indigo-500" />,
       bgColor: 'bg-indigo-50',
     },
     {
@@ -39,65 +41,68 @@ const QuickActions = () => {
       title: 'OKR Deadline Approaching',
       description: 'Q1 2025 OKR submission due in 5 days.',
       time: '5 days ago',
-      icon: <AlertCircle className="w-4 h-4 text-pink-500" />,
+      icon: <AlertCircle className="w-5 h-5 text-pink-500" />,
       bgColor: 'bg-pink-50',
     },
   ];
 
   return (
-    <div className="w-full max-w-[340px] flex flex-col gap-5">
-      <h2 className="text-[18px] font-bold text-gray-800 ml-1">
+    <div className="w-full max-w-[400px] flex flex-col gap-6">
+      {/* Header - Montserrat 18px */}
+      <h2 className="text-[#000] font-montserrat text-[18px] font-semibold leading-normal ml-1">
         Quick Actions
       </h2>
 
-      {/* Дээд талын 2 жижиг карт */}
-      <div className="grid grid-cols-2 gap-4">
-        <button className="flex flex-col items-start p-5 bg-white/70 backdrop-blur-md border border-white rounded-[24px] shadow-sm hover:shadow-md transition-all text-left group">
-          <div className="p-2 bg-orange-50 rounded-lg mb-3 group-hover:bg-orange-100 transition-colors">
-            <FileText className="w-5 h-5 text-orange-500" />
+      {/* Action Buttons Grid - Томруулсан хувилбар */}
+      <div className="grid grid-cols-2 gap-5">
+        <button className="flex flex-col items-start p-7 bg-white/70 backdrop-blur-md border border-[rgba(217,217,217,0)] rounded-[16px] shadow-[0_4px_6px_0_rgba(0,0,0,0.09)] hover:shadow-md transition-all text-left group min-h-[170px]">
+          <div className="p-3 bg-orange-50 rounded-xl mb-4 group-hover:bg-orange-100 transition-colors">
+            <FileText className="w-6 h-6 text-orange-500" />
           </div>
-          <span className="text-[14px] font-bold text-gray-800">
+          <span className="text-[#000] font-montserrat text-[15px] font-semibold leading-normal">
             View Contracts
           </span>
-          <p className="text-[11px] text-gray-500 mt-1 leading-tight">
+          <p className="text-[#717182] font-montserrat text-[12px] font-semibold leading-normal mt-2">
             Review your accepted contracts
           </p>
         </button>
 
-        <button className="flex flex-col items-start p-5 bg-white/70 backdrop-blur-md border border-white rounded-[24px] shadow-sm hover:shadow-md transition-all text-left group">
-          <div className="p-2 bg-pink-50 rounded-lg mb-3 group-hover:bg-pink-100 transition-colors">
-            <HelpCircle className="w-5 h-5 text-pink-400" />
+        <button className="flex flex-col items-start p-7 bg-white/70 backdrop-blur-md border border-[rgba(217,217,217,0)] rounded-[16px] shadow-[0_4px_6px_0_rgba(0,0,0,0.09)] hover:shadow-md transition-all text-left group min-h-[170px]">
+          <div className="p-3 bg-pink-50 rounded-xl mb-4 group-hover:bg-pink-100 transition-colors">
+            <HelpCircle className="w-6 h-6 text-pink-400" />
           </div>
-          <span className="text-[14px] font-bold text-gray-800">Get Help</span>
-          <p className="text-[11px] text-gray-500 mt-1 leading-tight">
+          <span className="text-[#000] font-montserrat text-[15px] font-semibold leading-normal">
+            Get Help
+          </span>
+          <p className="text-[#717182] font-montserrat text-[12px] font-semibold leading-normal mt-2">
             Contact HR support
           </p>
         </button>
       </div>
 
-      {/* Timeline Карт */}
-      <div className="bg-white/70 backdrop-blur-md border border-white rounded-[28px] p-6 shadow-sm">
-        <div className="relative flex flex-col gap-8">
-          {/* Босоо зураас */}
-          <div className="absolute left-[15px] top-2 bottom-2 w-[1px] bg-gray-100" />
+      {/* Timeline Card - Илүү уудам padding-тай */}
+      <div className="bg-white/70 backdrop-blur-md border border-[rgba(217,217,217,0)] rounded-[16px] p-8 shadow-[0_4px_6px_0_rgba(0,0,0,0.09)]">
+        <div className="relative flex flex-col gap-9">
+          {/* Vertical Line */}
+          <div className="absolute left-[19px] top-2 bottom-2 w-[1px] bg-gray-100/80" />
 
           {timelineEvents.map((event) => (
-            <div key={event.id} className="relative flex items-start pl-10">
+            <div key={event.id} className="relative flex items-start pl-12">
               {/* Icon Circle */}
               <div
-                className={`absolute left-0 p-2 rounded-full z-10 ${event.bgColor} ring-4 ring-white/50`}
+                className={`absolute left-0 p-2.5 rounded-full z-10 ${event.bgColor} shadow-sm`}
               >
                 {event.icon}
               </div>
 
-              <div className="flex flex-col">
-                <h4 className="text-[13px] font-bold text-gray-800 leading-none">
+              <div className="flex flex-col pt-0.5">
+                <h4 className="text-[#000] font-montserrat text-[14px] font-semibold leading-normal">
                   {event.title}
                 </h4>
-                <p className="text-[11px] text-gray-500 mt-1 leading-snug">
+                <p className="text-[rgba(0,0,0,0.60)] font-montserrat text-[12px] font-medium leading-normal">
                   {event.description}
                 </p>
-                <span className="text-[10px] text-gray-400 mt-1.5">
+                <span className="text-[rgba(0,0,0,0.60)] font-montserrat text-[12px] font-normal leading-normal">
                   {event.time}
                 </span>
               </div>
@@ -106,21 +111,21 @@ const QuickActions = () => {
         </div>
       </div>
 
-      {/* Доод талын Help & Support сурталчилгааны хэсэг */}
-      <div className="mt-2 p-6 bg-gradient-to-br from-white/80 to-emerald-50/50 backdrop-blur-md border border-white rounded-[28px] relative overflow-hidden">
+      {/* Support Promo Section */}
+      <div className="p-8 bg-gradient-to-br from-white/90 to-emerald-50/50 backdrop-blur-md border border-[rgba(217,217,217,0)] rounded-[16px] shadow-[0_4px_6px_0_rgba(0,0,0,0.09)] relative overflow-hidden">
         <div className="relative z-10">
-          <h4 className="text-[13px] font-bold text-gray-800">
+          <h4 className="text-[#000] font-montserrat text-[15px] font-semibold leading-normal">
             Help & Support
           </h4>
-          <p className="text-[11px] text-gray-500 mt-1 mb-4">
+          <p className="text-[#717182] font-montserrat text-[12px] font-semibold mt-2 mb-6 leading-relaxed">
             Contact HR directly for enrollment questions.
           </p>
-          <button className="w-full py-2.5 bg-white/90 border border-gray-100 rounded-xl text-[12px] font-semibold text-gray-700 hover:bg-white transition-colors shadow-sm">
+          <button className="w-full py-3.5 bg-white/95 border border-gray-100 rounded-xl text-[13px] font-bold text-gray-700 hover:bg-white transition-all shadow-sm active:scale-[0.98]">
             Contact HR
           </button>
         </div>
-        {/* Чимэглэлийн гэрэлтсэн бөмбөлөг */}
-        <div className="absolute -right-4 -top-4 w-16 h-16 bg-emerald-200/30 blur-2xl rounded-full" />
+        {/* Decorative Blur Effect */}
+        <div className="absolute -right-6 -top-6 w-24 h-24 bg-emerald-200/30 blur-3xl rounded-full" />
       </div>
     </div>
   );
