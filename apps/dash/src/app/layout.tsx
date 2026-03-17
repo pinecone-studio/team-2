@@ -3,6 +3,7 @@ import { ClerkProvider } from '@clerk/nextjs';
 
 import { SidebarProvider } from '@team/source-ui';
 import { TopNavBar } from './_components/navBar/TopNavBar';
+import { Toaster } from 'sonner';
 
 export const metadata = {
   title: 'Welcome to dash',
@@ -26,6 +27,7 @@ export default async function RootLayout({
               <main className="flex-1 overflow-y-auto p-8 text-gray-900">
                 {children}
               </main>
+              <Toaster position={'top-center'} />
             </div>
           </SidebarProvider>
         </body>

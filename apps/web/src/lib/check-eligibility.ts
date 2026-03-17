@@ -31,6 +31,7 @@ function getEmployeeValue(
   const field = FIELD_MAP[ruleType.toLowerCase()];
   if (!field) return undefined;
 
+  if (!employee) return undefined;
   return employee[field];
 }
 

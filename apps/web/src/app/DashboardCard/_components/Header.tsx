@@ -1,5 +1,6 @@
 'use client';
 
+import { useUser } from '@clerk/nextjs';
 import { Skeleton } from '@team/source-ui';
 
 type HeaderProps = {
@@ -7,6 +8,7 @@ type HeaderProps = {
 };
 
 export function Header({ isLoading = false }: HeaderProps) {
+  const { user } = useUser();
   if (isLoading) {
     return (
       <div className="flex items-center justify-between mb-6 animate-[pulse_1.5s_infinite]">
@@ -34,14 +36,12 @@ export function Header({ isLoading = false }: HeaderProps) {
   }
 
   return (
-    <div className="flex items-center justify-between mb-6">
+    <div className="flex items-center justify-between mb-[32px]">
       <div>
         <h1 className="text-3xl font-bold text-gray-900">
-          Your Benefits Overview
+          Hello {user?.firstName ?? user?.fullName ?? ''}
         </h1>
-        <p className="text-gray-500 mt-1">
-          Comprehensive management and tracking of your corporate advantages.
-        </p>
+        <p className="text-[#666666]">Welcome to the company benefit system </p>
       </div>
     </div>
   );

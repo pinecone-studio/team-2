@@ -5,7 +5,7 @@ import React from 'react';
 
 const menuItems = [
   { path: '/', label: 'Dashboard' },
-  { path: '/employees', label: 'Employees' },
+  { path: '/employees', label: 'Add Employees' },
   { path: '/benefitManagement', label: 'Benefits' },
   { path: '/requestManagement', label: 'Requests' },
   { path: '/contracts', label: 'Contracts' },

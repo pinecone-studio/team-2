@@ -15,43 +15,25 @@ export function BenefitFilter({ onChange }: BenefitFilterProps) {
     onChange(value);
   };
 
+  const tabs = ['All', 'Active', 'Eligible', 'Pending', 'Locked'];
+
   return (
-    <Tabs value={filter} onValueChange={handleChange}>
-      <TabsList className="bg-transparent gap-2 ">
-        <TabsTrigger
-          value="All"
-          className="px-3 py-1 !rounded-[16px] data-[state=active]:bg-blue-500 data-[state=active]:text-white"
-        >
-          All
-        </TabsTrigger>
-
-        <TabsTrigger
-          value="Active"
-          className="px-3 py-1 !rounded-[16px] data-[state=active]:bg-blue-500 data-[state=active]:text-white"
-        >
-          Active
-        </TabsTrigger>
-
-        <TabsTrigger
-          value="Eligible"
-          className="px-3 py-1 !rounded-[16px] data-[state=active]:bg-blue-500 data-[state=active]:text-white"
-        >
-          Eligible
-        </TabsTrigger>
-
-        <TabsTrigger
-          value="Pending"
-          className="px-3 py-1 !rounded-[16px] data-[state=active]:bg-blue-500 data-[state=active]:text-white"
-        >
-          Pending
-        </TabsTrigger>
-
-        <TabsTrigger
-          value="Locked"
-          className="px-3 py-1 !rounded-[16px] data-[state=active]:bg-blue-500 data-[state=active]:text-white"
-        >
-          Locked
-        </TabsTrigger>
+    <Tabs value={filter} onValueChange={handleChange} className="w-full">
+      <TabsList className="bg-transparent gap-2">
+        {tabs.map((tab) => (
+          <TabsTrigger
+            key={tab}
+            value={tab}
+            className="px-[42px] py-[10px] rounded-[10px] font-Montserrat font-semibold 
+                       text-[#64748B] 
+                       data-[state=active]:bg-[#FB923C] 
+                       data-[state=active]:text-white 
+                       data-[state=active]:shadow-md 
+                       transition-all duration-200 hover:bg-gray-50"
+          >
+            {tab}
+          </TabsTrigger>
+        ))}
       </TabsList>
     </Tabs>
   );

@@ -3,13 +3,23 @@ import { Skeleton } from '@team/source-ui';
 export function BenefitsManagementSkeleton() {
   return (
     <div className="w-full min-h-screen bg-[#F9FAFB] py-8">
-      {/* Header */}
+      {/* Header — real content, no skeleton */}
       <div className="max-w-[1215px] mx-auto flex justify-between items-start mb-8">
         <div>
-          <Skeleton className="h-8 w-52" />
-          <Skeleton className="h-4 w-64 mt-2" />
+          <h1 className="text-[#0F172A] text-2xl font-bold tracking-tight">
+            Benefits Management
+          </h1>
+          <p className="text-[#64748B] text-sm mt-1">
+            Configure and manage company benefits
+          </p>
         </div>
-        <Skeleton className="h-9 w-36 rounded-xl" />
+        {/* 👇 real button, disabled + faded like the Demo Button skeleton */}
+        <button
+          disabled
+          className="flex items-center gap-2 px-4 py-2 text-sm font-semibold bg-white rounded-lg border border-gray-200 opacity-50 cursor-not-allowed"
+        >
+          Add Benefit
+        </button>
       </div>
 
       {/* Table */}

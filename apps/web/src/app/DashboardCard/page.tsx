@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Card, Header } from '../DashboardCard/_components';
+import { Header } from '../DashboardCard/_components';
 
 const DashboardCard = () => {
   const [loading, setLoading] = useState(true);
@@ -14,7 +14,7 @@ const DashboardCard = () => {
   return (
     <div>
       <Header isLoading={loading} />
-      <Card isLoading={loading} />
+      {/* <Card isLoading={loading} /> */}
     </div>
   );
 };

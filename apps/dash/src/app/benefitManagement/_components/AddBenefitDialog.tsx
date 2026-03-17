@@ -16,7 +16,7 @@ import {
   Label,
 } from '@team/source-ui';
 
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, Beaker } from 'lucide-react';
 import { useState } from 'react';
 import { gqlRequest } from 'apps/dash/src/graphql/helpers/graphql-client';
 import {
@@ -26,6 +26,7 @@ import {
   CreateEligibilityRuleInput,
   GetBenefitsQuery,
 } from 'apps/dash/src/graphql/generated/graphql';
+import { toast } from 'sonner';
 
 type Benefit = GetBenefitsQuery['benefits'][number];
 
@@ -109,6 +110,38 @@ export const AddBenefitDialog = ({ onCreated }: Props) => {
     });
   }
 
+  function fillDemoData() {
+    setForm({
+      name: 'Premium Health Insurance',
+      category: 'Health',
+      description:
+        'Comprehensive medical and dental coverage for full-time employees.',
+      vendorName: 'BlueCross Shield',
+      subsidyPercent: 75,
+      isActive: true,
+      requiresContract: true,
+      contractExpiryDate: '2025-12-31',
+      r2ObjectKey: 'demo-contract-key',
+    });
+    setAddRules(true);
+    setRules([
+      {
+        ruleType: 'responsibility_level',
+        operator: 'gte',
+        value: '1',
+        errorMessage: 'Only level 2 or above employees are eligible.',
+        isActive: true,
+      },
+      {
+        ruleType: 'department',
+        operator: 'equals',
+        value: 'Engineering',
+        errorMessage: 'Benefit limited to Engineering department.',
+        isActive: true,
+      },
+    ]);
+  }
+
   async function handleFinish() {
     setLoading(true);
     setError('');
@@ -137,8 +170,16 @@ export const AddBenefitDialog = ({ onCreated }: Props) => {
 
       onCreated(createdBenefit);
       handleClose();
+      toast.success('Successfully added new benefit', {
+        className: 'my-custom-class',
+        style: { background: '#43A047', color: '#ffffff', border: '0' },
+      });
     } catch (e: any) {
       setError(e.message ?? 'Something went wrong');
+      toast.error('Benefit has not been added', {
+        className: 'my-custom-class',
+        style: { background: '#E53935', color: '#ffffff', border: '0' },
+      });
     } finally {
       setLoading(false);
     }
@@ -169,7 +210,18 @@ export const AddBenefitDialog = ({ onCreated }: Props) => {
         <DialogContent className="sm:max-w-md">
           <form onSubmit={handleNext}>
             <DialogHeader>
-              <DialogTitle>Add New Benefit</DialogTitle>
+              <div className="flex items-center justify-between pr-6">
+                <DialogTitle>Add New Benefit</DialogTitle>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={fillDemoData}
+                  className="h-7 text-xs flex items-center gap-1"
+                >
+                  Demo Button
+                </Button>
+              </div>
               <DialogDescription>
                 {/* Step indicator */}
                 <span className="flex items-center gap-2 mt-1">
@@ -292,19 +344,6 @@ export const AddBenefitDialog = ({ onCreated }: Props) => {
                   </Label>
                 </Field>
 
-                <Field>
-                  <Label
-                    style={{ display: 'flex', alignItems: 'center', gap: 8 }}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={Boolean(form.isActive)}
-                      onChange={(e) => updateForm('isActive', e.target.checked)}
-                    />
-                    Is Active
-                  </Label>
-                </Field>
-
                 {/* Optional rules toggle */}
                 <div className="mt-2 flex items-center gap-2 rounded-lg border border-dashed border-blue-300 bg-blue-50 px-4 py-3">
                   <input
@@ -392,24 +431,6 @@ export const AddBenefitDialog = ({ onCreated }: Props) => {
                             updateRule(i, 'errorMessage', e.target.value)
                           }
                         />
-                      </Field>
-                      <Field>
-                        <Label
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: 8,
-                          }}
-                        >
-                          <input
-                            type="checkbox"
-                            checked={Boolean(rule.isActive)}
-                            onChange={(e) =>
-                              updateRule(i, 'isActive', e.target.checked)
-                            }
-                          />
-                          Rule is Active
-                        </Label>
                       </Field>
                     </FieldGroup>
                   </div>

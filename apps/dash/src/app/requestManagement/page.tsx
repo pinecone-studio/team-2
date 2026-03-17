@@ -23,7 +23,7 @@ const RequestManagementPage = () => {
   const [requests, setRequests] = useState<BenefitRequest[]>([]);
   const [benefits, setBenefits] = useState<Benefit[]>([]);
   const [employees, setEmployees] = useState<Employee[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
