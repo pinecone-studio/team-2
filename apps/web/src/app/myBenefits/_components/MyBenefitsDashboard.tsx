@@ -17,6 +17,7 @@ import {
 import { gqlRequest } from 'apps/web/src/graphql/helpers/graphql-client';
 import { deriveBenefitStatus } from '../../benefitsCardDashboard/page';
 import { BenefitCard } from '../../benefitsCardDashboard/_components';
+import { MyBenefitsDashboardSkeleton } from './skeletonComp/MyBenefitsDashboardSkeleton';
 
 type Employee = GetEmployeesQuery['employees'][number];
 type Benefit = GetBenefitsQuery['benefits'][number];
@@ -87,7 +88,7 @@ export default function MyBenefitsDashboard() {
   // Only Active and Pending
   const filtered = benefitsWithStatus.filter((b) => b.status === tab);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <MyBenefitsDashboardSkeleton />;
   if (error) return <p className="text-red-500">{error}</p>;
   if (!employee) return <p>Employee record not found.</p>;
 

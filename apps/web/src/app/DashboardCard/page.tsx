@@ -1,4 +1,4 @@
-"use client"
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import { Card, Header } from '../DashboardCard/_components';
@@ -12,7 +12,7 @@ const DashboardCard = () => {
   }, []);
 
   return (
-    <div className="p-6">
+    <div>
       <Header isLoading={loading} />
       <Card isLoading={loading} />
     </div>

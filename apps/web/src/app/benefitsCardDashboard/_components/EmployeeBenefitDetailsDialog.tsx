@@ -27,6 +27,7 @@ import {
   EligibilityResult,
 } from 'apps/web/src/lib/check-eligibility';
 import { gqlRequest } from 'apps/web/src/graphql/helpers/graphql-client';
+import { BenefitDetailsDialogSkeleton } from './skeletonComp/BenefitDetailsDialogSkeleton';
 
 type Benefit = GetBenefitsQuery['benefits'][number];
 type Rule =
@@ -162,9 +163,7 @@ export function EmployeeBenefitDetailsDialog({
         </DialogHeader>
 
         {loadingData ? (
-          <div className="py-8 text-center text-sm text-gray-400">
-            Loading...
-          </div>
+          <BenefitDetailsDialogSkeleton />
         ) : (
           <div className="space-y-6 mt-2">
             {/* ── Section 1: Benefit Details ── */}
