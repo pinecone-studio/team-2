@@ -29,6 +29,7 @@ const statusStyles: Record<BenefitStatus, string> = {
   Locked: '!bg-gray-100 !text-gray-500 !rounded-full',
   Pending: '!bg-yellow-100 !text-yellow-700 !rounded-full',
   Eligible: '!bg-blue-100 !text-blue-700 !rounded-full',
+  Rejected: '!bg-red-100 !text-red-600 !rounded-full',
 };
 
 export function BenefitCard({
