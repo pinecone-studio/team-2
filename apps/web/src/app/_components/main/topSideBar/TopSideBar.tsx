@@ -1,6 +1,6 @@
 'use client';
 import { UserButton } from '@clerk/nextjs';
-import { Gift, Settings } from 'lucide-react';
+import { Bell, Settings } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import React from 'react';
@@ -23,33 +23,28 @@ export const TopNavBar = () => {
   };
 
   return (
-    <nav className="w-screen bg-gray-50 sticky top-0 z-50 px-20 py-2">
+    <nav className="w-screen bg-white sticky top-0 z-50 px-20 py-2">
       <div className="flex items-center justify-between px-6 h-14">
         {/* Logo / Brand */}
-        <div className="flex items-center space-x-3 shrink-0">
-          <div className="w-9 h-9 bg-[#324554] rounded-xl flex items-center justify-center shadow-md">
-            <Gift className="text-white" size={18} />
+        <div className="flex items-center space-x-2 shrink-0">
+          <div className="w-12 h-12 flex items-center justify-center">
+            <img src="/pinecone.svg" alt="Logo" width={60} height={60} />
           </div>
           <div>
-            <h1 className="text-sm font-bold text-[#1a2b3b] leading-tight">
-              Employee Benefits
-            </h1>
-            <p className="text-[10px] text-gray-500 font-medium">
-              Baatar Dorj • Engineering
-            </p>
+            <h1 className="text-xl font-bold text-black leading-tight">EBMS</h1>
           </div>
         </div>
 
         {/* Nav Items */}
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-3">
           {menuItems.map(({ path, label }) => (
             <button
               key={path}
               onClick={() => router.push(path)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+              className={`flex items-center gap-4 px-4 py-2 rounded-[8px] text-sm font-medium transition-all duration-200 ${
                 isActive(path)
-                  ? 'bg-black text-white shadow-sm'
-                  : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                  ? 'bg-[#FB923C] text-white shadow-sm'
+                  : 'text-black hover:bg-gray-200 hover:text-gray-900'
               }`}
             >
               {label}
@@ -58,13 +53,17 @@ export const TopNavBar = () => {
         </div>
 
         {/* User */}
-        <div className="flex items-center gap-3 shrink-0">
-          <div className="text-right">
+        <div className="flex items-center gap-10 shrink-0">
+          <div className="text-right flex items-center">
             <Link href={'./settings'}>
-              <div className="bg-[#D8D8D8] rounded-full px-1 py-1">
-                <Settings size={20} />
+              <div className="text-sm font-medium px-2 py-2 rounded-xl text-black hover:bg-gray-200 hover:text-gray-900">
+                <Settings></Settings>
               </div>
             </Link>
+
+            <div className="text-sm font-medium px-2 py-2 rounded-xl text-black hover:bg-gray-200 hover:text-gray-900">
+              <Bell />
+            </div>
           </div>
           <UserButton
             appearance={{

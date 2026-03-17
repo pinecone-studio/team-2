@@ -20,7 +20,7 @@ export default async function RootLayout({
       <html lang="en" suppressHydrationWarning>
         <body>
           <SidebarProvider>
-            <div className=" h-screen bg-gray-50">
+            <div className=" h-screen">
               <TopNavBar />
               <main className="flex-1 overflow-y-auto p-8 text-gray-900">
                 {children}

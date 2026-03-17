@@ -24,7 +24,7 @@ const FIELD_MAP: Record<string, keyof Employee> = {
 
 function getEmployeeValue(employee: Employee, ruleType: string): unknown {
   const field = FIELD_MAP[ruleType.toLowerCase()];
-  if (!field) return undefined;
+  if (!employee) return undefined;
   return employee[field];
 }
 
