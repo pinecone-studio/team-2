@@ -4,7 +4,7 @@ import DashboardCard from '../DashboardCard/page';
 
 const Dashboard = () => {
   return (
-    <div>
+    <div className="mx-auto max-w-7xl px-4 ">
       <DashboardCard />
       <BenefitsCardDashboard />
     </div>

@@ -1,6 +1,7 @@
 import './global.css';
 import { ClerkProvider } from '@clerk/nextjs';
-import Sidebar from './Sidebar/page';
+import { SidebarProvider } from '@team/source-ui';
+import { TopNavBar } from './_components/main/topSideBar/TopSideBar';
 
 export const runtime = 'edge';
 
@@ -18,12 +19,14 @@ export default async function RootLayout({
     <ClerkProvider afterSignOutUrl="/sign-in">
       <html lang="en" suppressHydrationWarning>
         <body>
-          <div className="flex h-screen bg-gray-50">
-            <Sidebar />
-            <main className="flex-1 overflow-y-auto p-8 text-gray-900">
-              {children}
-            </main>
-          </div>
+          <SidebarProvider>
+            <div className=" h-screen bg-gray-50">
+              <TopNavBar />
+              <main className="flex-1 overflow-y-auto p-8 text-gray-900">
+                {children}
+              </main>
+            </div>
+          </SidebarProvider>
         </body>
       </html>
     </ClerkProvider>

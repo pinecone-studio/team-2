@@ -16,6 +16,7 @@ import {
 } from 'apps/web/src/graphql/generated/graphql';
 import { checkEligibility } from 'apps/web/src/lib/check-eligibility';
 import { gqlRequest } from 'apps/web/src/graphql/helpers/graphql-client';
+import { BenefitsCardSkeleton } from './_components/skeletonComp/BenefitCardsSkeleton';
 
 type Employee = GetEmployeesQuery['employees'][number];
 type Benefit = GetBenefitsQuery['benefits'][number];
@@ -111,7 +112,7 @@ export default function BenefitsCardDashboard() {
       ? benefitsWithStatus
       : benefitsWithStatus.filter((b) => b.status === filter);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <BenefitsCardSkeleton />;
   if (error) return <p className="text-red-500">{error}</p>;
   if (!employee) return <p>Employee record not found.</p>;
 
