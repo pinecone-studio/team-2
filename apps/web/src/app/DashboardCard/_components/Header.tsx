@@ -17,20 +17,6 @@ export function Header({ isLoading = false }: HeaderProps) {
           <Skeleton className="h-8 w-64 rounded" />
           <Skeleton className="h-4 w-96 rounded" />
         </div>
-
-        {/* Right */}
-        <div className="flex items-center gap-6">
-          <Skeleton className="w-5 h-5 rounded" />
-          <Skeleton className="w-5 h-5 rounded" />
-
-          <div className="flex items-center gap-3 border-l pl-6">
-            <div className="space-y-1 text-right">
-              <Skeleton className="h-4 w-24 rounded" />
-              <Skeleton className="h-3 w-20 rounded" />
-            </div>
-            <Skeleton className="w-9 h-9 rounded-full" />
-          </div>
-        </div>
       </div>
     );
   }

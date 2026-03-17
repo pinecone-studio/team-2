@@ -22,7 +22,7 @@ export default async function RootLayout({
           <SidebarProvider>
             <div className=" h-screen">
               <TopNavBar />
-              <main className="flex-1 overflow-y-auto p-8 text-gray-900">
+              <main className="flex-1 overflow-y-auto  text-gray-900">
                 {children}
               </main>
             </div>

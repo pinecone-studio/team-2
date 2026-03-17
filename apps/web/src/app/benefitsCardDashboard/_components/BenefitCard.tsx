@@ -134,9 +134,11 @@ export function BenefitCard({
           >
             {benefit.name}
           </h3>
-          <p className="text-[#717182] font-normal text-[12px] leading-[20px] font-family: 'Inter', sans-serif">
-            {benefit.description}
-          </p>
+          <div className="h-10">
+            <p className="text-[#717182] text-[12px] leading-[20px] font-normal font-family: 'Inter', sans-serif line-clamp-2">
+              {benefit.description}
+            </p>
+          </div>
         </div>
 
         <div className="pt-2">
