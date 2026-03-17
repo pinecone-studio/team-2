@@ -16,7 +16,7 @@ import {
   Label,
 } from '@team/source-ui';
 
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, Beaker } from 'lucide-react';
 import { useState } from 'react';
 import { gqlRequest } from 'apps/dash/src/graphql/helpers/graphql-client';
 import {
@@ -110,6 +110,38 @@ export const AddBenefitDialog = ({ onCreated }: Props) => {
     });
   }
 
+  function fillDemoData() {
+    setForm({
+      name: 'Premium Health Insurance',
+      category: 'Health',
+      description:
+        'Comprehensive medical and dental coverage for full-time employees.',
+      vendorName: 'BlueCross Shield',
+      subsidyPercent: 75,
+      isActive: true,
+      requiresContract: true,
+      contractExpiryDate: '2025-12-31',
+      r2ObjectKey: 'demo-contract-key',
+    });
+    setAddRules(true);
+    setRules([
+      {
+        ruleType: 'responsibility_level',
+        operator: 'gte',
+        value: '1',
+        errorMessage: 'Only level 2 or above employees are eligible.',
+        isActive: true,
+      },
+      {
+        ruleType: 'department',
+        operator: 'equals',
+        value: 'Engineering',
+        errorMessage: 'Benefit limited to Engineering department.',
+        isActive: true,
+      },
+    ]);
+  }
+
   async function handleFinish() {
     setLoading(true);
     setError('');
@@ -178,7 +210,18 @@ export const AddBenefitDialog = ({ onCreated }: Props) => {
         <DialogContent className="sm:max-w-md">
           <form onSubmit={handleNext}>
             <DialogHeader>
-              <DialogTitle>Add New Benefit</DialogTitle>
+              <div className="flex items-center justify-between pr-6">
+                <DialogTitle>Add New Benefit</DialogTitle>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={fillDemoData}
+                  className="h-7 text-xs flex items-center gap-1"
+                >
+                  Demo Button
+                </Button>
+              </div>
               <DialogDescription>
                 {/* Step indicator */}
                 <span className="flex items-center gap-2 mt-1">
