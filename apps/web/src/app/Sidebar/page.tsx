@@ -24,6 +24,7 @@ const Sidebar = () => {
           <div className="w-10 h-10 bg-[#324554] rounded-xl flex items-center justify-center shadow-lg">
             <Gift className="text-white" size={20} />
           </div>
+
           <div>
             <h1 className="text-lg font-bold text-[#1a2b3b] leading-tight">
               Employee Benefits

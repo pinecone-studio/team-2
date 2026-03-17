@@ -6,10 +6,17 @@ import {
   CardFooter,
   CardHeader,
   Separator,
+  Button,
+  Badge,
 } from '@team/source-ui';
-import { Button } from '@team/source-ui';
-import { Badge } from '@team/source-ui';
-import { Dumbbell } from 'lucide-react';
+import {
+  Dumbbell,
+  CheckCircle2,
+  Lock,
+  Clock,
+  Home,
+  LucideIcon,
+} from 'lucide-react';
 import { EmployeeBenefitDetailsDialog } from './EmployeeBenefitDetailsDialog';
 
 import type { BenefitStatus } from '../page';
@@ -24,6 +31,51 @@ type Employee = GetEmployeesQuery['employees'][number];
 type BenefitRequest =
   GetBenefitRequestsByEmployeeQuery['benefitRequestsByEmployee'][number];
 
+// 1. Статус бүрт тохирох иконууд
+const statusIcons: Record<BenefitStatus, LucideIcon> = {
+  Active: CheckCircle2,
+  Eligible: Home,
+  Pending: Clock,
+  Locked: Lock,
+};
+
+// 2. Иконы арын хайрцаг болон өнгө
+const statusIconStyles: Record<BenefitStatus, { bg: string; text: string }> = {
+  Active: { bg: 'bg-[#D1FAE5]', text: 'text-[#047857]' },
+  Eligible: { bg: 'bg-[#EBF2FF]', text: 'text-[#3B82F6]' },
+  Pending: { bg: 'bg-[#FEF3C7]', text: 'text-[#B45309]' },
+  Locked: { bg: 'bg-gray-100', text: 'text-gray-400' },
+};
+
+// 3. Бадге (Status Badge) стиль
+const badgeStyles: Record<BenefitStatus, string> = {
+  Active:
+    '!bg-green-100 !text-green-700 !rounded-full border-none px-4 font-semibold',
+  Eligible:
+    '!bg-blue-100 !text-blue-700 !rounded-full border-none px-4 font-semibold',
+  Pending:
+    '!bg-[#FFEDD5] !text-[#9A3412] !rounded-full border-none px-4 font-semibold',
+  Locked:
+    '!bg-gray-100 !text-gray-500 !rounded-full border-none px-4 font-semibold',
+};
+
+// 4. Товчны Gradient стиль
+const statusButtonStyles: Record<BenefitStatus, string> = {
+  Active:
+    '![background:linear-gradient(180deg,#3ABD6A_0%,#87DBA6_100%)] !rounded-[12px] shadow-sm',
+  Eligible:
+    '![background:linear-gradient(180deg,#137FEC_0%,#60A5FA_100%)] !rounded-[12px] shadow-sm',
+  Pending:
+    '![background:linear-gradient(180deg,#F59E0B_0%,#FCD34D_100%)] !rounded-[12px] shadow-sm',
+  Locked: '!bg-gray-400 !rounded-[12px] cursor-not-allowed',
+};
+
+// 5. Картны уусгалттай (Gradient) фон
+const statusCardStyles: Record<BenefitStatus, string> = {
+  Active: 'bg-gradient-to-b from-[#ECFDF5] via-white to-white',
+  Eligible: 'bg-gradient-to-b from-[#EFF6FF] via-white to-white',
+  Pending: 'bg-gradient-to-b from-[#FFF7ED] via-white to-white',
+  Locked: 'bg-gradient-to-b from-[#F8FAFC] via-white to-white',
 const statusStyles: Record<BenefitStatus, string> = {
   Active: '!bg-green-100 !text-green-700 !rounded-full',
   Locked: '!bg-gray-100 !text-gray-500 !rounded-full',
@@ -45,58 +97,76 @@ export function BenefitCard({
   status: BenefitStatus;
   onApplied: (request: BenefitRequest) => void;
 }) {
+  const StatusIcon = statusIcons[status] || Dumbbell;
+  const iconStyle = statusIconStyles[status] || statusIconStyles.Eligible;
+  const buttonStyle = statusButtonStyles[status] || statusButtonStyles.Eligible;
+  const cardGradient = statusCardStyles[status] || 'bg-white';
+
   return (
-    <Card className="w-[280px] !rounded-[24px] border-[#E2E8F0] shadow-[0_1px_2px_rgba(0,0,0,0.25)] flex flex-col justify-between">
-      <CardHeader>
-        <div className="flex flex-row justify-between">
-          <div className="w-12 h-12 rounded-lg bg-[#DBEAFE] flex items-center justify-center">
-            <Dumbbell className="text-blue-500 text-xl" />
+    <Card
+      className={`w-full !rounded-[24px] border-[#F1F5F9] shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col justify-between overflow-hidden transition-all duration-300 ${cardGradient}`}
+    >
+      <CardHeader className="pt-8 px-6 pb-4">
+        <div className="flex flex-row justify-between items-start">
+          <div
+            className={`w-14 h-14 rounded-2xl ${iconStyle.bg} flex items-center justify-center transition-colors`}
+          >
+            <StatusIcon
+              className={iconStyle.text}
+              size={28}
+              strokeWidth={1.5}
+            />
           </div>
-          <div className="flex items-start">
-            <Badge className={statusStyles[status]}>{status}</Badge>
+          <div className="flex items-start shadow-none">
+            <Badge className={badgeStyles[status]}>{status}</Badge>
           </div>
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-2 flex flex-col justify-between flex-1">
-        <div>
-          <h3 className="font-semibold text-lg text-[#0F172B] leading-[27px]">
+      <CardContent className="px-6 space-y-4 flex flex-col justify-between flex-1">
+        <div className="space-y-2">
+          <h3
+            className="text-[#000] font-semibold text-[20px] leading-normal font-lato truncate"
+            title={benefit.name}
+          >
             {benefit.name}
           </h3>
-          <p className="text-xs leading-5 text-[#45556C]">
+          <p className="text-[#717182] font-normal text-[12px] leading-[20px] font-family: 'Inter', sans-serif">
             {benefit.description}
           </p>
         </div>
 
-        <div>
-          <div className="flex justify-between text-xs">
-            <span className="text-[#64748B] leading-4 text-xs font-normal">
+        <div className="pt-2">
+          <div className="flex justify-between items-center text-sm">
+            <span className="text-[#64748B] font-inter text-[12px] font-normal leading-[16px]">
               Subsidy
             </span>
-            <span className="font-bold text-[#137FEC] text-xs leading-4">
+            <span className="text-[#000] font-inter text-[12px] font-bold leading-[16px]">
               {benefit.subsidyPercent ?? 0}%
             </span>
           </div>
-          <Separator className="my-2" />
-          <div className="flex justify-between text-xs">
-            <span className="text-[#64748B] leading-4 text-xs font-normal">
+          <Separator className="my-3 bg-[#F1F5F9]" />
+          <div className="flex justify-between items-center text-sm">
+            <span className="text-[#64748B] font-inter text-[12px] font-normal leading-[16px]">
               Vendor
             </span>
-            <span className="font-medium text-xs leading-4">
+            <span className="text-[#000] font-inter text-[12px] font-bold leading-[16px]">
               {benefit.vendorName ?? '—'}
             </span>
           </div>
         </div>
       </CardContent>
 
-      <CardFooter>
+      <CardFooter className="px-6 pb-8 pt-4">
         <EmployeeBenefitDetailsDialog
           benefit={benefit}
           employee={employee}
           existingRequest={request}
           onApplied={onApplied}
         >
-          <Button className="w-full !bg-[#137FEC] !rounded-[16px] hover:shadow-[2px_4px_3.8px_rgba(19,127,236,0.25)] transition-shadow duration-300">
+          <Button
+            className={`w-full !h-12 text-white font-bold transition-all active:scale-[0.98] ${buttonStyle}`}
+          >
             View Details
           </Button>
         </EmployeeBenefitDetailsDialog>
