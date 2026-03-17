@@ -1,29 +1,3 @@
-// import React from 'react';
-// import { ActiveRequests, ProcessedRequests } from './_components';
-
-// const requestManagementPage = () => {
-//   return (
-//     <div className="w-full min-h-screen bg-[#F9FAFB] p-12">
-//       <div className="flex flex-col justify-start items-start">
-//         <div className="flex flex-col p-5">
-//           <div className="self-stretch justify-start text-gray-900 text-3xl font-bold  leading-10 tracking-tight">
-//             Request Management
-//           </div>
-//           <div className="self-stretch justify-start text-gray-500 text-base font-normal  leading-8 tracking-tight">
-//             Review and process employee benefit requests
-//           </div>
-//         </div>
-//         <div className="flex flex-col justify-center items-center gap-8 w-full">
-//           <ActiveRequests />
-//           <ProcessedRequests />
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default requestManagementPage;
-
 'use client';
 
 import React, { useEffect, useState } from 'react';
@@ -39,6 +13,7 @@ import {
   RequestStatus,
 } from 'apps/dash/src/graphql/generated/graphql';
 import { gqlRequest } from 'apps/dash/src/graphql/helpers/graphql-client';
+import { ProcessedRequestsSkeletonNavbar } from './_components/skeletonComp/ProcessedRequestsSkeletonNavbar';
 
 type BenefitRequest = GetBenefitRequestsQuery['benefitRequests'][number];
 type Benefit = GetBenefitsQuery['benefits'][number];
@@ -88,32 +63,34 @@ const RequestManagementPage = () => {
       r.status === RequestStatus.Rejected,
   );
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <ProcessedRequestsSkeletonNavbar />;
   if (error) return <p className="text-red-500">{error}</p>;
 
   return (
-    <div className="w-full min-h-screen bg-[#F9FAFB] p-12">
-      <div className="flex flex-col justify-start items-start">
-        <div className="flex flex-col p-5">
-          <div className="self-stretch justify-start text-gray-900 text-3xl font-bold leading-10 tracking-tight">
-            Request Management
+    <div className="w-full min-h-screen bg-[#F9FAFB] py-8">
+      <div className="max-w-[1215px] mx-auto">
+        <div className="flex flex-col justify-start items-start">
+          <div className="flex flex-col mb-8">
+            <h1 className="text-[#0F172A] text-2xl font-bold tracking-tight">
+              Request Management
+            </h1>
+            <p className="text-[#64748B] text-sm mt-1">
+              Review and process employee benefit requests
+            </p>
           </div>
-          <div className="self-stretch justify-start text-gray-500 text-base font-normal leading-8 tracking-tight">
-            Review and process employee benefit requests
+          <div className="flex flex-col justify-center items-center gap-8 w-full">
+            <ActiveRequests
+              requests={activeRequests}
+              benefits={benefits}
+              employees={employees}
+              onUpdated={handleUpdated}
+            />
+            <ProcessedRequests
+              requests={processedRequests}
+              benefits={benefits}
+              employees={employees}
+            />
           </div>
-        </div>
-        <div className="flex flex-col justify-center items-center gap-8 w-full">
-          <ActiveRequests
-            requests={activeRequests}
-            benefits={benefits}
-            employees={employees}
-            onUpdated={handleUpdated}
-          />
-          <ProcessedRequests
-            requests={processedRequests}
-            benefits={benefits}
-            employees={employees}
-          />
         </div>
       </div>
     </div>

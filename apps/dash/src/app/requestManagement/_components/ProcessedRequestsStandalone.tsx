@@ -11,6 +11,7 @@ import {
   type GetEmployeesQuery,
 } from 'apps/dash/src/graphql/generated/graphql';
 import { gqlRequest } from 'apps/dash/src/graphql/helpers/graphql-client';
+import { ProcessedRequestsSkeleton } from './skeletonComp/ProcessedRequestsSkeleton';
 
 type BenefitRequest = GetBenefitRequestsQuery['benefitRequests'][number];
 type Benefit = GetBenefitsQuery['benefits'][number];
@@ -51,7 +52,7 @@ export const ProcessedRequestsStandalone = () => {
     fetchData();
   }, []);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <ProcessedRequestsSkeleton />;
   if (error) return <p className="text-red-500">{error}</p>;
 
   return (
