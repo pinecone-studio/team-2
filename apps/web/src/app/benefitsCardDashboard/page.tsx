@@ -24,7 +24,12 @@ type BenefitRequest =
   GetBenefitRequestsByEmployeeQuery['benefitRequestsByEmployee'][number];
 type EligibilityRule = GetEligibilityRulesQuery['eligibilityRules'][number];
 
-export type BenefitStatus = 'Active' | 'Pending' | 'Eligible' | 'Locked';
+export type BenefitStatus =
+  | 'Active'
+  | 'Pending'
+  | 'Eligible'
+  | 'Locked'
+  | 'Rejected';
 
 export function deriveBenefitStatus(
   benefit: Benefit,
@@ -35,7 +40,7 @@ export function deriveBenefitStatus(
   if (request) {
     if (request.status === RequestStatus.Pending) return 'Pending';
     if (request.status === RequestStatus.Approved) return 'Active';
-    if (request.status === RequestStatus.Rejected) return 'Locked';
+    if (request.status === RequestStatus.Rejected) return 'Rejected';
     if (request.status === RequestStatus.Cancelled) return 'Locked';
   }
 
