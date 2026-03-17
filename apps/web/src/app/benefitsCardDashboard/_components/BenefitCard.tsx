@@ -16,6 +16,7 @@ import {
   Clock,
   Home,
   LucideIcon,
+  Ban,
 } from 'lucide-react';
 import { EmployeeBenefitDetailsDialog } from './EmployeeBenefitDetailsDialog';
 
@@ -37,6 +38,7 @@ const statusIcons: Record<BenefitStatus, LucideIcon> = {
   Eligible: Home,
   Pending: Clock,
   Locked: Lock,
+  Rejected: Ban,
 };
 
 // 2. Иконы арын хайрцаг болон өнгө
@@ -45,6 +47,7 @@ const statusIconStyles: Record<BenefitStatus, { bg: string; text: string }> = {
   Eligible: { bg: 'bg-[#EBF2FF]', text: 'text-[#3B82F6]' },
   Pending: { bg: 'bg-[#FEF3C7]', text: 'text-[#B45309]' },
   Locked: { bg: 'bg-gray-100', text: 'text-gray-400' },
+  Rejected: { bg: 'bg-red-100', text: 'text-red-400' },
 };
 
 // 3. Бадге (Status Badge) стиль
@@ -57,6 +60,8 @@ const badgeStyles: Record<BenefitStatus, string> = {
     '!bg-[#FFEDD5] !text-[#9A3412] !rounded-full border-none px-4 font-semibold',
   Locked:
     '!bg-gray-100 !text-gray-500 !rounded-full border-none px-4 font-semibold',
+  Rejected:
+    '!bg-red-100 !text-red-500 !rounded-full border-none px-4 font-semibold',
 };
 
 // 4. Товчны Gradient стиль
@@ -68,6 +73,7 @@ const statusButtonStyles: Record<BenefitStatus, string> = {
   Pending:
     '![background:linear-gradient(180deg,#F59E0B_0%,#FCD34D_100%)] !rounded-[12px] shadow-sm',
   Locked: '!bg-gray-400 !rounded-[12px] cursor-not-allowed',
+  Rejected: '!bg-red-400 !rounded-[12px] ',
 };
 
 // 5. Картны уусгалттай (Gradient) фон
@@ -76,12 +82,13 @@ const statusCardStyles: Record<BenefitStatus, string> = {
   Eligible: 'bg-gradient-to-b from-[#EFF6FF] via-white to-white',
   Pending: 'bg-gradient-to-b from-[#FFF7ED] via-white to-white',
   Locked: 'bg-gradient-to-b from-[#F8FAFC] via-white to-white',
-const statusStyles: Record<BenefitStatus, string> = {
-  Active: '!bg-green-100 !text-green-700 !rounded-full',
-  Locked: '!bg-gray-100 !text-gray-500 !rounded-full',
-  Pending: '!bg-yellow-100 !text-yellow-700 !rounded-full',
-  Eligible: '!bg-blue-100 !text-blue-700 !rounded-full',
-  Rejected: '!bg-red-100 !text-red-600 !rounded-full',
+  Rejected: '!bg-red-100 !text-red-600 ',
+  // const statusStyles: Record<BenefitStatus, string> = {
+  //   Active: '!bg-green-100 !text-green-700 !rounded-full',
+  //   Locked: '!bg-gray-100 !text-gray-500 !rounded-full',
+  //   Pending: '!bg-yellow-100 !text-yellow-700 !rounded-full',
+  //   Eligible: '!bg-blue-100 !text-blue-700 !rounded-full',
+  //   Rejected: '!bg-red-100 !text-red-600 !rounded-full',
 };
 
 export function BenefitCard({
