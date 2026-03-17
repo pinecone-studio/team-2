@@ -15,6 +15,7 @@ import { useState } from 'react';
 import { CheckCircle, Clock, XCircle, ShieldCheck } from 'lucide-react';
 import {
   CreateBenefitRequestDocument,
+  RequestStatus,
   GetBenefitRequestsByEmployeeQuery,
   GetBenefitsQuery,
   GetEligibilityRulesByBenefitDocument,
@@ -46,19 +47,24 @@ const requestStatusConfig: Record<
   string,
   { label: string; className: string; icon: React.ReactNode }
 > = {
-  approved: {
+  [RequestStatus.Approved]: {
     label: 'Approved',
     className: 'bg-green-100 text-green-700 border-green-200',
     icon: <CheckCircle size={14} />,
   },
-  pending: {
+  [RequestStatus.Pending]: {
     label: 'Pending',
     className: 'bg-yellow-100 text-yellow-700 border-yellow-200',
     icon: <Clock size={14} />,
   },
-  rejected: {
+  [RequestStatus.Rejected]: {
     label: 'Rejected',
     className: 'bg-red-100 text-red-600 border-red-200',
+    icon: <XCircle size={14} />,
+  },
+  [RequestStatus.Cancelled]: {
+    label: 'Cancelled',
+    className: 'bg-gray-100 text-gray-500 border-gray-200',
     icon: <XCircle size={14} />,
   },
 };
@@ -109,11 +115,11 @@ export function EmployeeBenefitDetailsDialog({
         input: {
           benefitId: benefit.id,
           employeeId: employee.id,
-          status: 'pending',
+          status: RequestStatus.Pending,
           createdAt: new Date().toISOString(),
         },
       });
-      onApplied(data.createBenefitRequest); // ← bubble up to page
+      onApplied(data.createBenefitRequest);
     } catch (e: any) {
       setApplyError(e.message ?? 'Failed to submit request');
     } finally {
@@ -121,7 +127,7 @@ export function EmployeeBenefitDetailsDialog({
     }
   }
 
-  const statusKey = existingRequest?.status?.toLowerCase() ?? '';
+  const statusKey = existingRequest?.status ?? RequestStatus.Pending;
   const statusConfig = requestStatusConfig[statusKey];
 
   return (
@@ -292,7 +298,7 @@ export function EmployeeBenefitDetailsDialog({
                       ? 'Submitting...'
                       : !benefit.isActive
                         ? 'Benefit Inactive'
-                        : 'Apply for this Benefit'}
+                        : 'Request Benefit'}
                   </Button>
                 </div>
               )}
@@ -303,8 +309,6 @@ export function EmployeeBenefitDetailsDialog({
     </Dialog>
   );
 }
-
-// ── Helpers ──────────────────────────────────────────────
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
