@@ -6,7 +6,7 @@ export function BenefitsCardSkeleton() {
       {/* Filter skeleton */}
       <div className="flex gap-2">
         {Array.from({ length: 5 }).map((_, i) => (
-          <Skeleton key={i} className="h-9 w-24 rounded-full" />
+          <Skeleton key={i} className="px-[24px] py-[10px] rounded-full" />
         ))}
       </div>
 

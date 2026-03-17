@@ -64,7 +64,7 @@ const badgeStyles: Record<BenefitStatus, string> = {
     '!bg-red-100 !text-red-500 !rounded-full border-none px-4 font-semibold',
 };
 
-// 4. Товчны Gradient стиль
+// 4. Товчны Gradient стиль - Rejected хэсгийг шинэчлэв
 const statusButtonStyles: Record<BenefitStatus, string> = {
   Active:
     '![background:linear-gradient(180deg,#3ABD6A_0%,#87DBA6_100%)] !rounded-[12px] shadow-sm',
@@ -73,22 +73,18 @@ const statusButtonStyles: Record<BenefitStatus, string> = {
   Pending:
     '![background:linear-gradient(180deg,#F59E0B_0%,#FCD34D_100%)] !rounded-[12px] shadow-sm',
   Locked: '!bg-gray-400 !rounded-[12px] cursor-not-allowed',
-  Rejected: '!bg-red-400 !rounded-[12px] ',
+  // Rejected товчийг Улаан Gradient-тай болгов
+  Rejected:
+    '![background:linear-gradient(180deg,#EF4444_0%,#FCA5A5_100%)] !rounded-[12px] shadow-sm',
 };
 
-// 5. Картны уусгалттай (Gradient) фон
+// 5. Картны стиль - Rejected хэсгийг бусадтай ижил уусалттай болгов
 const statusCardStyles: Record<BenefitStatus, string> = {
   Active: 'bg-gradient-to-b from-[#ECFDF5] via-white to-white',
   Eligible: 'bg-gradient-to-b from-[#EFF6FF] via-white to-white',
   Pending: 'bg-gradient-to-b from-[#FFF7ED] via-white to-white',
   Locked: 'bg-gradient-to-b from-[#F8FAFC] via-white to-white',
-  Rejected: '!bg-red-100 !text-red-600 ',
-  // const statusStyles: Record<BenefitStatus, string> = {
-  //   Active: '!bg-green-100 !text-green-700 !rounded-full',
-  //   Locked: '!bg-gray-100 !text-gray-500 !rounded-full',
-  //   Pending: '!bg-yellow-100 !text-yellow-700 !rounded-full',
-  //   Eligible: '!bg-blue-100 !text-blue-700 !rounded-full',
-  //   Rejected: '!bg-red-100 !text-red-600 !rounded-full',
+  Rejected: 'bg-gradient-to-b from-[#FEF2F2] via-white to-white',
 };
 
 export function BenefitCard({
@@ -111,7 +107,7 @@ export function BenefitCard({
 
   return (
     <Card
-      className={`w-full !rounded-[24px] border-[#F1F5F9] shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col justify-between overflow-hidden transition-all duration-300 ${cardGradient}`}
+      className={`w-full max-w-[320px] rounded-[12px] border-none shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col justify-between overflow-hidden transition-all duration-300 ${cardGradient}`}
     >
       <CardHeader className="pt-8 px-6 pb-4">
         <div className="flex flex-row justify-between items-start">

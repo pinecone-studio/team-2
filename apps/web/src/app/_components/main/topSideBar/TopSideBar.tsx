@@ -1,5 +1,5 @@
 'use client';
-import { UserButton } from '@clerk/nextjs';
+import { UserButton, ClerkLoading, ClerkLoaded } from '@clerk/nextjs'; // ClerkLoading, ClerkLoaded нэмлээ
 import { Bell, Settings } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
@@ -17,8 +17,7 @@ export const TopNavBar = () => {
   const pathname = usePathname();
 
   const isActive = (path: string) => {
-    if (path === '/dashboard')
-      return pathname === '/' || pathname === '/dashboard';
+    if (path === '/') return pathname === '/' || pathname === '/dashboard';
     return pathname === path;
   };
 
@@ -52,26 +51,38 @@ export const TopNavBar = () => {
           ))}
         </div>
 
-        {/* User */}
+        {/* User & Actions */}
         <div className="flex items-center gap-10 shrink-0">
           <div className="text-right flex items-center">
-            <Link href={'./settings'}>
-              <div className="text-sm font-medium px-2 py-2 rounded-xl text-black hover:bg-gray-200 hover:text-gray-900">
-                <Settings></Settings>
+            <Link href={'/settings'}>
+              <div className="text-sm font-medium px-2 py-2 rounded-xl text-black hover:bg-gray-200 hover:text-gray-900 transition-colors">
+                <Settings size={20} />
               </div>
             </Link>
 
-            <div className="text-sm font-medium px-2 py-2 rounded-xl text-black hover:bg-gray-200 hover:text-gray-900">
-              <Bell />
+            <div className="text-sm font-medium px-2 py-2 rounded-xl text-black hover:bg-gray-200 hover:text-gray-900 transition-colors cursor-pointer">
+              <Bell size={20} />
             </div>
           </div>
-          <UserButton
-            appearance={{
-              elements: {
-                userButtonAvatarBox: 'w-7 h-7',
-              },
-            }}
-          />
+
+          {/* Clerk User Button with Skeleton */}
+          <div className="relative flex items-center justify-center w-8 h-8">
+            {/* Ачаалж байх үед харагдах Skeleton */}
+            <ClerkLoading>
+              <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse border border-gray-100" />
+            </ClerkLoading>
+
+            {/* Ачаалж дууссаны дараа харагдах товчлуур */}
+            <ClerkLoaded>
+              <UserButton
+                appearance={{
+                  elements: {
+                    userButtonAvatarBox: 'w-8 h-8', // Skeleton-той ижил хэмжээтэй байх
+                  },
+                }}
+              />
+            </ClerkLoaded>
+          </div>
         </div>
       </div>
     </nav>
