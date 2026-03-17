@@ -1,7 +1,34 @@
-import React from 'react';
+'use client';
 
-const Settings = () => {
-  return <div className="mx-auto max-w-7xl px-4 py-8">Settings page</div>;
-};
+import { SettingsForm } from './_components/SettingsForm';
+import { useSettingsPage } from './_components/use-settings-page';
 
-export default Settings;
+export default function SettingsPage() {
+  const state = useSettingsPage();
+
+  if (state.status === 'loading-user' || state.status === 'loading-employee') {
+    return <div className="p-6">Loading...</div>;
+  }
+
+  if (state.status === 'signed-out') {
+    return (
+      <div className="p-6 text-red-500">
+        You must be signed in to view settings.
+      </div>
+    );
+  }
+
+  if (state.status === 'not-found') {
+    return (
+      <div className="p-6 text-red-500">
+        No employee profile found. Please complete your{' '}
+        <a href="/userProfile" className="underline">
+          user profile
+        </a>{' '}
+        first.
+      </div>
+    );
+  }
+
+  return <SettingsForm {...state} />;
+}

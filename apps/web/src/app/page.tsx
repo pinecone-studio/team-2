@@ -1,11 +1,11 @@
 import React from 'react';
-import Dashboard from './dashboard/page';
+import { EmployeeGatePage } from './userProfile/_components/EmployeeGatePage';
 
 export default function Page() {
   return (
     <div className="flex h-screen bg-gray-50 max-w-[100vw] mx-auto">
-      <main className="flex-1 overflow-y-auto p-8 text-gray-900">
-        <Dashboard />
+      <main className="relative flex-1 overflow-hidden  text-gray-900">
+        <EmployeeGatePage />
       </main>
     </div>
   );
