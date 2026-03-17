@@ -37,7 +37,7 @@ export default function BenefitsManagement() {
   }, []);
 
   function handleCreated(benefit: Benefit) {
-    setBenefits((prev) => [benefit, ...prev]);
+    setBenefits((prev) => [...prev, benefit]);
   }
 
   function handleUpdated(updated: Benefit) {

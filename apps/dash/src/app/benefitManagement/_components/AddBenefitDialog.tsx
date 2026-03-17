@@ -26,6 +26,7 @@ import {
   CreateEligibilityRuleInput,
   GetBenefitsQuery,
 } from 'apps/dash/src/graphql/generated/graphql';
+import { toast } from 'sonner';
 
 type Benefit = GetBenefitsQuery['benefits'][number];
 
@@ -137,8 +138,16 @@ export const AddBenefitDialog = ({ onCreated }: Props) => {
 
       onCreated(createdBenefit);
       handleClose();
+      toast.success('Successfully added new benefit', {
+        className: 'my-custom-class',
+        style: { background: '#43A047', color: '#ffffff', border: '0' },
+      });
     } catch (e: any) {
       setError(e.message ?? 'Something went wrong');
+      toast.error('Benefit has not been added', {
+        className: 'my-custom-class',
+        style: { background: '#E53935', color: '#ffffff', border: '0' },
+      });
     } finally {
       setLoading(false);
     }
@@ -292,19 +301,6 @@ export const AddBenefitDialog = ({ onCreated }: Props) => {
                   </Label>
                 </Field>
 
-                <Field>
-                  <Label
-                    style={{ display: 'flex', alignItems: 'center', gap: 8 }}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={Boolean(form.isActive)}
-                      onChange={(e) => updateForm('isActive', e.target.checked)}
-                    />
-                    Is Active
-                  </Label>
-                </Field>
-
                 {/* Optional rules toggle */}
                 <div className="mt-2 flex items-center gap-2 rounded-lg border border-dashed border-blue-300 bg-blue-50 px-4 py-3">
                   <input
@@ -392,24 +388,6 @@ export const AddBenefitDialog = ({ onCreated }: Props) => {
                             updateRule(i, 'errorMessage', e.target.value)
                           }
                         />
-                      </Field>
-                      <Field>
-                        <Label
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: 8,
-                          }}
-                        >
-                          <input
-                            type="checkbox"
-                            checked={Boolean(rule.isActive)}
-                            onChange={(e) =>
-                              updateRule(i, 'isActive', e.target.checked)
-                            }
-                          />
-                          Rule is Active
-                        </Label>
                       </Field>
                     </FieldGroup>
                   </div>
