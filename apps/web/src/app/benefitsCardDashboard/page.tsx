@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { useUser } from '@clerk/nextjs';
-
 import { BenefitCard, BenefitFilter } from './_components';
 import {
   GetBenefitRequestsByEmployeeDocument,
@@ -13,9 +12,10 @@ import {
   GetEligibilityRulesQuery,
   GetEmployeesDocument,
   GetEmployeesQuery,
-} from '../../graphql/generated/graphql';
-import { checkEligibility } from '../../lib/check-eligibility';
-import { gqlRequest } from '../../graphql/helpers/graphql-client';
+  RequestStatus,
+} from 'apps/web/src/graphql/generated/graphql';
+import { checkEligibility } from 'apps/web/src/lib/check-eligibility';
+import { gqlRequest } from 'apps/web/src/graphql/helpers/graphql-client';
 
 type Employee = GetEmployeesQuery['employees'][number];
 type Benefit = GetBenefitsQuery['benefits'][number];
@@ -23,7 +23,6 @@ type BenefitRequest =
   GetBenefitRequestsByEmployeeQuery['benefitRequestsByEmployee'][number];
 type EligibilityRule = GetEligibilityRulesQuery['eligibilityRules'][number];
 
-// Per-benefit derived status for the employee
 export type BenefitStatus = 'Active' | 'Pending' | 'Eligible' | 'Locked';
 
 export function deriveBenefitStatus(
@@ -32,18 +31,15 @@ export function deriveBenefitStatus(
   rules: EligibilityRule[],
   employee: Employee,
 ): BenefitStatus {
-  // Already applied
   if (request) {
-    const s = request.status?.toLowerCase();
-    if (s === 'pending') return 'Pending';
-    if (s === 'approved') return 'Active';
-    if (s === 'rejected') return 'Locked';
+    if (request.status === RequestStatus.Pending) return 'Pending';
+    if (request.status === RequestStatus.Approved) return 'Active';
+    if (request.status === RequestStatus.Rejected) return 'Locked';
+    if (request.status === RequestStatus.Cancelled) return 'Locked';
   }
 
-  // Benefit is inactive
   if (!benefit.isActive) return 'Locked';
 
-  // Check eligibility rules for this benefit
   const benefitRules = rules.filter((r) => r.benefitId === benefit.id);
   const { eligible } = checkEligibility(employee, benefitRules);
 
@@ -96,7 +92,6 @@ export default function BenefitsCardDashboard() {
     if (user?.id) fetchData();
   }, [user?.id]);
 
-  // Called from BenefitCard when employee applies
   function handleApplied(newRequest: BenefitRequest) {
     setRequests((prev) => {
       const exists = prev.find((r) => r.benefitId === newRequest.benefitId);

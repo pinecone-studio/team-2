@@ -19,8 +19,8 @@ export const MenuItems = [
     icon: React.createElement(Gift, { size: 18 }),
   },
   {
-    name: 'Requests',
-    path: '/requests',
+    name: 'My Requests',
+    path: '/myRequests',
     icon: React.createElement(ClipboardList, { size: 18 }),
   },
   {
