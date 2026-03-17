@@ -22,15 +22,8 @@ const FIELD_MAP: Record<string, keyof Employee> = {
   employee_role: 'employeeRole',
 };
 
-function getEmployeeValue(
-  employee: Employee | null | undefined,
-  ruleType: string,
-) {
-  if (!employee) return undefined;
-
+function getEmployeeValue(employee: Employee, ruleType: string): unknown {
   const field = FIELD_MAP[ruleType.toLowerCase()];
-  if (!field) return undefined;
-
   if (!employee) return undefined;
   return employee[field];
 }
@@ -58,24 +51,16 @@ function evaluateRule(
       return empStr !== ruleStr;
     case 'gte':
     case '>=':
-      return (
-        !Number.isNaN(empNum) && !Number.isNaN(ruleNum) && empNum >= ruleNum
-      );
+      return !isNaN(empNum) && !isNaN(ruleNum) && empNum >= ruleNum;
     case 'lte':
     case '<=':
-      return (
-        !Number.isNaN(empNum) && !Number.isNaN(ruleNum) && empNum <= ruleNum
-      );
+      return !isNaN(empNum) && !isNaN(ruleNum) && empNum <= ruleNum;
     case 'gt':
     case '>':
-      return (
-        !Number.isNaN(empNum) && !Number.isNaN(ruleNum) && empNum > ruleNum
-      );
+      return !isNaN(empNum) && !isNaN(ruleNum) && empNum > ruleNum;
     case 'lt':
     case '<':
-      return (
-        !Number.isNaN(empNum) && !Number.isNaN(ruleNum) && empNum < ruleNum
-      );
+      return !isNaN(empNum) && !isNaN(ruleNum) && empNum < ruleNum;
     case 'contains':
       return empStr.includes(ruleStr);
     case 'not_contains':
@@ -86,16 +71,9 @@ function evaluateRule(
 }
 
 export function checkEligibility(
-  employee: Employee | null | undefined,
+  employee: Employee,
   rules: Rule[],
 ): EligibilityResult {
-  if (!employee) {
-    return {
-      eligible: false,
-      errors: ['Employee profile not found'],
-    };
-  }
-
   const activeRules = rules.filter((r) => r.isActive);
 
   if (activeRules.length === 0) {
@@ -106,10 +84,8 @@ export function checkEligibility(
 
   for (const rule of activeRules) {
     if (!rule.ruleType || !rule.operator || rule.value == null) continue;
-
     const employeeValue = getEmployeeValue(employee, rule.ruleType);
     const passes = evaluateRule(employeeValue, rule.operator, rule.value);
-
     if (!passes) {
       errors.push(
         rule.errorMessage ??
