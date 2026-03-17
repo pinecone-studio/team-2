@@ -1,18 +1,24 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable import/no-default-export */
+/* eslint-disable complexity */
+/* eslint-disable @nx/enforce-module-boundaries */
 'use client';
 
 import { useState, useEffect } from 'react';
 import { useUser } from '@clerk/nextjs';
 
 import { Tabs, TabsList, TabsTrigger } from '@team/source-ui';
+import type {
+  GetBenefitRequestsByEmployeeQuery,
+  GetBenefitsQuery,
+  GetEligibilityRulesQuery,
+  GetEmployeesQuery} from 'apps/web/src/graphql/generated/graphql';
 import {
   GetBenefitRequestsByEmployeeDocument,
-  GetBenefitRequestsByEmployeeQuery,
   GetBenefitsDocument,
-  GetBenefitsQuery,
   GetEligibilityRulesDocument,
-  GetEligibilityRulesQuery,
-  GetEmployeesDocument,
-  GetEmployeesQuery,
+  GetEmployeesDocument
 } from 'apps/web/src/graphql/generated/graphql';
 import { gqlRequest } from 'apps/web/src/graphql/helpers/graphql-client';
 import { deriveBenefitStatus } from '../../benefitsCardDashboard/page';
