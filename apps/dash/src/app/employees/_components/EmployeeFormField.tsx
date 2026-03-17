@@ -13,16 +13,17 @@ import type { EmployeeFormData } from './EmployeeForm';
 
 const RESPONSIBILITY_OPTIONS = [
   { value: '', label: '-- Select Grade --' },
-  { value: 'junior', label: 'Junior Level' },
-  { value: 'mid', label: 'Mid Level' },
-  { value: 'senior', label: 'Senior Level' },
+  { value: '1', label: 'Junior Level' },
+  { value: '2', label: 'Mid Level' },
+  { value: '3', label: 'Senior Level' },
 ];
 
 const STATUS_OPTIONS = [
   { value: '', label: '-- Select Status --' },
-  { value: 'active', label: 'Full-time' },
-  { value: 'probation', label: 'On Probation' },
-  { value: 'contract', label: 'Contractor' },
+  { value: 'ACTIVE', label: 'Active' },
+  { value: 'PROBATION', label: 'Probation' },
+  { value: 'LEAVE', label: 'Leave' },
+  { value: 'TERMINATED', label: 'Terminated' },
 ];
 
 interface Props {

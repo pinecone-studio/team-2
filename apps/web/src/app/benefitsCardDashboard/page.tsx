@@ -217,7 +217,13 @@ type Benefit = GetBenefitsQuery['benefits'][number];
 type BenefitRequest =
   GetBenefitRequestsByEmployeeQuery['benefitRequestsByEmployee'][number];
 type EligibilityRule = GetEligibilityRulesQuery['eligibilityRules'][number];
-export type BenefitStatus = 'Active' | 'Pending' | 'Eligible' | 'Locked';
+
+export type BenefitStatus =
+  | 'Active'
+  | 'Pending'
+  | 'Eligible'
+  | 'Locked'
+  | 'Rejected';
 
 export function deriveBenefitStatus(
   benefit: Benefit,
@@ -226,17 +232,10 @@ export function deriveBenefitStatus(
   employee: Employee,
 ): BenefitStatus {
   if (request) {
-    switch (request.status) {
-      case RequestStatus.Pending:
-        return 'Pending';
-      case RequestStatus.Approved:
-        return 'Active';
-      case RequestStatus.Rejected:
-      case RequestStatus.Cancelled:
-        return 'Locked';
-      default:
-        break;
-    }
+    if (request.status === RequestStatus.Pending) return 'Pending';
+    if (request.status === RequestStatus.Approved) return 'Active';
+    if (request.status === RequestStatus.Rejected) return 'Rejected';
+    if (request.status === RequestStatus.Cancelled) return 'Locked';
   }
   if (!benefit.isActive) return 'Locked';
   const benefitRules = rules.filter((r) => r.benefitId === benefit.id);
