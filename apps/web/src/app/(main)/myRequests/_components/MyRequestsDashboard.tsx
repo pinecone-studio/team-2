@@ -12,6 +12,7 @@ import {
 } from 'apps/web/src/graphql/generated/graphql';
 import { gqlRequest } from 'apps/web/src/graphql/helpers/graphql-client';
 import { MyRequestsDashboardSkeleton } from './skeletonComp/MyRequestsDashboardSkeleton';
+import { Spinner } from 'libs/ui/src/components/spinner';
 
 type Employee = GetEmployeesQuery['employees'][number];
 type Benefit = GetBenefitsQuery['benefits'][number];
@@ -109,7 +110,12 @@ export function MyRequestsDashboard() {
 
   if (loading) return <MyRequestsDashboardSkeleton />;
   if (error) return <p className="text-red-500">{error}</p>;
-  if (!employee && !loading) return <p>Employee record not found.</p>;
+  if (!employee && !loading)
+    return (
+      <div className="w-[100vw] h-[100vh] flex items-center justify-center">
+        <Spinner className="w-16 h-16 opacity-30" />
+      </div>
+    );
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 space-y-8">
