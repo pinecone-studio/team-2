@@ -13,8 +13,8 @@ import {
   type PageStatus,
   type UserProfilePageState,
 } from './profile-form.helpers';
-import { gqlRequest } from '../../../graphql/helpers/graphql-client';
-import { CreateEmployeeDocument } from '../../../graphql/generated/graphql';
+import { gqlRequest } from 'apps/web/src/graphql/helpers/graphql-client';
+import { CreateEmployeeDocument } from 'apps/web/src/graphql/generated/graphql';
 
 export function useUserProfilePage(): UserProfilePageState {
   const { user, isLoaded } = useUser();

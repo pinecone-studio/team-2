@@ -16,7 +16,7 @@ import {
   Label,
 } from '@team/source-ui';
 
-import { Plus, Trash2, Beaker } from 'lucide-react';
+import { Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { gqlRequest } from 'apps/dash/src/graphql/helpers/graphql-client';
 import {
@@ -228,13 +228,12 @@ export const AddBenefitDialog = ({ onCreated }: Props) => {
                   {STEPS.map((label, i) => (
                     <span key={label} className="flex items-center gap-2">
                       <span
-                        className={`inline-flex items-center justify-center w-5 h-5 rounded-full text-[11px] font-bold ${
-                          i === step
+                        className={`inline-flex items-center justify-center w-5 h-5 rounded-full text-[11px] font-bold ${i === step
                             ? 'bg-blue-600 text-white'
                             : i < step
                               ? 'bg-green-500 text-white'
                               : 'bg-gray-200 text-gray-500'
-                        }`}
+                          }`}
                       >
                         {i + 1}
                       </span>

@@ -115,7 +115,7 @@ export function EmployeeBenefitDetailsDialog({
       const data = await gqlRequest(CreateBenefitRequestDocument, {
         input: {
           benefitId: benefit.id,
-          employeeId: employee.id,
+          employeeId: parseInt(employee.id, 10),
           status: RequestStatus.Pending,
           createdAt: new Date().toISOString(),
         },

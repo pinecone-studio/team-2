@@ -9,10 +9,10 @@ import {
   asChecked,
   asNumber,
   asText,
-  getSubmitLabel,
-  type UserProfilePageState,
-} from './profile-form.helpers';
-import { EmploymentStatus } from '../../../graphql/generated/graphql';
+  getSaveLabel,
+  type SettingsPageState,
+} from './settings-form.helpers';
+import { EmploymentStatus } from 'apps/web/src/graphql/generated/graphql';
 
 import {
   Select,
@@ -26,57 +26,49 @@ import { Button } from '@team/source-ui';
 import { Calendar } from '@team/source-ui';
 import { cn } from '@team/source-ui';
 
-type Props = UserProfilePageState;
+type Props = SettingsPageState;
 
-const inputStyles =
-  'w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm outline-none transition-all focus:border-orange-300 focus:ring-2 focus:ring-orange-100';
-
-const disabledInputStyles =
-  'w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm text-gray-400 outline-none cursor-not-allowed';
-
-export function UserProfileForm(props: Props) {
-  const { form, loading, created, error, onSubmit, updateField } = props;
+export function SettingsForm(props: Props) {
+  const { form, loading, saved, error, onSubmit, updateField } = props;
 
   return (
-    <div className="relative h-screen overflow-hidden ">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_#FB923C_0%,_transparent_30%),radial-gradient(ellipse_at_bottom_right,_#FB923C_0%,_transparent_30%)] pointer-events-none" />
+    // Background gradient and centering container
+    <div className="min-h-[922px] bg-[radial-gradient(ellipse_at_bottom_left,_#FB923C_0%,_transparent_30%),radial-gradient(ellipse_at_bottom_right,_#FB923C_0%,_transparent_30%)] bg-gray-50">
+      <div className="mx-auto mt-[169px] max-w-[1027px]  bg-transparent  shadow-none">
+        <Title />
 
-      <div className="relative mx-auto flex h-full max-w-[1027px] items-center">
-        <div className="w-full bg-transparent shadow-none">
-          <Title />
-
-          <form onSubmit={onSubmit} className="flex flex-col gap-8 md:flex-row">
-            <div className="flex flex-col items-center gap-4 px-8">
-              <div className="relative">
-                <div className="h-32 w-32 overflow-hidden rounded-full border-4 border-blue-50 bg-blue-100">
-                  <img
-                    src="https://api.dicebear.com/7.x/avataaars/svg?seed=Profile"
-                    alt="Avatar"
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <button
-                  type="button"
-                  className="absolute bottom-1 right-1 flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 text-white shadow-md hover:bg-blue-600"
-                >
-                  <Pencil size={14} />
-                </button>
+        <form onSubmit={onSubmit} className="flex flex-col gap-8 md:flex-row">
+          {/* Left Side: Profile Picture */}
+          <div className="flex flex-col items-center gap-4 px-8">
+            <div className="relative">
+              <div className="h-32 w-32 overflow-hidden rounded-full border-4 border-blue-50 bg-blue-100">
+                <img
+                  src="https://api.dicebear.com/7.x/avataaars/svg?seed=Anujin"
+                  alt="Avatar"
+                  className="h-full w-full object-cover"
+                />
               </div>
+              <button
+                type="button"
+                className="absolute bottom-1 right-1 flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 text-white shadow-md hover:bg-blue-600"
+              >
+                <Pencil size={14} />
+              </button>
+            </div>
+          </div>
+
+          {/* Right Side: Form Fields */}
+          <div className="flex-1">
+            <div className="grid grid-cols-1 gap-x-6 gap-y-5 md:grid-cols-2">
+              <EditableFields form={form} updateField={updateField} />
             </div>
 
-            <div className="flex-1">
-              <div className="grid grid-cols-1 gap-x-6 gap-y-5 md:grid-cols-2">
-                <IdentityFields form={form} />
-                <EditableFields form={form} updateField={updateField} />
-              </div>
-
-              <div className="mt-8 flex flex-col items-end gap-3">
-                <SubmitButton loading={loading} created={created} />
-                <StatusMessages created={created} error={error} />
-              </div>
+            <div className="mt-8 flex flex-col items-end gap-3">
+              <SubmitButton loading={loading} saved={saved} />
+              <StatusMessages saved={saved} error={error} />
             </div>
-          </form>
-        </div>
+          </div>
+        </form>
       </div>
     </div>
   );
@@ -85,57 +77,9 @@ export function UserProfileForm(props: Props) {
 function Title() {
   return (
     <div className="mb-10 flex flex-col items-center md:items-start">
-      <h2 className="text-lg font-medium text-blue-500">Create Profile</h2>
+      <h2 className="text-lg font-medium text-blue-500">Edit Profile</h2>
       <div className="mt-1 h-0.5 w-16 bg-blue-500" />
     </div>
-  );
-}
-
-function FieldGroup({
-  label,
-  children,
-}: {
-  label: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="flex flex-col gap-1.5">
-      <label className="text-sm font-medium text-gray-600">{label}</label>
-      {children}
-    </div>
-  );
-}
-
-function IdentityFields({ form }: Pick<Props, 'form'>) {
-  return (
-    <>
-      <FieldGroup label="Email">
-        <input
-          value={asText(form.email)}
-          disabled
-          placeholder="Email"
-          className={disabledInputStyles}
-        />
-      </FieldGroup>
-
-      <FieldGroup label="Name">
-        <input
-          value={asText(form.name)}
-          disabled
-          placeholder="Name"
-          className={disabledInputStyles}
-        />
-      </FieldGroup>
-
-      <FieldGroup label="Clerk User ID">
-        <input
-          value={asText(form.clerkUserId)}
-          disabled
-          placeholder="Clerk User ID"
-          className={disabledInputStyles}
-        />
-      </FieldGroup>
-    </>
   );
 }
 
@@ -144,9 +88,27 @@ function EditableFields({
   updateField,
 }: Pick<Props, 'form' | 'updateField'>) {
   const [calendarOpen, setCalendarOpen] = useState(false);
+
   const hireDateValue = form.hireDate
     ? new Date(asText(form.hireDate))
     : undefined;
+
+  // Helper to render styled input groups
+  const FieldGroup = ({
+    label,
+    children,
+  }: {
+    label: string;
+    children: React.ReactNode;
+  }) => (
+    <div className="flex flex-col gap-1.5">
+      <label className="text-sm font-medium text-gray-600">{label}</label>
+      {children}
+    </div>
+  );
+
+  const inputStyles =
+    'w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm outline-none transition-all focus:border-orange-300 focus:ring-2 focus:ring-orange-100';
 
   return (
     <>
@@ -240,7 +202,7 @@ function EditableFields({
         <input
           type="number"
           className={inputStyles}
-          value={asNumber(form.lateArrivalCount)}
+          value={asNumber(Number(form.lateArrivalCount))}
           onChange={(e) =>
             updateField('lateArrivalCount', Number(e.target.value))
           }
@@ -263,33 +225,28 @@ function EditableFields({
   );
 }
 
-function SubmitButton({
-  loading,
-  created,
-}: Pick<Props, 'loading' | 'created'>) {
+function SubmitButton({ loading, saved }: Pick<Props, 'loading' | 'saved'>) {
   return (
     <button
       type="submit"
-      disabled={loading || created}
+      disabled={loading || saved}
       className={cn(
         'w-full rounded-lg px-12 py-3 text-sm font-semibold text-white transition-all md:w-auto',
-        loading || created
-          ? 'cursor-not-allowed bg-gray-300'
-          : 'bg-[#f4a261] shadow-md shadow-orange-200 hover:bg-[#e76f51] active:scale-95',
+        loading || saved
+          ? 'bg-gray-300 cursor-not-allowed'
+          : 'bg-[#f4a261] hover:bg-[#e76f51] active:scale-95 shadow-md shadow-orange-200',
       )}
     >
-      {getSubmitLabel(loading, created)}
+      {getSaveLabel(loading, saved)}
     </button>
   );
 }
 
-function StatusMessages({ created, error }: Pick<Props, 'created' | 'error'>) {
+function StatusMessages({ saved, error }: Pick<Props, 'saved' | 'error'>) {
   return (
     <div className="min-h-[24px]">
-      {created && (
-        <p className="text-sm text-green-600">
-          Employee profile created successfully.
-        </p>
+      {saved && (
+        <p className="text-sm text-green-600">Settings saved successfully.</p>
       )}
       {error && <p className="text-sm text-red-500">{error}</p>}
     </div>

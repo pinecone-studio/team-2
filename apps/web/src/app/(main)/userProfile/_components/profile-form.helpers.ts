@@ -3,7 +3,7 @@ import type { useUser } from '@clerk/nextjs';
 import {
   EmploymentStatus,
   type CreateEmployeeMutationVariables,
-} from '../../../graphql/generated/graphql';
+} from 'apps/web/src/graphql/generated/graphql';
 
 export type EmployeeInput = CreateEmployeeMutationVariables['input'];
 
