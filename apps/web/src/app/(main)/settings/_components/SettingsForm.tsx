@@ -2,6 +2,7 @@
 
 import type React from 'react';
 import { useState } from 'react';
+import { useUser } from '@clerk/nextjs';
 import { format } from 'date-fns';
 import { CalendarIcon, Pencil } from 'lucide-react';
 
@@ -9,10 +10,10 @@ import {
   asChecked,
   asNumber,
   asText,
-  getSubmitLabel,
-  type UserProfilePageState,
-} from './profile-form.helpers';
-import { EmploymentStatus } from '../../../graphql/generated/graphql';
+  getSaveLabel,
+  type SettingsPageState,
+} from './settings-form.helpers';
+import { EmploymentStatus } from 'apps/web/src/graphql/generated/graphql';
 
 import {
   Select,
@@ -26,22 +27,36 @@ import { Button } from '@team/source-ui';
 import { Calendar } from '@team/source-ui';
 import { cn } from '@team/source-ui';
 
-type Props = UserProfilePageState;
+type Props = SettingsPageState;
 
 const inputStyles =
-  'w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm outline-none transition-all focus:border-orange-300 focus:ring-2 focus:ring-orange-100';
+  'h-11 w-full rounded-lg border border-gray-200 bg-white px-4 text-sm outline-none transition-all focus:border-orange-300 focus:ring-2 focus:ring-orange-100';
 
 const disabledInputStyles =
-  'w-full rounded-lg border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm text-gray-400 outline-none cursor-not-allowed';
+  'h-11 w-full rounded-lg border border-gray-200 bg-gray-50 px-4 text-sm text-gray-700 opacity-100 outline-none cursor-not-allowed';
 
-export function UserProfileForm(props: Props) {
-  const { form, loading, created, error, onSubmit, updateField } = props;
+const selectTriggerStyles =
+  '!h-11 !w-full !rounded-lg !border-gray-200 !bg-white !px-4 !text-sm !shadow-none focus:!border-orange-300 focus:!ring-2 focus:!ring-orange-100';
+
+const dateTriggerStyles =
+  '!h-11 !w-full !justify-start !rounded-lg !border-gray-200 !bg-white !px-4 !text-sm !font-normal !shadow-none hover:!bg-white focus:!border-orange-300 focus:!ring-2 focus:!ring-orange-100';
+
+export function SettingsForm(props: Props) {
+  const { form, loading, saved, error, onSubmit, updateField } = props;
 
   return (
-    <div className="relative h-screen overflow-hidden ">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_#FB923C_0%,_transparent_30%),radial-gradient(ellipse_at_bottom_right,_#FB923C_0%,_transparent_30%)] pointer-events-none" />
+    <div className="relative h-[calc(100vh-72px)] overflow-hidden bg-white ">
+      <div
+        className="pointer-events-none absolute inset-x-0 bottom-[-120px] h-[420px] blur-3xl opacity-90 "
+        style={{
+          background: `
+            radial-gradient(55% 85% at 22% 100%, rgba(251,146,60,0.95) 0%, rgba(251,146,60,0.75) 28%, rgba(251,146,60,0.35) 52%, rgba(251,146,60,0.12) 68%, transparent 82%),
+            radial-gradient(55% 85% at 78% 100%, rgba(251,146,60,0.95) 0%, rgba(251,146,60,0.75) 28%, rgba(251,146,60,0.35) 52%, rgba(251,146,60,0.12) 68%, transparent 82%)
+          `,
+        }}
+      />
 
-      <div className="relative mx-auto flex h-full max-w-[1027px] items-center">
+      <div className="relative mx-auto mt-40 h-full max-w-[1027px] ">
         <div className="w-full bg-transparent shadow-none">
           <Title />
 
@@ -50,7 +65,7 @@ export function UserProfileForm(props: Props) {
               <div className="relative">
                 <div className="h-32 w-32 overflow-hidden rounded-full border-4 border-blue-50 bg-blue-100">
                   <img
-                    src="https://api.dicebear.com/7.x/avataaars/svg?seed=Profile"
+                    src="https://api.dicebear.com/7.x/avataaars/svg?seed=Anujin"
                     alt="Avatar"
                     className="h-full w-full object-cover"
                   />
@@ -66,13 +81,13 @@ export function UserProfileForm(props: Props) {
 
             <div className="flex-1">
               <div className="grid grid-cols-1 gap-x-6 gap-y-5 md:grid-cols-2">
-                <IdentityFields form={form} />
+                <IdentityFields />
                 <EditableFields form={form} updateField={updateField} />
               </div>
 
               <div className="mt-8 flex flex-col items-end gap-3">
-                <SubmitButton loading={loading} created={created} />
-                <StatusMessages created={created} error={error} />
+                <SubmitButton loading={loading} saved={saved} />
+                <StatusMessages saved={saved} error={error} />
               </div>
             </div>
           </form>
@@ -85,7 +100,7 @@ export function UserProfileForm(props: Props) {
 function Title() {
   return (
     <div className="mb-10 flex flex-col items-center md:items-start">
-      <h2 className="text-lg font-medium text-blue-500">Create Profile</h2>
+      <h2 className="text-lg font-medium text-blue-500">Edit Profile</h2>
       <div className="mt-1 h-0.5 w-16 bg-blue-500" />
     </div>
   );
@@ -106,13 +121,18 @@ function FieldGroup({
   );
 }
 
-function IdentityFields({ form }: Pick<Props, 'form'>) {
+function IdentityFields() {
+  const { user, isLoaded } = useUser();
+
+  const email = isLoaded ? (user?.primaryEmailAddress?.emailAddress ?? '') : '';
+  const name = isLoaded ? (user?.fullName ?? user?.username ?? '') : '';
+
   return (
     <>
       <FieldGroup label="Email">
         <input
-          value={asText(form.email)}
-          disabled
+          value={email}
+          readOnly
           placeholder="Email"
           className={disabledInputStyles}
         />
@@ -120,18 +140,9 @@ function IdentityFields({ form }: Pick<Props, 'form'>) {
 
       <FieldGroup label="Name">
         <input
-          value={asText(form.name)}
-          disabled
+          value={name}
+          readOnly
           placeholder="Name"
-          className={disabledInputStyles}
-        />
-      </FieldGroup>
-
-      <FieldGroup label="Clerk User ID">
-        <input
-          value={asText(form.clerkUserId)}
-          disabled
-          placeholder="Clerk User ID"
           className={disabledInputStyles}
         />
       </FieldGroup>
@@ -144,6 +155,7 @@ function EditableFields({
   updateField,
 }: Pick<Props, 'form' | 'updateField'>) {
   const [calendarOpen, setCalendarOpen] = useState(false);
+
   const hireDateValue = form.hireDate
     ? new Date(asText(form.hireDate))
     : undefined;
@@ -173,13 +185,13 @@ function EditableFields({
           value={asText(form.responsibilityLevel)}
           onValueChange={(val) => updateField('responsibilityLevel', val)}
         >
-          <SelectTrigger className={inputStyles}>
+          <SelectTrigger className={selectTriggerStyles}>
             <SelectValue placeholder="Select Level" />
           </SelectTrigger>
           <SelectContent className="rounded-lg border bg-white shadow-lg">
-            <SelectItem value="1">L1</SelectItem>
-            <SelectItem value="2">L2</SelectItem>
-            <SelectItem value="3">L3</SelectItem>
+            <SelectItem value="1">1</SelectItem>
+            <SelectItem value="2">2</SelectItem>
+            <SelectItem value="3">3</SelectItem>
           </SelectContent>
         </Select>
       </FieldGroup>
@@ -191,7 +203,7 @@ function EditableFields({
             updateField('employmentStatus', val as EmploymentStatus)
           }
         >
-          <SelectTrigger className={inputStyles}>
+          <SelectTrigger className={selectTriggerStyles}>
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent className="rounded-lg border bg-white shadow-lg">
@@ -213,8 +225,7 @@ function EditableFields({
             <Button
               variant="outline"
               className={cn(
-                inputStyles,
-                'justify-start font-normal',
+                dateTriggerStyles,
                 !form.hireDate && 'text-gray-400',
               )}
             >
@@ -222,7 +233,8 @@ function EditableFields({
               {hireDateValue ? format(hireDateValue, 'PPP') : 'Pick a date'}
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="start">
+
+          <PopoverContent className="w-auto bg-white p-0" align="start">
             <Calendar
               mode="single"
               selected={hireDateValue}
@@ -230,6 +242,9 @@ function EditableFields({
                 updateField('hireDate', date ? format(date, 'yyyy-MM-dd') : '');
                 setCalendarOpen(false);
               }}
+              captionLayout="dropdown"
+              fromYear={1990}
+              toYear={new Date().getFullYear() + 5}
               initialFocus
             />
           </PopoverContent>
@@ -263,29 +278,29 @@ function EditableFields({
   );
 }
 
-function SubmitButton({
-  loading,
-  created,
-}: Pick<Props, 'loading' | 'created'>) {
+function SubmitButton({ loading, saved }: Pick<Props, 'loading' | 'saved'>) {
   return (
     <button
       type="submit"
-      disabled={loading || created}
+      disabled={loading || saved}
       className={cn(
         'w-full rounded-lg px-12 py-3 text-sm font-semibold text-white transition-all md:w-auto',
-        loading || created
+        loading || saved
           ? 'cursor-not-allowed bg-gray-300'
           : 'bg-[#f4a261] shadow-md shadow-orange-200 hover:bg-[#e76f51] active:scale-95',
       )}
     >
-      {getSubmitLabel(loading, created)}
+      {getSaveLabel(loading, saved)}
     </button>
   );
 }
 
-function StatusMessages({ created, error }: Pick<Props, 'created' | 'error'>) {
+function StatusMessages({ saved, error }: Pick<Props, 'saved' | 'error'>) {
   return (
     <div className="min-h-[24px]">
+      {saved && (
+        <p className="text-sm text-green-600">Settings saved successfully.</p>
+      )}
       {error && <p className="text-sm text-red-500">{error}</p>}
     </div>
   );

@@ -12,8 +12,8 @@ import {
   type SettingsPageState,
   type SettingsPageStatus,
 } from './settings-form.helpers';
-import { gqlRequest } from '../../../graphql/helpers/graphql-client';
-import { UpdateEmployeeDocument } from '../../../graphql/generated/graphql';
+import { gqlRequest } from 'apps/web/src/graphql/helpers/graphql-client';
+import { UpdateEmployeeDocument } from 'apps/web/src/graphql/generated/graphql';
 import { findCurrentEmployee } from '../../userProfile/_components/employee/find-current-employee';
 
 type ClerkUser = NonNullable<ReturnType<typeof useUser>['user']>;
