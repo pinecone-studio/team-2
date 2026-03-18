@@ -7,11 +7,13 @@
     "next": "~16.0.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-router-dom": "^7.13.1"
+    "react-router-dom": "^7.13.1",
+    "vercel": "^50.29.0"
   },
   "scripts": {
-    "vercel-build": "next build",
+    "vercel-build": "next build --webpack",
     "pages:build": "npx @cloudflare/next-on-pages",
+    "cf:build": "npx @cloudflare/next-on-pages",
     "codegen": "graphql-codegen",
     "codegen:watch": "graphql-codegen --watch"
   }
