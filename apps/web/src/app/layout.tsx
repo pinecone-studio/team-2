@@ -25,9 +25,10 @@ export default async function RootLayout({
               </main>
             </div>
           </SidebarProvider>
+          {children}
           <Toaster position="top-center" />
         </body>
-      </html>
+      </html>``
     </ClerkProvider>
   );
 }
