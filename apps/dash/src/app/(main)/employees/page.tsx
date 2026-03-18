@@ -136,12 +136,9 @@ import { useEffect, useState } from 'react';
 import { EmployeeForm } from './_components/EmployeeForm';
 import type { EmployeeFormData } from './_components/EmployeeForm';
 import { EmployeeFormSkeleton } from './_components/EmployeeFormSkeleton';
-import { gqlRequest } from '../../graphql/helpers/graphql-client';
-import {
-  CreateEmployeeDocument,
-  EmploymentStatus,
-  type CreateEmployeeMutationVariables,
-} from '../../graphql/generated/graphql';
+import { CreateEmployeeDocument, CreateEmployeeMutationVariables, EmploymentStatus } from 'apps/dash/src/graphql/generated/graphql';
+import { gqlRequest } from 'apps/dash/src/graphql/helpers/graphql-client';
+
 
 const INITIAL_FORM: EmployeeFormData = {
   email: '',

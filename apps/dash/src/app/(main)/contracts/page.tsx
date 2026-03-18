@@ -1,11 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { gqlRequest } from '../../graphql/helpers/graphql-client';
-import {
-  GetBenefitsDocument,
-  GetBenefitsQuery,
-} from '../../graphql/generated/graphql';
+
 import {
   FileText,
   ExternalLink,
@@ -13,6 +9,8 @@ import {
   Building2,
   Percent,
 } from 'lucide-react';
+import { GetBenefitsDocument, GetBenefitsQuery } from 'apps/dash/src/graphql/generated/graphql';
+import { gqlRequest } from 'apps/dash/src/graphql/helpers/graphql-client';
 
 type Benefit = GetBenefitsQuery['benefits'][number];
 
