@@ -1,13 +1,14 @@
 'use client';
 
 import { SettingsForm } from './_components/SettingsForm';
+import { SettingsFormSkeleton } from './_components/SettingsFormSkeleton';
 import { useSettingsPage } from './_components/use-settings-page';
 
 export default function SettingsPage() {
   const state = useSettingsPage();
 
   if (state.status === 'loading-user' || state.status === 'loading-employee') {
-    return <div className="p-6">Loading...</div>;
+    return <SettingsFormSkeleton />;
   }
 
   if (state.status === 'signed-out') {

@@ -1,16 +1,14 @@
 'use client';
 
-import { Spinner } from '@team/source-ui';
 import { useUserProfilePage } from './_components/use-user-profile-page';
 import { UserProfileForm } from './_components/UserProfileForm';
+import { SettingsFormSkeleton } from '../settings/_components/SettingsFormSkeleton';
 
 export default function UserProfilePage() {
   const state = useUserProfilePage();
 
   if (state.status === 'loading-user') {
-    <div className="w-[100vw] h-[100vh] flex items-center justify-center">
-      <Spinner className="w-16 h-16" />
-    </div>;
+    return <SettingsFormSkeleton />;
   }
 
   if (state.status === 'signed-out') {
@@ -22,11 +20,7 @@ export default function UserProfilePage() {
   }
 
   if (state.status === 'checking') {
-    return (
-      <div className="w-[100vw] h-[100vh] flex items-center justify-center">
-        <Spinner className="w-16 h-16" />
-      </div>
-    );
+    return <SettingsFormSkeleton />;
   }
 
   return <UserProfileForm {...state} />;

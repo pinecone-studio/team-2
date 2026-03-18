@@ -2,6 +2,7 @@
 
 import type React from 'react';
 import { useState } from 'react';
+import { useUser } from '@clerk/nextjs';
 import { format } from 'date-fns';
 import { CalendarIcon, Pencil } from 'lucide-react';
 
@@ -28,47 +29,69 @@ import { cn } from '@team/source-ui';
 
 type Props = SettingsPageState;
 
+const inputStyles =
+  'h-11 w-full rounded-lg border border-gray-200 bg-white px-4 text-sm outline-none transition-all focus:border-orange-300 focus:ring-2 focus:ring-orange-100';
+
+const disabledInputStyles =
+  'h-11 w-full rounded-lg border border-gray-200 bg-gray-50 px-4 text-sm text-gray-700 opacity-100 outline-none cursor-not-allowed';
+
+const selectTriggerStyles =
+  '!h-11 !w-full !rounded-lg !border-gray-200 !bg-white !px-4 !text-sm !shadow-none focus:!border-orange-300 focus:!ring-2 focus:!ring-orange-100';
+
+const dateTriggerStyles =
+  '!h-11 !w-full !justify-start !rounded-lg !border-gray-200 !bg-white !px-4 !text-sm !font-normal !shadow-none hover:!bg-white focus:!border-orange-300 focus:!ring-2 focus:!ring-orange-100';
+
 export function SettingsForm(props: Props) {
   const { form, loading, saved, error, onSubmit, updateField } = props;
 
   return (
-    // Background gradient and centering container
-    <div className="min-h-[922px] bg-[radial-gradient(ellipse_at_bottom_left,_#FB923C_0%,_transparent_30%),radial-gradient(ellipse_at_bottom_right,_#FB923C_0%,_transparent_30%)] bg-gray-50">
-      <div className="mx-auto mt-[169px] max-w-[1027px]  bg-transparent  shadow-none">
-        <Title />
+    <div className="relative h-[calc(100vh-72px)] overflow-hidden bg-white ">
+      <div
+        className="pointer-events-none absolute inset-x-0 bottom-[-120px] h-[420px] blur-3xl opacity-90 "
+        style={{
+          background: `
+            radial-gradient(55% 85% at 22% 100%, rgba(251,146,60,0.95) 0%, rgba(251,146,60,0.75) 28%, rgba(251,146,60,0.35) 52%, rgba(251,146,60,0.12) 68%, transparent 82%),
+            radial-gradient(55% 85% at 78% 100%, rgba(251,146,60,0.95) 0%, rgba(251,146,60,0.75) 28%, rgba(251,146,60,0.35) 52%, rgba(251,146,60,0.12) 68%, transparent 82%)
+          `,
+        }}
+      />
 
-        <form onSubmit={onSubmit} className="flex flex-col gap-8 md:flex-row">
-          {/* Left Side: Profile Picture */}
-          <div className="flex flex-col items-center gap-4 px-8">
-            <div className="relative">
-              <div className="h-32 w-32 overflow-hidden rounded-full border-4 border-blue-50 bg-blue-100">
-                <img
-                  src="https://api.dicebear.com/7.x/avataaars/svg?seed=Anujin"
-                  alt="Avatar"
-                  className="h-full w-full object-cover"
-                />
+      <div className="relative mx-auto mt-40 h-full max-w-[1027px] ">
+        <div className="w-full bg-transparent shadow-none">
+          <Title />
+
+          <form onSubmit={onSubmit} className="flex flex-col gap-8 md:flex-row">
+            <div className="flex flex-col items-center gap-4 px-8">
+              <div className="relative">
+                <div className="h-32 w-32 overflow-hidden rounded-full border-4 border-blue-50 bg-blue-100">
+                  <img
+                    src="https://api.dicebear.com/7.x/avataaars/svg?seed=Anujin"
+                    alt="Avatar"
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <button
+                  type="button"
+                  className="absolute bottom-1 right-1 flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 text-white shadow-md hover:bg-blue-600"
+                >
+                  <Pencil size={14} />
+                </button>
               </div>
-              <button
-                type="button"
-                className="absolute bottom-1 right-1 flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 text-white shadow-md hover:bg-blue-600"
-              >
-                <Pencil size={14} />
-              </button>
-            </div>
-          </div>
-
-          {/* Right Side: Form Fields */}
-          <div className="flex-1">
-            <div className="grid grid-cols-1 gap-x-6 gap-y-5 md:grid-cols-2">
-              <EditableFields form={form} updateField={updateField} />
             </div>
 
-            <div className="mt-8 flex flex-col items-end gap-3">
-              <SubmitButton loading={loading} saved={saved} />
-              <StatusMessages saved={saved} error={error} />
+            <div className="flex-1">
+              <div className="grid grid-cols-1 gap-x-6 gap-y-5 md:grid-cols-2">
+                <IdentityFields />
+                <EditableFields form={form} updateField={updateField} />
+              </div>
+
+              <div className="mt-8 flex flex-col items-end gap-3">
+                <SubmitButton loading={loading} saved={saved} />
+                <StatusMessages saved={saved} error={error} />
+              </div>
             </div>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   );
@@ -83,6 +106,50 @@ function Title() {
   );
 }
 
+function FieldGroup({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex flex-col gap-1.5">
+      <label className="text-sm font-medium text-gray-600">{label}</label>
+      {children}
+    </div>
+  );
+}
+
+function IdentityFields() {
+  const { user, isLoaded } = useUser();
+
+  const email = isLoaded ? (user?.primaryEmailAddress?.emailAddress ?? '') : '';
+  const name = isLoaded ? (user?.fullName ?? user?.username ?? '') : '';
+
+  return (
+    <>
+      <FieldGroup label="Email">
+        <input
+          value={email}
+          readOnly
+          placeholder="Email"
+          className={disabledInputStyles}
+        />
+      </FieldGroup>
+
+      <FieldGroup label="Name">
+        <input
+          value={name}
+          readOnly
+          placeholder="Name"
+          className={disabledInputStyles}
+        />
+      </FieldGroup>
+    </>
+  );
+}
+
 function EditableFields({
   form,
   updateField,
@@ -92,23 +159,6 @@ function EditableFields({
   const hireDateValue = form.hireDate
     ? new Date(asText(form.hireDate))
     : undefined;
-
-  // Helper to render styled input groups
-  const FieldGroup = ({
-    label,
-    children,
-  }: {
-    label: string;
-    children: React.ReactNode;
-  }) => (
-    <div className="flex flex-col gap-1.5">
-      <label className="text-sm font-medium text-gray-600">{label}</label>
-      {children}
-    </div>
-  );
-
-  const inputStyles =
-    'w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm outline-none transition-all focus:border-orange-300 focus:ring-2 focus:ring-orange-100';
 
   return (
     <>
@@ -135,13 +185,13 @@ function EditableFields({
           value={asText(form.responsibilityLevel)}
           onValueChange={(val) => updateField('responsibilityLevel', val)}
         >
-          <SelectTrigger className={inputStyles}>
+          <SelectTrigger className={selectTriggerStyles}>
             <SelectValue placeholder="Select Level" />
           </SelectTrigger>
           <SelectContent className="rounded-lg border bg-white shadow-lg">
-            <SelectItem value="L1">L1</SelectItem>
-            <SelectItem value="L2">L2</SelectItem>
-            <SelectItem value="L3">L3</SelectItem>
+            <SelectItem value="1">1</SelectItem>
+            <SelectItem value="2">2</SelectItem>
+            <SelectItem value="3">3</SelectItem>
           </SelectContent>
         </Select>
       </FieldGroup>
@@ -153,7 +203,7 @@ function EditableFields({
             updateField('employmentStatus', val as EmploymentStatus)
           }
         >
-          <SelectTrigger className={inputStyles}>
+          <SelectTrigger className={selectTriggerStyles}>
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent className="rounded-lg border bg-white shadow-lg">
@@ -175,8 +225,7 @@ function EditableFields({
             <Button
               variant="outline"
               className={cn(
-                inputStyles,
-                'justify-start font-normal',
+                dateTriggerStyles,
                 !form.hireDate && 'text-gray-400',
               )}
             >
@@ -184,7 +233,8 @@ function EditableFields({
               {hireDateValue ? format(hireDateValue, 'PPP') : 'Pick a date'}
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="start">
+
+          <PopoverContent className="w-auto bg-white p-0" align="start">
             <Calendar
               mode="single"
               selected={hireDateValue}
@@ -192,6 +242,9 @@ function EditableFields({
                 updateField('hireDate', date ? format(date, 'yyyy-MM-dd') : '');
                 setCalendarOpen(false);
               }}
+              captionLayout="dropdown"
+              fromYear={1990}
+              toYear={new Date().getFullYear() + 5}
               initialFocus
             />
           </PopoverContent>
@@ -202,7 +255,7 @@ function EditableFields({
         <input
           type="number"
           className={inputStyles}
-          value={asNumber(Number(form.lateArrivalCount))}
+          value={asNumber(form.lateArrivalCount)}
           onChange={(e) =>
             updateField('lateArrivalCount', Number(e.target.value))
           }
@@ -233,8 +286,8 @@ function SubmitButton({ loading, saved }: Pick<Props, 'loading' | 'saved'>) {
       className={cn(
         'w-full rounded-lg px-12 py-3 text-sm font-semibold text-white transition-all md:w-auto',
         loading || saved
-          ? 'bg-gray-300 cursor-not-allowed'
-          : 'bg-[#f4a261] hover:bg-[#e76f51] active:scale-95 shadow-md shadow-orange-200',
+          ? 'cursor-not-allowed bg-gray-300'
+          : 'bg-[#f4a261] shadow-md shadow-orange-200 hover:bg-[#e76f51] active:scale-95',
       )}
     >
       {getSaveLabel(loading, saved)}
