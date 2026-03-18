@@ -1,6 +1,6 @@
 import BenefitsCardDashboard from '../benefitsCardDashboard/page';
 import DashboardCard from '../DashboardCard/page';
-import { RepeatingGradient } from '../_components/main/backgroundGradient/RepeatingGradients';
+import { RepeatingGradient } from '../../_components/main/backgroundGradient/RepeatingGradients';
 
 export default function DashboardPage() {
   return (

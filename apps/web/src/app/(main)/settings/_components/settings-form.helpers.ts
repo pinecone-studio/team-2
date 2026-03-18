@@ -1,7 +1,7 @@
 import type React from 'react';
 import type { useUser } from '@clerk/nextjs';
-import type { UpdateEmployeeMutationVariables } from '../../../graphql/generated/graphql';
-import { EmploymentStatus } from '../../../graphql/generated/graphql';
+import type { UpdateEmployeeMutationVariables } from 'apps/web/src/graphql/generated/graphql';
+import { EmploymentStatus } from 'apps/web/src/graphql/generated/graphql';
 
 export type EmployeeUpdateInput = UpdateEmployeeMutationVariables['input'];
 

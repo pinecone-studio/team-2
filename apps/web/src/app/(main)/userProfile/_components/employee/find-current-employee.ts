@@ -1,6 +1,6 @@
-import type { GetEmployeesQuery } from '../../../../graphql/generated/graphql';
-import { GetEmployeesDocument } from '../../../../graphql/generated/graphql';
-import { gqlRequest } from '../../../../graphql/helpers/graphql-client';
+import type { GetEmployeesQuery } from 'apps/web/src/graphql/generated/graphql';
+import { GetEmployeesDocument } from 'apps/web/src/graphql/generated/graphql';
+import { gqlRequest } from 'apps/web/src/graphql/helpers/graphql-client';
 
 type Employee = GetEmployeesQuery['employees'][number];
 
