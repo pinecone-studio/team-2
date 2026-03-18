@@ -22,7 +22,9 @@ export const TopNavBar = () => {
   };
 
   return (
-    <nav className="w-screen bg-white sticky top-0 z-50 px-20 py-2">
+    // <nav className="w-screen bg-white/50 sticky top-0 z-50 px-20 py-2">
+
+    <nav className="w-screen bg-white/50 sticky top-0 z-50 px-20 py-2 backdrop-blur-sm border-b border-white/20">
       <div className="flex items-center justify-between px-6 h-14">
         {/* Logo / Brand */}
         <div className="flex items-center space-x-2 shrink-0">

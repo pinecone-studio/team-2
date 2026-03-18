@@ -90,9 +90,13 @@ export default function BenefitsCardDashboard() {
 
         let employeeRequests: BenefitRequest[] = [];
         if (matchedEmployee) {
+          // const reqs = await gqlRequest(GetBenefitRequestsByEmployeeDocument, {
+          //   employeeId: matchedEmployee.id,
+          // });
           const reqs = await gqlRequest(GetBenefitRequestsByEmployeeDocument, {
-            employeeId: matchedEmployee.id,
+            employeeId: parseInt(matchedEmployee.id, 10),
           });
+
           employeeRequests = reqs.benefitRequestsByEmployee;
         }
 

@@ -39,7 +39,7 @@ const QuickActions = () => {
     {
       id: 4,
       title: 'OKR Deadline Approaching',
-      description: 'Q1 2025 OKR submission due in 5 days.',
+      description: 'Q1 2026 OKR submission due in 5 days.',
       time: '5 days ago',
       icon: <AlertCircle className="w-5 h-5 text-pink-500" />,
       bgColor: 'bg-pink-50',
