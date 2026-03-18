@@ -22,7 +22,7 @@ export function Header({ isLoading = false }: HeaderProps) {
   }
 
   return (
-    <div className="flex items-center justify-between mb-[32px]">
+    <div className="flex items-center justify-between mb-[34px] mt-3">
       <div>
         <h1 className="text-3xl font-bold text-gray-900">
           Hello {user?.firstName ?? user?.fullName ?? ''}
