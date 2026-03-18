@@ -8,7 +8,9 @@ export default function UserProfilePage() {
   const state = useUserProfilePage();
 
   if (state.status === 'loading-user') {
-    return <SettingsFormSkeleton />;
+    <div className="w-[100vw] h-[100vh] flex items-center justify-center">
+      <Spinner className="w-16 h-16 opacity-30" />
+    </div>;
   }
 
   if (state.status === 'signed-out') {
@@ -20,7 +22,11 @@ export default function UserProfilePage() {
   }
 
   if (state.status === 'checking') {
-    return <SettingsFormSkeleton />;
+    return (
+      <div className="w-[100vw] h-[100vh] flex items-center justify-center">
+        <Spinner className="w-16 h-16 opacity-30" />
+      </div>
+    );
   }
 
   return <UserProfileForm {...state} />;

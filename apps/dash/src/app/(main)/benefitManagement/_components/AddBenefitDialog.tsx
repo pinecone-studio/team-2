@@ -9,7 +9,7 @@ import {
   DialogTrigger,
 } from '@team/source-ui';
 
-import { Plus, Trash2, Beaker } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { useState } from 'react';
 import { gqlRequest } from 'apps/dash/src/graphql/helpers/graphql-client';
 import {
