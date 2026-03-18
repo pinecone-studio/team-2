@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
+    "vercel-build": "next build --webpack",
+    "pages:build": "npx @cloudflare/next-on-pages",
+    "cf:build": "npx @cloudflare/next-on-pages",
     "codegen": "graphql-codegen",
     "codegen:watch": "graphql-codegen --watch"
   },

@@ -59,9 +59,15 @@ export function MyRequestsDashboard() {
         setEmployee(matched ?? null);
 
         if (matched) {
+          const employeeId = Number.parseInt(matched.id, 10);
+
+          if (Number.isNaN(employeeId)) {
+            throw new Error('Invalid employee id');
+          }
+
           const requestsData = await gqlRequest(
             GetBenefitRequestsByEmployeeDocument,
-            { employeeId: matched.id },
+            { employeeId },
           );
           setRequests(requestsData.benefitRequestsByEmployee);
         }
