@@ -10,14 +10,18 @@ import {
   type GetBenefitsQuery,
   type GetEmployeesQuery,
 } from 'apps/dash/src/graphql/generated/graphql';
-import { gqlRequest } from 'apps/dash/src/graphql/helpers/graphql-client';
 import { ProcessedRequestsSkeleton } from './skeletonComp/ProcessedRequestsSkeleton';
+import { gqlRequest } from 'apps/dash/src/graphql/helpers/graphql-client';
 
 type BenefitRequest = GetBenefitRequestsQuery['benefitRequests'][number];
 type Benefit = GetBenefitsQuery['benefits'][number];
 type Employee = GetEmployeesQuery['employees'][number];
 
-export const ProcessedRequestsStandalone = () => {
+type Props = {
+  variant?: 'table' | 'feed';
+};
+
+export const ProcessedRequestsStandalone = ({ variant = 'table' }: Props) => {
   const [requests, setRequests] = useState<BenefitRequest[]>([]);
   const [benefits, setBenefits] = useState<Benefit[]>([]);
   const [employees, setEmployees] = useState<Employee[]>([]);
@@ -43,8 +47,8 @@ export const ProcessedRequestsStandalone = () => {
         setRequests(processed);
         setBenefits(benefitsData.benefits);
         setEmployees(employeesData.employees);
-      } catch (e: any) {
-        setError(e.message ?? 'Failed to load');
+      } catch (error: unknown) {
+        setError(error instanceof Error ? error.message : 'Failed to load');
       } finally {
         setLoading(false);
       }
@@ -60,6 +64,7 @@ export const ProcessedRequestsStandalone = () => {
       requests={requests}
       benefits={benefits}
       employees={employees}
+      variant={variant}
     />
   );
 };
