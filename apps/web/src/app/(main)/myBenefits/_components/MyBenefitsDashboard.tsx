@@ -57,7 +57,7 @@ export default function MyBenefitsDashboard() {
         if (matched) {
           const requestsData = await gqlRequest(
             GetBenefitRequestsByEmployeeDocument,
-            { employeeId: matched.id },
+            { employeeId: parseInt(matched.id, 10) },
           );
           setRequests(requestsData.benefitRequestsByEmployee);
         }

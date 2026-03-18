@@ -5,36 +5,28 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
   DialogTitle,
   DialogTrigger,
-  Field,
-  FieldGroup,
-  Input,
-  Label,
 } from '@team/source-ui';
 
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, Beaker } from 'lucide-react';
 import { useState } from 'react';
 import { gqlRequest } from 'apps/dash/src/graphql/helpers/graphql-client';
 import {
   CreateBenefitDocument,
   CreateBenefitMutationVariables,
   CreateEligibilityRuleDocument,
-  CreateEligibilityRuleInput,
   GetBenefitsQuery,
 } from 'apps/dash/src/graphql/generated/graphql';
 import { toast } from 'sonner';
+import { BenefitDetailsStep } from './BenefitDetailsStep';
+import { EligibilityRulesStep, RuleForm } from './EligibilityRulesStep';
 
 type Benefit = GetBenefitsQuery['benefits'][number];
 
 type Props = {
   onCreated: (benefit: Benefit) => void;
 };
-
-type RuleForm = Omit<CreateEligibilityRuleInput, 'benefitId'>;
 
 const emptyRule = (): RuleForm => ({
   ruleType: '',
@@ -53,6 +45,7 @@ export const AddBenefitDialog = ({ onCreated }: Props) => {
   const [error, setError] = useState('');
   const [addRules, setAddRules] = useState(false);
   const [rules, setRules] = useState<RuleForm[]>([emptyRule()]);
+  const [contractFile, setContractFile] = useState<File | null>(null);
 
   const [form, setForm] = useState<CreateBenefitMutationVariables['input']>({
     name: '',
@@ -97,6 +90,7 @@ export const AddBenefitDialog = ({ onCreated }: Props) => {
     setAddRules(false);
     setRules([emptyRule()]);
     setError('');
+    setContractFile(null);
     setForm({
       name: '',
       category: '',
@@ -146,20 +140,40 @@ export const AddBenefitDialog = ({ onCreated }: Props) => {
     setLoading(true);
     setError('');
     try {
-      // Step 1: create benefit
+      // Step 1: upload file to R2 via Worker if a file was selected
+      let uploadedKey: string | undefined;
+      if (contractFile) {
+        const fd = new FormData();
+        fd.append('file', contractFile);
+
+        const uploadRes = await fetch(
+          'https://team-service.nbhishgee22.workers.dev/api/upload',
+          { method: 'POST', body: fd },
+        );
+        const uploadJson = await uploadRes.json();
+        if (!uploadRes.ok)
+          throw new Error(uploadJson?.message ?? 'Upload failed');
+
+        uploadedKey = uploadJson.key;
+      }
+
+      // Step 2: create benefit in D1, attaching the R2 key if we got one
       const data = await gqlRequest(CreateBenefitDocument, {
         input: {
           ...form,
-          contractUploadedAt: new Date().toISOString(),
+          r2ObjectKey: uploadedKey ?? form.r2ObjectKey,
+          requiresContract: uploadedKey ? true : form.requiresContract,
+          contractUploadedAt: uploadedKey
+            ? new Date().toISOString()
+            : undefined,
         },
       });
       const createdBenefit = data.createBenefit;
 
-      // Step 2: create rules if user opted in
       if (addRules && rules.length > 0) {
         await Promise.all(
           rules
-            .filter((r) => r.ruleType) // skip empty rows
+            .filter((r) => r.ruleType)
             .map((r) =>
               gqlRequest(CreateEligibilityRuleDocument, {
                 input: { ...r, benefitId: createdBenefit.id },
@@ -201,17 +215,20 @@ export const AddBenefitDialog = ({ onCreated }: Props) => {
         onOpenChange={(v) => (v ? setOpen(true) : handleClose())}
       >
         <DialogTrigger asChild>
-          <Button className="bg-[#1D4ED8] hover:bg-[#1E40AF] text-white px-4 py-2 rounded-lg flex items-center justify-center gap-2 h-10">
+          <Button className="flex-1 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-semibold h-12 border-0">
             <Plus />
             <span className="font-semibold text-sm">Add Benefit</span>
           </Button>
         </DialogTrigger>
 
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-lg p-0 overflow-hidden rounded-2xl">
           <form onSubmit={handleNext}>
-            <DialogHeader>
-              <div className="flex items-center justify-between pr-6">
-                <DialogTitle>Add New Benefit</DialogTitle>
+            {/* Header */}
+            <div className="bg-gray-100 px-6 py-5 flex items-center justify-between rounded-2xl mt-4">
+              <DialogTitle className="text-2xl font-bold text-gray-900">
+                Add New Benefit
+              </DialogTitle>
+              <div className="flex items-center gap-2">
                 <Button
                   type="button"
                   variant="outline"
@@ -222,26 +239,30 @@ export const AddBenefitDialog = ({ onCreated }: Props) => {
                   Demo Button
                 </Button>
               </div>
-              <DialogDescription>
-                {/* Step indicator */}
-                <span className="flex items-center gap-2 mt-1">
+            </div>
+
+            {/* Step indicator — only when addRules is checked */}
+            {addRules && (
+              <div className="px-6 pt-4">
+                <span className="flex items-center gap-2">
                   {STEPS.map((label, i) => (
                     <span key={label} className="flex items-center gap-2">
                       <span
-                        className={`inline-flex items-center justify-center w-5 h-5 rounded-full text-[11px] font-bold ${i === step
+                        className={`inline-flex items-center justify-center w-5 h-5 rounded-full text-[11px] font-bold ${
+                          i === step
                             ? 'bg-blue-600 text-white'
                             : i < step
                               ? 'bg-green-500 text-white'
                               : 'bg-gray-200 text-gray-500'
-                          }`}
+                        }`}
                       >
                         {i + 1}
                       </span>
                       <span
                         className={
                           i === step
-                            ? 'text-blue-600 font-medium'
-                            : 'text-gray-400'
+                            ? 'text-orange-400 font-medium text-sm'
+                            : 'text-gray-400 text-sm'
                         }
                       >
                         {label}
@@ -252,216 +273,57 @@ export const AddBenefitDialog = ({ onCreated }: Props) => {
                     </span>
                   ))}
                 </span>
-              </DialogDescription>
-            </DialogHeader>
-
-            {/* ── STEP 0: Benefit Details ── */}
-            {step === 0 && (
-              <FieldGroup>
-                <Field>
-                  <Label htmlFor="name">Name *</Label>
-                  <Input
-                    id="name"
-                    placeholder="e.g. Health Insurance"
-                    value={form.name}
-                    onChange={(e) => updateForm('name', e.target.value)}
-                    required
-                  />
-                </Field>
-
-                <Field>
-                  <Label htmlFor="category">Category</Label>
-                  <Input
-                    id="category"
-                    placeholder="e.g. Health, Transport"
-                    value={form.category ?? ''}
-                    onChange={(e) => updateForm('category', e.target.value)}
-                  />
-                </Field>
-
-                <Field>
-                  <Label htmlFor="description">Description</Label>
-                  <Input
-                    id="description"
-                    placeholder="Short description"
-                    value={form.description ?? ''}
-                    onChange={(e) => updateForm('description', e.target.value)}
-                  />
-                </Field>
-
-                <Field>
-                  <Label htmlFor="vendorName">Vendor Name</Label>
-                  <Input
-                    id="vendorName"
-                    placeholder="e.g. Manulife"
-                    value={form.vendorName ?? ''}
-                    onChange={(e) => updateForm('vendorName', e.target.value)}
-                  />
-                </Field>
-
-                <Field>
-                  <Label htmlFor="subsidyPercent">Subsidy %</Label>
-                  <Input
-                    id="subsidyPercent"
-                    type="number"
-                    min={0}
-                    max={100}
-                    placeholder="0–100"
-                    value={form.subsidyPercent ?? 0}
-                    onChange={(e) =>
-                      updateForm('subsidyPercent', Number(e.target.value))
-                    }
-                  />
-                </Field>
-
-                <Field>
-                  <Label htmlFor="contractExpiryDate">
-                    Contract Expiry Date
-                  </Label>
-                  <Input
-                    id="contractExpiryDate"
-                    type="date"
-                    value={form.contractExpiryDate ?? ''}
-                    onChange={(e) =>
-                      updateForm('contractExpiryDate', e.target.value)
-                    }
-                  />
-                </Field>
-
-                <Field>
-                  <Label
-                    style={{ display: 'flex', alignItems: 'center', gap: 8 }}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={Boolean(form.requiresContract)}
-                      onChange={(e) =>
-                        updateForm('requiresContract', e.target.checked)
-                      }
-                    />
-                    Requires Contract
-                  </Label>
-                </Field>
-
-                {/* Optional rules toggle */}
-                <div className="mt-2 flex items-center gap-2 rounded-lg border border-dashed border-blue-300 bg-blue-50 px-4 py-3">
-                  <input
-                    type="checkbox"
-                    id="addRules"
-                    checked={addRules}
-                    onChange={(e) => setAddRules(e.target.checked)}
-                    className="accent-blue-600"
-                  />
-                  <Label
-                    htmlFor="addRules"
-                    className="text-blue-700 font-medium cursor-pointer"
-                  >
-                    Add eligibility rules to this benefit
-                  </Label>
-                </div>
-              </FieldGroup>
-            )}
-
-            {/* ── STEP 1: Eligibility Rules ── */}
-            {step === 1 && (
-              <div className="mt-4 space-y-4">
-                <p className="text-xs text-gray-500">
-                  Define rules that determine which employees are eligible for
-                  this benefit. All fields are optional per rule.
-                </p>
-
-                {rules.map((rule, i) => (
-                  <div
-                    key={i}
-                    className="relative rounded-lg border border-gray-200 bg-gray-50 p-4 space-y-3"
-                  >
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                        Rule {i + 1}
-                      </span>
-                      {rules.length > 1 && (
-                        <button
-                          type="button"
-                          onClick={() => removeRuleRow(i)}
-                          className="text-red-400 hover:text-red-600"
-                        >
-                          <Trash2 size={14} />
-                        </button>
-                      )}
-                    </div>
-
-                    <FieldGroup>
-                      <Field>
-                        <Label>Rule Type</Label>
-                        <Input
-                          placeholder="e.g. department, responsibility_level"
-                          value={rule.ruleType ?? ''}
-                          onChange={(e) =>
-                            updateRule(i, 'ruleType', e.target.value)
-                          }
-                        />
-                      </Field>
-                      <Field>
-                        <Label>Operator</Label>
-                        <Input
-                          placeholder="e.g. equals, gte, lte"
-                          value={rule.operator ?? ''}
-                          onChange={(e) =>
-                            updateRule(i, 'operator', e.target.value)
-                          }
-                        />
-                      </Field>
-                      <Field>
-                        <Label>Value</Label>
-                        <Input
-                          placeholder="e.g. Engineering, L3"
-                          value={rule.value ?? ''}
-                          onChange={(e) =>
-                            updateRule(i, 'value', e.target.value)
-                          }
-                        />
-                      </Field>
-                      <Field>
-                        <Label>Error Message</Label>
-                        <Input
-                          placeholder="Shown when rule fails"
-                          value={rule.errorMessage ?? ''}
-                          onChange={(e) =>
-                            updateRule(i, 'errorMessage', e.target.value)
-                          }
-                        />
-                      </Field>
-                    </FieldGroup>
-                  </div>
-                ))}
-
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="w-full border-dashed"
-                  onClick={addRuleRow}
-                >
-                  <Plus size={14} className="mr-1" /> Add Another Rule
-                </Button>
               </div>
             )}
 
-            {error && <p className="text-red-500 text-sm mt-3">{error}</p>}
+            {/* Body */}
+            <div className="px-6 pb-2 max-h-[60vh] overflow-y-auto">
+              {step === 0 && (
+                <BenefitDetailsStep
+                  form={form}
+                  addRules={addRules}
+                  contractFile={contractFile}
+                  onFormChange={updateForm}
+                  onAddRulesChange={setAddRules}
+                  onContractFileChange={setContractFile}
+                />
+              )}
 
-            <DialogFooter className="mt-5">
+              {step === 1 && (
+                <EligibilityRulesStep
+                  rules={rules}
+                  onRuleChange={updateRule}
+                  onAddRule={addRuleRow}
+                  onRemoveRule={removeRuleRow}
+                />
+              )}
+
+              {error && <p className="text-red-500 text-sm mt-3">{error}</p>}
+            </div>
+
+            {/* Footer */}
+            <div className="px-6 py-4 flex gap-3">
               {step === 0 ? (
                 <>
                   <DialogClose asChild>
-                    <Button type="button" variant="outline">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="flex-1 rounded-lg border-gray-300 text-gray-800 font-semibold h-12"
+                    >
                       Cancel
                     </Button>
                   </DialogClose>
-                  <Button type="submit" disabled={loading}>
+                  <Button
+                    type="submit"
+                    disabled={loading}
+                    className="flex-1 rounded-lg bg-orange-400 hover:bg-orange-500 text-white font-semibold h-12 border-0"
+                  >
                     {addRules
                       ? 'Next: Add Rules →'
                       : loading
                         ? 'Saving...'
-                        : 'Save Benefit'}
+                        : 'Add Benefit'}
                   </Button>
                 </>
               ) : (
@@ -471,15 +333,20 @@ export const AddBenefitDialog = ({ onCreated }: Props) => {
                     variant="outline"
                     onClick={() => setStep(0)}
                     disabled={loading}
+                    className="flex-1 rounded-lg border-gray-300 text-gray-800 font-semibold h-12"
                   >
                     ← Back
                   </Button>
-                  <Button type="submit" disabled={loading}>
+                  <Button
+                    type="submit"
+                    disabled={loading}
+                    className="flex-1 rounded-lg bg-orange-400 hover:bg-orange-500 text-white font-semibold h-12 border-0"
+                  >
                     {loading ? 'Saving...' : 'Save Benefit & Rules'}
                   </Button>
                 </>
               )}
-            </DialogFooter>
+            </div>
           </form>
         </DialogContent>
       </Dialog>

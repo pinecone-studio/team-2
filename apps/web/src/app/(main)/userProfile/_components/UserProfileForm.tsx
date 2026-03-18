@@ -177,9 +177,9 @@ function EditableFields({
             <SelectValue placeholder="Select Level" />
           </SelectTrigger>
           <SelectContent className="rounded-lg border bg-white shadow-lg">
-            <SelectItem value="L1">L1</SelectItem>
-            <SelectItem value="L2">L2</SelectItem>
-            <SelectItem value="L3">L3</SelectItem>
+            <SelectItem value="1">L1</SelectItem>
+            <SelectItem value="2">L2</SelectItem>
+            <SelectItem value="3">L3</SelectItem>
           </SelectContent>
         </Select>
       </FieldGroup>
@@ -286,11 +286,6 @@ function SubmitButton({
 function StatusMessages({ created, error }: Pick<Props, 'created' | 'error'>) {
   return (
     <div className="min-h-[24px]">
-      {created && (
-        <p className="text-sm text-green-600">
-          Employee profile created successfully.
-        </p>
-      )}
       {error && <p className="text-sm text-red-500">{error}</p>}
     </div>
   );
