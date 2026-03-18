@@ -17,7 +17,7 @@ import {
   type GetBenefitRequestsQuery,
   RequestStatus,
 } from 'apps/dash/src/graphql/generated/graphql';
-import { XCircle } from 'lucide-react';
+
 import { useState } from 'react';
 
 type BenefitRequest = GetBenefitRequestsQuery['benefitRequests'][number];
@@ -52,8 +52,8 @@ export const RejectRequestDialog = ({ request, onUpdated }: Props) => {
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <button className="px-3 py-1 bg-rose-100 text-rose-700 hover:bg-rose-200 rounded-lg flex items-center gap-1.5 transition-colors text-xs font-semibold">
-          <XCircle size={16} /> Reject
+        <button className="px-5 py-2.5 bg-[#FFE4E6] text-[#991B1B] hover:bg-[#FECDD3] rounded-xl transition-colors text-xs font-bold border border-[#FECDD3]">
+          Reject
         </button>
       </AlertDialogTrigger>
       <AlertDialogContent>

@@ -26,6 +26,12 @@ const RequestManagementPage = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState('');
 
+  console.log('==============================================');
+  console.log('requests', requests);
+  console.log('benefits', benefits);
+  console.log('employees', employees);
+  console.log('==============================================');
+
   useEffect(() => {
     async function fetchData() {
       setLoading(true);

@@ -9,8 +9,8 @@ import {
   type GetBenefitRequestsQuery,
   type GetBenefitsQuery,
   type GetEmployeesQuery,
-} from 'apps/dash/src/graphql/generated/graphql';
-import { gqlRequest } from 'apps/dash/src/graphql/helpers/graphql-client';
+} from '../../../graphql/generated/graphql';
+import { gqlRequest } from '../../../graphql/helpers/graphql-client';
 import { ProcessedRequestsSkeleton } from './skeletonComp/ProcessedRequestsSkeleton';
 
 type BenefitRequest = GetBenefitRequestsQuery['benefitRequests'][number];
@@ -43,8 +43,8 @@ export const ProcessedRequestsStandalone = () => {
         setRequests(processed);
         setBenefits(benefitsData.benefits);
         setEmployees(employeesData.employees);
-      } catch (e: any) {
-        setError(e.message ?? 'Failed to load');
+      } catch (e: unknown) {
+        setError(e instanceof Error ? e.message : 'Failed to load');
       } finally {
         setLoading(false);
       }
