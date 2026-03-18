@@ -9,7 +9,7 @@ export default function UserProfilePage() {
 
   if (state.status === 'loading-user') {
     <div className="w-[100vw] h-[100vh] flex items-center justify-center">
-      <Spinner className="w-16 h-16" />
+      <Spinner className="w-16 h-16 opacity-30" />
     </div>;
   }
 
@@ -24,7 +24,7 @@ export default function UserProfilePage() {
   if (state.status === 'checking') {
     return (
       <div className="w-[100vw] h-[100vh] flex items-center justify-center">
-        <Spinner className="w-16 h-16" />
+        <Spinner className="w-16 h-16 opacity-30" />
       </div>
     );
   }

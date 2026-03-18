@@ -1,5 +1,7 @@
 //@ts-check
 
+const path = require('node:path');
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { composePlugins, withNx } = require('@nx/next');
 
@@ -11,7 +13,8 @@ const nextConfig = {
   // See: https://nx.dev/recipes/next/next-config-setup
   nx: {},
   turbopack: {
-    root: __dirname,
+    // Allow Turbopack to resolve the workspace-root Next install in this monorepo.
+    root: path.join(__dirname, '../..'),
   },
 };
 
