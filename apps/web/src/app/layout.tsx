@@ -2,6 +2,7 @@ import './global.css';
 import { ClerkProvider } from '@clerk/nextjs';
 import { SidebarProvider } from '@team/source-ui';
 import { TopNavBar } from './_components/main/topSideBar/TopSideBar';
+import { Toaster } from 'sonner';
 
 export const runtime = 'edge';
 
@@ -27,6 +28,7 @@ export default async function RootLayout({
               </main>
             </div>
           </SidebarProvider>
+          <Toaster position="top-center" />
         </body>
       </html>
     </ClerkProvider>

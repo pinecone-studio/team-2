@@ -15,6 +15,7 @@ import {
 } from './profile-form.helpers';
 import { gqlRequest } from '../../../graphql/helpers/graphql-client';
 import { CreateEmployeeDocument } from '../../../graphql/generated/graphql';
+import { toast } from 'sonner';
 
 export function useUserProfilePage(): UserProfilePageState {
   const { user, isLoaded } = useUser();
@@ -148,11 +149,15 @@ async function submitProfile({
     });
 
     setCreated(true);
+    toast.success('Employee profile created successfully.', {
+      className: 'my-custom-class',
+      style: { background: '#66bb6a', color: '#ffffff', border: '0' },
+    });
 
     // Brief delay so the user sees the success message before redirect
     setTimeout(() => {
       router.replace('/');
-    }, 1500);
+    }, 2000);
   } catch (e) {
     const message = e instanceof Error ? e.message : 'Create failed';
     setError(message);
