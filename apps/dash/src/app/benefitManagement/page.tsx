@@ -92,6 +92,16 @@ export default function BenefitsManagement() {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
+            {benefits.length === 0 && (
+              <tr>
+                <td
+                  colSpan={6}
+                  className="px-4 py-8 text-center text-sm text-gray-400"
+                >
+                  No benefits added.
+                </td>
+              </tr>
+            )}
             {benefits.map((benefit) => (
               <tr
                 key={benefit.id}
