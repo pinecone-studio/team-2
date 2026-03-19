@@ -107,7 +107,7 @@ export function BenefitCard({
 
   return (
     <Card
-      className={`w-full max-w-[320px] border border-gray-200 rounded-[12px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col justify-between overflow-hidden transition-all duration-300 ${cardGradient}`}
+      className={`w-full max-w-[320px] border border-gray-200 rounded-[12px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] flex flex-col justify-between overflow-hidden transition-all duration-300 xl:max-w-none ${cardGradient}`}
     >
       <CardHeader className="pt-8 px-6 pb-4">
         <div className="flex flex-row justify-between items-start">

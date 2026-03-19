@@ -242,102 +242,105 @@ const QuickActions = ({ benefits, requests, counts }: QuickActionsProps) => {
   const activeCount = counts.Active || 0;
 
   return (
-    <div className="w-full max-w-[400px] flex flex-col gap-6">
-      {/* Header - Montserrat 18px */}
-      <h2 className="text-[#000] font-montserrat text-[18px] font-semibold leading-normal ml-1">
-        Quick Actions
-      </h2>
-
-      {/* Action Buttons Grid - Томруулсан хувилбар */}
-      <div className="grid grid-cols-2 gap-5">
-        <Link
-          href="/contracts"
-          className="flex min-h-[170px] flex-col items-start rounded-[16px] border border-[rgba(217,217,217,0)] bg-white/70 p-7 text-left shadow-[0_4px_6px_0_rgba(0,0,0,0.09)] transition-all hover:shadow-md group backdrop-blur-md"
-        >
-          <div className="p-3 bg-orange-50 rounded-xl mb-4 group-hover:bg-orange-100 transition-colors">
-            <FileText className="w-6 h-6 text-orange-500" />
-          </div>
-          <span className="text-[#000] font-montserrat text-[15px] font-semibold leading-normal">
-            View Contracts
-          </span>
-          <p className="mt-2 font-montserrat text-[12px] font-medium leading-normal tracking-[0.01em] text-[#717182]">
-            {contractCount > 0
-              ? `${contractCount} request${contractCount === 1 ? '' : 's'} have contract details ready to review`
-              : 'No contract-backed requests yet'}
-          </p>
-        </Link>
-
-        <Link
-          href="/myRequests"
-          className="flex min-h-[170px] flex-col items-start rounded-[16px] border border-[rgba(217,217,217,0)] bg-white/70 p-7 text-left shadow-[0_4px_6px_0_rgba(0,0,0,0.09)] transition-all hover:shadow-md group backdrop-blur-md"
-        >
-          <div className="p-3 bg-pink-50 rounded-xl mb-4 group-hover:bg-pink-100 transition-colors">
-            <ListTodo className="w-6 h-6 text-pink-400" />
-          </div>
-          <span className="text-[#000] font-montserrat text-[15px] font-semibold leading-normal">
-            My Requests
-          </span>
-          <p className="mt-2 font-montserrat text-[12px] font-medium leading-normal tracking-[0.01em] text-[#717182]">
-            {pendingCount > 0
-              ? `${pendingCount} pending request${pendingCount === 1 ? '' : 's'} and ${activeCount} active benefit${activeCount === 1 ? '' : 's'}`
-              : `${requests.length} total request${requests.length === 1 ? '' : 's'} tracked so far`}
-          </p>
-        </Link>
+    <div className="w-full max-w-[400px]">
+      <div className="ml-1 flex min-h-7 mt-3 items-center">
+        <h2 className="text-[#000] font-montserrat text-[18px] font-semibold leading-normal">
+          Quick Actions
+        </h2>
       </div>
 
-      {/* Timeline Card - Илүү уудам padding-тай */}
-      <div className="bg-white/70 backdrop-blur-md border border-[rgba(217,217,217,0)] rounded-[16px] p-8 shadow-[0_4px_6px_0_rgba(0,0,0,0.09)]">
-        <div className="relative flex flex-col gap-9">
-          {/* Vertical Line */}
-          {timelineEvents.length > 0 && (
-            <div className="absolute left-[19px] top-2 bottom-2 w-[1px] bg-gray-100/80" />
-          )}
-
-          {timelineEvents.length === 0 ? (
-            <div className="pl-12 text-sm text-[rgba(0,0,0,0.60)]">
-              No requests yet. Once you apply for a benefit, updates will show
-              up here.
+      <div className="mt-3 flex flex-col gap-6">
+        {/* Action Buttons Grid - Томруулсан хувилбар */}
+        <div className="grid grid-cols-2 gap-5">
+          <Link
+            href="/contracts"
+            className="flex min-h-[170px] flex-col items-start rounded-[16px] border border-[rgba(217,217,217,0)] bg-white/70 p-5 text-left shadow-[0_4px_6px_0_rgba(0,0,0,0.09)] transition-all hover:shadow-md group backdrop-blur-md"
+          >
+            <div className="p-3 bg-orange-50 rounded-xl mb-1 group-hover:bg-orange-100 transition-colors">
+              <FileText className="w-6 h-6 text-orange-500" />
             </div>
-          ) : (
-            timelineEvents.map((event) => (
-              <div key={event.id} className="relative flex items-start pl-12">
-                {/* Icon Circle */}
-                <div
-                  className={`absolute left-0 p-2.5 rounded-full z-10 ${event.bgColor} shadow-sm`}
-                >
-                  {event.icon}
-                </div>
+            <span className="text-[#000] font-montserrat text-[15px] font-semibold leading-normal">
+              View Contracts
+            </span>
+            <p className="mt-1 font-montserrat text-[14px] font-medium leading-normal tracking-[0.01em] text-[#717182]">
+              {contractCount > 0
+                ? `${contractCount} request${contractCount === 1 ? '' : 's'} have contract details ready to review`
+                : 'No contract-backed requests yet'}
+            </p>
+          </Link>
 
-                <div className="flex flex-col pt-0.5">
-                  <h4 className="text-[#000] font-montserrat text-[14px] font-semibold leading-normal">
-                    {event.title}
-                  </h4>
-                  <p className="text-[rgba(0,0,0,0.60)] font-montserrat text-[12px] font-medium leading-normal">
-                    {event.description}
-                  </p>
-                  <span className="text-[rgba(0,0,0,0.60)] font-montserrat text-[12px] font-normal leading-normal">
-                    {event.time}
-                  </span>
-                </div>
+          <Link
+            href="/myRequests"
+            className="flex min-h-[170px] flex-col items-start rounded-[16px] border border-[rgba(217,217,217,0)] bg-white/70 p-5 text-left shadow-[0_4px_6px_0_rgba(0,0,0,0.09)] transition-all hover:shadow-md group backdrop-blur-md"
+          >
+            <div className="p-3 bg-pink-50 rounded-xl mb-1 group-hover:bg-pink-100 transition-colors">
+              <ListTodo className="w-6 h-6 text-pink-400" />
+            </div>
+            <span className="text-[#000] font-montserrat text-[15px] font-semibold leading-normal">
+              My Requests
+            </span>
+            <p className="mt-1 font-montserrat text-[14px] font-medium leading-normal tracking-[0.01em] text-[#717182]">
+              {pendingCount > 0
+                ? `${pendingCount} pending request${pendingCount === 1 ? '' : 's'} and ${activeCount} active benefit${activeCount === 1 ? '' : 's'}`
+                : `${requests.length} total request${requests.length === 1 ? '' : 's'} tracked so far`}
+            </p>
+          </Link>
+        </div>
+
+        {/* Timeline Card - Илүү уудам padding-тай */}
+        <div className="bg-white/70 backdrop-blur-md border border-[rgba(217,217,217,0)] rounded-[16px] p-8 shadow-[0_4px_6px_0_rgba(0,0,0,0.09)]">
+          <div className="relative flex flex-col gap-9">
+            {/* Vertical Line */}
+            {timelineEvents.length > 0 && (
+              <div className="absolute left-[19px] top-2 bottom-2 w-[1px] bg-gray-100/80" />
+            )}
+
+            {timelineEvents.length === 0 ? (
+              <div className="pl-12 text-sm text-[rgba(0,0,0,0.60)]">
+                No requests yet. Once you apply for a benefit, updates will show
+                up here.
               </div>
-            ))
-          )}
-        </div>
-      </div>
+            ) : (
+              timelineEvents.map((event) => (
+                <div key={event.id} className="relative flex items-start pl-12">
+                  {/* Icon Circle */}
+                  <div
+                    className={`absolute left-0 p-2.5 rounded-full z-10 ${event.bgColor} shadow-sm`}
+                  >
+                    {event.icon}
+                  </div>
 
-      {/* Support Promo Section */}
-      <div className="p-8 bg-gradient-to-br from-white/90 to-emerald-50/50 backdrop-blur-md border border-[rgba(217,217,217,0)] rounded-[16px] shadow-[0_4px_6px_0_rgba(0,0,0,0.09)] relative overflow-hidden">
-        <div className="relative z-10">
-          <h4 className="text-[#000] font-montserrat text-[15px] font-semibold leading-normal">
-            Help & Support
-          </h4>
-          <p className="text-[#717182] font-montserrat text-[12px] font-semibold mt-2 mb-6 leading-relaxed">
-            Contact HR directly for enrollment questions.
-          </p>
-          <ContactHRDialog />
+                  <div className="flex flex-col pt-0.5">
+                    <h4 className="text-[#000] font-montserrat text-[14px] font-semibold leading-normal">
+                      {event.title}
+                    </h4>
+                    <p className="text-[rgba(0,0,0,0.60)] font-montserrat text-[12px] font-medium leading-normal">
+                      {event.description}
+                    </p>
+                    <span className="text-[rgba(0,0,0,0.60)] font-montserrat text-[12px] font-normal leading-normal">
+                      {event.time}
+                    </span>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
         </div>
-        {/* Decorative Blur Effect */}
-        <div className="absolute -right-6 -top-6 w-24 h-24 bg-emerald-200/30 blur-3xl rounded-full" />
+
+        {/* Support Promo Section */}
+        <div className="relative overflow-hidden rounded-[16px] border border-[rgba(217,217,217,0)] bg-gradient-to-br from-white/90 to-emerald-50/50 p-8 shadow-[0_4px_6px_0_rgba(0,0,0,0.09)] backdrop-blur-md">
+          <div className="relative z-10">
+            <h4 className="text-[#000] font-montserrat text-[15px] font-semibold leading-normal">
+              Help & Support
+            </h4>
+            <p className="text-[#717182] font-montserrat text-[12px] font-semibold mt-2 mb-6 leading-relaxed">
+              Contact HR directly for enrollment questions.
+            </p>
+            <ContactHRDialog />
+          </div>
+          {/* Decorative Blur Effect */}
+          <div className="absolute -right-6 -top-6 w-24 h-24 bg-emerald-200/30 blur-3xl rounded-full" />
+        </div>
       </div>
     </div>
   );
