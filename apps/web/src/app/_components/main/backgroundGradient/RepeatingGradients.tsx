@@ -22,29 +22,30 @@ export const RepeatingGradient = () => {
         {[...Array(count)].map((_, i) => (
           <div
             key={i}
-            className="w-20 h-full flex-shrink-0 bg-gradient-to-r from-[#C8C8C8] from-10% via-[#060606C4] via-85% to-[#D9D9D900]"
+            className="w-20 h-full flex-shrink-0 bg-gradient-to-r from-[#C8C8C8] from-20% via-[#060606C4] via-85% to-[#D9D9D900]"
           />
         ))}
       </div>
       <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
+        className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
         style={{
-          width: '1000px',
-          height: '1200px',
+          top: '500px',
+          width: '2000px',
+          height: '1000px',
           borderRadius: '50%',
           background: '#FB923C',
-          filter: 'blur(120px)',
-          // 'multiply' will tint the pillars orange.
-          // 'color' or 'overlay' also works depending on the vibrance you want.
-          //   mixBlendMode: 'overlay',
+          filter: 'blur(150px)',
+
           mixBlendMode: 'color',
         }}
       />
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background:
-            'radial-gradient(ellipse at center, transparent 0%, white 75%)',
+          background: `
+            linear-gradient(to bottom, transparent 40%, white 40.1%),
+            radial-gradient(circle at center top, transparent 20%, white 85%)
+          `,
         }}
       />
     </div>

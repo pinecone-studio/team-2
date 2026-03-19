@@ -185,7 +185,7 @@ export default function BenefitsCardDashboard() {
     );
 
   return (
-    <div className="flex flex-col lg:flex-row gap-12 items-start py-4 animate-in fade-in duration-500">
+    <div className="flex flex-col lg:flex-row gap-12 items-start py-6 animate-in fade-in duration-500">
       {/* LEFT SIDE: Benefits List */}
       <div className="flex-1 w-full order-2 lg:order-1">
         <BenefitFilter onChange={setFilter} counts={counts} />
