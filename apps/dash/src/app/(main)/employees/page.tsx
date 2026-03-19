@@ -1,6 +1,6 @@
 'use client';
 
-import { Search, SlidersHorizontal } from 'lucide-react';
+import { SlidersHorizontal } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import {
   GetEmployeesDocument,
@@ -10,6 +10,7 @@ import { gqlRequest } from 'apps/dash/src/graphql/helpers/graphql-client';
 import { getSearchableEmployeeValues } from './employeeDirectoryUtils';
 import { EmployeesTable } from './_components/EmployeesTable';
 import { AddEmployeeModal } from './_components/AddEmployeeModal';
+import { Pagination } from './_components/Pagination';
 
 type Employee = GetEmployeesQuery['employees'][number];
 
@@ -19,6 +20,8 @@ export default function EmployeesPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [showAddEmployee, setShowAddEmployee] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 10;
 
   useEffect(() => {
     async function fetchEmployees() {
@@ -54,6 +57,13 @@ export default function EmployeesPage() {
     );
   }, [employees, query]);
 
+  const totalPages = Math.ceil(filteredEmployees.length / ITEMS_PER_PAGE);
+
+  const paginatedEmployees = useMemo(() => {
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    return filteredEmployees.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  }, [filteredEmployees, currentPage]);
+
   const handleEmployeeCreated = (employee: Employee) => {
     setEmployees((prev) => [employee, ...prev]);
     setShowAddEmployee(false);
@@ -73,14 +83,16 @@ export default function EmployeesPage() {
         </div> */}
 
         <section className="overflow-hidden rounded-xl border border-[#EAECF0] bg-white shadow-[0_12px_40px_rgba(15,23,42,0.08)]">
-          <div className="flex flex-col gap-5 border-b border-[#F0F2F5] px-6 py-6 md:px-8">
-            <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+          <div className="flex flex-col gap-3 border-b border-[#F0F2F5] px-[18px] pt-6 ">
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
               <div>
-                <h2 className="text-lg font-medium text-[#101828]">Employee</h2>
-                <p className="mt-1 text-xs text-[#4A5565]">
+                <h2 className="text-lg leading-6 tracking-[0.054px] font-medium text-[#101828]">
+                  Employee
+                </h2>
+                {/* <p className="mt-1 text-xs text-[#4A5565]">
                   Showing {filteredEmployees.length} of {employees.length}
                   employees
-                </p>
+                </p> */}
               </div>
 
               <button
@@ -92,12 +104,16 @@ export default function EmployeesPage() {
               </button>
             </div>
 
-            <div className="flex flex-col gap-3 md:flex-row md:items-center">
+            <div className="flex flex-col gap-[6px] md:flex-row md:items-center mb-[19px]">
+              <p className="text-xs text-[#4A5565]">Showing</p>
               <label className="relative block">
-                <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#98A2B3]" />
+                {/* <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#98A2B3]" /> */}
                 <input
                   value={query}
-                  onChange={(event) => setQuery(event.target.value)}
+                  onChange={(event) => {
+                    setQuery(event.target.value);
+                    setCurrentPage(1);
+                  }}
                   placeholder="Search employees"
                   className="h-9 w-full min-w-[260px] rounded-xl border border-[#E4E7EC] bg-white pl-11 pr-4 text-sm text-[#101828] outline-none transition placeholder:text-[#98A2B3] focus:border-[#FDBA74] md:w-[320px]"
                 />
@@ -105,7 +121,7 @@ export default function EmployeesPage() {
 
               <button
                 type="button"
-                className="inline-flex h-9 items-center gap-2 rounded-xl border border-[#E4E7EC] bg-white px-4 text-sm font-medium text-[#344054] transition hover:bg-[#F9FAFB]"
+                className="inline-flex h-9 items-center gap-2 ml-[6px] rounded-xl border border-[#E4E7EC] bg-white px-4 text-sm font-medium text-[#344054] transition hover:bg-[#F9FAFB]"
               >
                 <SlidersHorizontal size={16} color="#616162" />
                 Filter
@@ -132,7 +148,14 @@ export default function EmployeesPage() {
                 No employees matched your search.
               </div>
             ) : (
-              <EmployeesTable employees={filteredEmployees} />
+              <>
+                <EmployeesTable employees={paginatedEmployees} />
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                />
+              </>
             )}
           </div>
         </section>

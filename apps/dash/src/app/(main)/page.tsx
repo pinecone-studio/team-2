@@ -40,12 +40,12 @@ export default function Page() {
 
         <div className="relative z-10 mx-auto max-w-7xl px-4 pt-8 ">
           <div className="flex flex-col gap-10">
-            <section className="flex flex-col gap-8">
+            <section className="flex flex-col gap-7">
               <div className="max-w-[1215px]">
-                <h1 className="text-3xl font-semibold tracking-tight text-[#0F172A] md:text-5xl">
+                <h1 className="text-3xl font-semibold tracking-wider text-[#0F172A] md:text-5xl">
                   Dashboard Overview
                 </h1>
-                <p className="mt-2 text-base leading-6 text-[#45556C] md:text-[18px]">
+                <p className="mt-2 text-base leading-6 tracking-[-0.312px] font-normal text-[#45556C] md:text-[18px]">
                   Welcome back! Here's what's happening with your team today.
                 </p>
               </div>
@@ -60,10 +60,12 @@ export default function Page() {
                       <p className="text-sm leading-5 font-regular text-[#45556C]">
                         {stat.title}
                       </p>
-                      <p className=" text-2xl font-normal tracking-tight text-[#0A0A0A]">
+                      <p className=" text-2xl leading-9 font-normal tracking-tight text-[#0A0A0A]">
                         {stat.value}
                       </p>
-                      <p className={` text-sm font-normal ${stat.noteColor}`}>
+                      <p
+                        className={` text-sm font-normal tracking-[-0.15px] ${stat.noteColor}`}
+                      >
                         {stat.note}
                       </p>
                     </div>

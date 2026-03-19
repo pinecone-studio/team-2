@@ -2,13 +2,21 @@
 
 import { Search, SlidersHorizontal } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
-// import { useRouter } from 'next/navigation';
 
 import {
   GetEmployeesDocument,
   type GetEmployeesQuery,
 } from 'apps/dash/src/graphql/generated/graphql';
 import { gqlRequest } from 'apps/dash/src/graphql/helpers/graphql-client';
+
+// change this import path to your real shadcn path
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@team/source-ui';
 
 type Employee = GetEmployeesQuery['employees'][number];
 
@@ -52,15 +60,16 @@ function getStatusStyles(status?: string | null) {
 }
 
 export function EmployeeSearchPanel() {
-  // const router = useRouter();
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [query, setQuery] = useState('');
+  const [selectedDepartment, setSelectedDepartment] = useState('all');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   useEffect(() => {
     async function fetchEmployees() {
       setLoading(true);
+      setError('');
 
       try {
         const data = await gqlRequest(GetEmployeesDocument);
@@ -74,51 +83,78 @@ export function EmployeeSearchPanel() {
       }
     }
 
-    fetchEmployees();
+    void fetchEmployees();
   }, []);
+
+  const departments = useMemo(() => {
+    return [
+      ...new Set(
+        employees
+          .map((employee) => employee.department?.trim())
+          .filter((department): department is string => Boolean(department)),
+      ),
+    ].sort((a, b) => a.localeCompare(b));
+  }, [employees]);
 
   const filteredEmployees = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
 
-    if (!normalizedQuery) return employees;
+    return employees.filter((employee) => {
+      const matchesDepartment =
+        selectedDepartment === 'all' ||
+        employee.department?.trim() === selectedDepartment;
 
-    return employees.filter((employee) =>
-      [
-        employee.name,
-        employee.email,
-        employee.department,
-        employee.employeeRole,
-      ]
-        .filter(Boolean)
-        .some((value) => value!.toLowerCase().includes(normalizedQuery)),
-    );
-  }, [employees, query]);
+      const matchesSearch =
+        !normalizedQuery ||
+        [
+          employee.name,
+          employee.email,
+          employee.department,
+          employee.employeeRole,
+        ]
+          .filter(Boolean)
+          .some((value) => value!.toLowerCase().includes(normalizedQuery));
+
+      return matchesDepartment && matchesSearch;
+    });
+  }, [employees, query, selectedDepartment]);
 
   return (
     <section className="rounded-lg border border-white/70 bg-white/85 p-5 shadow-[0_4px_6px_0_rgba(0,0,0,0.09)] backdrop-blur-md">
       <div className="mt-5 flex flex-col gap-4">
-        <div className="flex justify-between items-center">
+        <div className="flex items-center justify-between gap-3">
           <label className="relative block">
             <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#00000099]" />
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Search"
-              className="h-8 w-70 rounded-lg border border-[#0000001A] bg-[#F3F3F5] pl-11 pr-4 text-xs text-slate-900 outline-none transition placeholder:text-[#00000080] focus:border-[#155DFC] focus:bg-white"
+              className="h-8 w-[253px] rounded-lg border border-[#0000001A] bg-[#F3F3F5] pl-11 pr-4 text-xs text-slate-900 outline-none transition placeholder:text-[#00000080] focus:border-[#155DFC] focus:bg-white"
             />
           </label>
-          <button className="bg-[#F3F3F5] border border-[#0000001A] py-1.5 px-4 rounded-lg text-xs font-[400] flex gap-2.5 items-center">
-            <SlidersHorizontal size={20} color="#616162" />
-            Departments
-          </button>
-        </div>
 
-        {/* <div className="grid grid-cols-[minmax(180px,2fr)_minmax(110px,1fr)_minmax(120px,1fr)_minmax(100px,0.9fr)] gap-4 px-2 text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">
-          <span>Employee</span>
-          <span>ID</span>
-          <span>Department</span>
-          <span>Status</span>
-        </div> */}
+          <Select
+            value={selectedDepartment}
+            onValueChange={setSelectedDepartment}
+          >
+            <SelectTrigger className="h-8 w-[170px] rounded-lg border border-[#0000001A] bg-[#F3F3F5] px-3 text-xs font-[400] text-[#616162] shadow-none">
+              <div className="flex items-center gap-2.5">
+                <SlidersHorizontal size={16} color="#616162" />
+                <SelectValue placeholder="Departments" />
+              </div>
+            </SelectTrigger>
+
+            <SelectContent className="bg-white">
+              <SelectItem value="all">All departments</SelectItem>
+
+              {departments.map((department) => (
+                <SelectItem key={department} value={department}>
+                  {department}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
 
         <div className="flex flex-col">
           {loading ? (
@@ -144,42 +180,37 @@ export function EmployeeSearchPanel() {
                 key={employee.id}
                 className="grid grid-cols-[minmax(180px,2fr)_repeat(4,minmax(100px,1fr))] items-center gap-4 border-b border-slate-100 px-2 py-4"
               >
-                <div className="flex min-w-0 items-center gap-3">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#D8ECFF] text-xs font-semibold text-[#155DFC]">
+                <div className="flex min-w-0 items-center gap-2.5">
+                  <div className="flex h-[41px] w-[41px] shrink-0 items-center justify-center rounded-full bg-[#D8ECFF] text-xs font-semibold text-[#155DFC]">
                     {getInitials(employee.name)}
                   </div>
 
                   <div className="min-w-0">
-                    <p className="truncate text-sm font-[500] leading-5 text-[#000000]">
+                    <p className="truncate text-xs font-lato font-[500] leading-5 text-[#000000]">
                       {employee.name ?? 'Unnamed employee'}
                     </p>
-                    {/* <p className="truncate text-sm text-[#64748B]">
-                      {employee.employeeRole ?? formatDate(employee.hireDate)}
-                    </p> */}
                   </div>
                 </div>
 
-                <p className="text-xs leading-4 text-[#4A5565]">
+                <p className="text-xs leading-4 font-normal text-[#4A5565]">
                   {formatEmployeeCode(employee.id)}
                 </p>
 
                 <div className="min-w-0">
-                  <p className="truncate text-xs leading-4 text-[#101828]">
+                  <p className="truncate text-xs tracking-[-0.116px] leading-4 text-[#101828]">
                     {employee.department ?? 'No department'}
                   </p>
-                  {/* <p className="text-sm text-[#94A3B8]">
-                    {formatDate(employee.hireDate)}
-                  </p> */}
                 </div>
+
                 <div>
-                  <p className="text-xs leading-4 text-[#4A5565]">
+                  <p className="text-xs leading-4 font-normal text-[#4A5565]">
                     {formatDate(employee.hireDate)}
                   </p>
                 </div>
 
                 <div>
                   <span
-                    className={`inline-flex rounded-full px-3 py-1 text-[10px] font-normal ${getStatusStyles(employee.employmentStatus)}`}
+                    className={`inline-flex rounded-full px-2.5 py-1 text-[10px] leading-3 font-normal ${getStatusStyles(employee.employmentStatus)}`}
                   >
                     {employee.employmentStatus?.toLowerCase() ?? 'unknown'}
                   </span>

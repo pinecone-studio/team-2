@@ -68,7 +68,7 @@ export const RecentActivities = ({
       <aside>
         {/* className="rounded-[28px] shadow-[0_12px_40px_rgba(15,23,42,0.08)] backdrop-blur-md xl:sticky xl:top-6" */}
         <div className="mb-3">
-          <h2 className="text-lg font-[600] text-[#364153]">
+          <h2 className="text-lg font-[600] tracking-[-0.439px] text-[#364153]">
             Recent Activities
           </h2>
         </div>
@@ -85,10 +85,8 @@ export const RecentActivities = ({
               return (
                 <div
                   key={request.id}
-                  className={`rounded-[24px] border p-4 shadow-[0_1px_3px_0_rgba(0,0,0,0.10),_0_1px_2px_-1px_rgba(0,0,0,0.10)] ${
-                    approved
-                      ? 'border-[#D9E8FF] bg-[#EEF5FF]'
-                      : 'border-[#F1E3FF] bg-white'
+                  className={`rounded-[14px] border px-[37.5px] py-2.5 shadow-[0_1px_3px_0_rgba(0,0,0,0.10),_0_1px_2px_-1px_rgba(0,0,0,0.10)] ${
+                    approved ? ' bg-[#EEF5FF]' : ' bg-white'
                   }`}
                 >
                   <span
@@ -101,19 +99,19 @@ export const RecentActivities = ({
                     {getBenefitName(request.benefitId)}
                   </span>
 
-                  <p className="mt-2 text-base text-[#334155]">
+                  <p className="mt-2.5 text-sm tracking-[-0.15px] text-[#334155]">
                     {approved
                       ? 'You accepted the request.'
                       : 'You rejected the request.'}
                   </p>
 
-                  <div className="mt-1 flex items-center justify-between">
-                    <span className="text-sm text-[#94A3B8] flex gap-1.5 items-center">
-                      <Calendar color="#94A3B8" size={14} />
+                  <div className="mt-[9.5px] flex items-center justify-between">
+                    <span className="text-xs text-[#94A3B8] flex gap-1 items-center">
+                      <Calendar color="#94A3B8" size={14} strokeWidth={2} />
                       {formatDate(request.createdAt)}
                     </span>
 
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#D8ECFF] text-xs font-semibold text-[#155DFC]">
+                    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#D8ECFF] text-xs font-semibold text-[#155DFC]">
                       {getEmployeeInitials(request.employeeId)}
                     </div>
                   </div>

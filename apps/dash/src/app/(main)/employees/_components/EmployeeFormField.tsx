@@ -35,7 +35,7 @@ interface Props {
 
 export function EmployeeFormFields({ form, onChange }: Props) {
   return (
-    <div className="p-7 space-y-6">
+    <div className="p-5 space-y-6">
       <div className="grid grid-cols-2 gap-5">
         <InputField
           label="Full Name"

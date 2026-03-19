@@ -10,7 +10,7 @@ import {
 } from '@team/source-ui';
 
 import { Plus } from 'lucide-react';
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { gqlRequest } from 'apps/dash/src/graphql/helpers/graphql-client';
 import {
   CreateBenefitDocument,
@@ -26,6 +26,7 @@ type Benefit = GetBenefitsQuery['benefits'][number];
 
 type Props = {
   onCreated: (benefit: Benefit) => void;
+  trigger?: ReactNode;
 };
 
 const emptyRule = (): RuleForm => ({
@@ -38,7 +39,7 @@ const emptyRule = (): RuleForm => ({
 
 const STEPS = ['Benefit Details', 'Eligibility Rules'] as const;
 
-export const AddBenefitDialog = ({ onCreated }: Props) => {
+export const AddBenefitDialog = ({ onCreated, trigger }: Props) => {
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -210,13 +211,17 @@ export const AddBenefitDialog = ({ onCreated }: Props) => {
     <div>
       <Dialog
         open={open}
-        onOpenChange={(v) => (v ? setOpen(true) : handleClose())}
+        onOpenChange={(isOpen: boolean) =>
+          isOpen ? setOpen(true) : handleClose()
+        }
       >
         <DialogTrigger asChild>
-          <Button className="flex-1 rounded-lg !bg-orange-500 hover:!bg-orange-600 text-white font-semibold h-12 border-0">
-            <Plus />
-            <span className="font-semibold text-sm">Add Benefit</span>
-          </Button>
+          {trigger ?? (
+            <Button className="flex-1 rounded-lg !bg-orange-500 hover:!bg-orange-600 text-white font-semibold h-12 border-0">
+              <Plus />
+              <span className="font-semibold text-sm">Add Benefit</span>
+            </Button>
+          )}
         </DialogTrigger>
 
         <DialogContent className="sm:max-w-lg p-0 overflow-hidden rounded-2xl">

@@ -9,7 +9,7 @@ export const QuickActionsSkeleton = () => {
         <div className="h-6 w-32 rounded-md bg-gray-200" />
       </div>
 
-      <div className="mt-4 flex flex-col gap-6">
+      <div className="mt-3 flex flex-col gap-6">
         <div className="grid grid-cols-2 gap-5">
           {[1, 2].map((i) => (
             <div

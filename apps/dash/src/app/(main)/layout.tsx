@@ -2,7 +2,7 @@
 
 import { SidebarProvider } from '@team/source-ui';
 import { usePathname } from 'next/navigation';
-import { AdminGuard } from '../_components/AdminGuard';
+// import { AdminGuard } from '../_components/AdminGuard';
 import { TopNavBar } from '../_components/navBar/TopNavBar';
 import { SecondaryPagesGradient } from '../_components/backgroundGradient/SecondaryPagesGradient';
 

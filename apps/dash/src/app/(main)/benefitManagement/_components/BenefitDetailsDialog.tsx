@@ -10,7 +10,7 @@ import {
   DialogTrigger,
 } from '@team/source-ui';
 
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { gqlRequest } from 'apps/dash/src/graphql/helpers/graphql-client';
 import {
   GetBenefitRequestsByBenefitDocument,
@@ -26,8 +26,26 @@ type Rule =
 type BenefitRequest =
   GetBenefitRequestsByBenefitQuery['benefitRequestsByBenefit'][number];
 
+function sortRequestsNewestFirst(requests: BenefitRequest[]) {
+  return [...requests].sort((first, second) => {
+    const firstCreatedAt = first.createdAt
+      ? new Date(first.createdAt).getTime()
+      : 0;
+    const secondCreatedAt = second.createdAt
+      ? new Date(second.createdAt).getTime()
+      : 0;
+
+    if (secondCreatedAt !== firstCreatedAt) {
+      return secondCreatedAt - firstCreatedAt;
+    }
+
+    return second.id - first.id;
+  });
+}
+
 type Props = {
   benefit: Benefit;
+  trigger?: ReactNode;
 };
 
 const requestStatusStyles: Record<string, string> = {
@@ -36,7 +54,7 @@ const requestStatusStyles: Record<string, string> = {
   rejected: '!bg-red-100 !text-red-600 !rounded-full',
 };
 
-export const BenefitDetailsDialog = ({ benefit }: Props) => {
+export const BenefitDetailsDialog = ({ benefit, trigger }: Props) => {
   const [open, setOpen] = useState(false);
   const [rules, setRules] = useState<Rule[]>([]);
   const [requests, setRequests] = useState<BenefitRequest[]>([]);
@@ -59,7 +77,9 @@ export const BenefitDetailsDialog = ({ benefit }: Props) => {
           }),
         ]);
         setRules(rulesData.eligibilityRulesByBenefit);
-        setRequests(requestsData.benefitRequestsByBenefit);
+        setRequests(
+          sortRequestsNewestFirst(requestsData.benefitRequestsByBenefit),
+        );
       } catch {
         setRules([]);
         setRequests([]);
@@ -73,13 +93,15 @@ export const BenefitDetailsDialog = ({ benefit }: Props) => {
   return (
     <Dialog open={open} onOpenChange={handleOpen}>
       <DialogTrigger asChild>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="text-xs text-[#137FEC] hover:text-blue-700 hover:bg-blue-50 font-medium"
-        >
-          View Details
-        </Button>
+        {trigger ?? (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-xs text-[#137FEC] hover:text-blue-700 hover:bg-blue-50 font-medium"
+          >
+            View Details
+          </Button>
+        )}
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-xl max-h-[85vh] overflow-y-auto">
