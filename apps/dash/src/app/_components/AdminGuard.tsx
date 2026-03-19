@@ -25,8 +25,8 @@ export function AdminGuard({ children }: { children: React.ReactNode }) {
             Admin access only
           </h1>
           <p className="mt-3 text-sm leading-6 text-[#6B7280]">
-            Your account is signed in, but it does not have the admin role
-            required to use this dashboard.
+            Your account does not have the admin role required to use this
+            dashboard.
           </p>
 
           <div className="mt-6">

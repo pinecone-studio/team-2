@@ -43,6 +43,28 @@ type Props = {
   onCancel?: () => void;
 };
 
+function normalizeCreateEmployeeInput(
+  form: EmployeeFormData,
+): CreateEmployeeMutationVariables['input'] {
+  const email = form.email.trim();
+  const name = form.name.trim();
+
+  return {
+    email,
+    name,
+    employeeRole: form.employeeRole.trim() || undefined,
+    department: form.department.trim() || undefined,
+    responsibilityLevel: form.responsibilityLevel.trim() || undefined,
+    employmentStatus:
+      (form.employmentStatus as EmploymentStatus | '') || undefined,
+    hireDate: form.hireDate.trim() || undefined,
+    okrSubmitted: form.okrSubmitted,
+    lateArrivalCount: form.lateArrivalCount,
+    clerkUserId: form.clerkUserId.trim() || undefined,
+    createdAt: new Date().toISOString(),
+  };
+}
+
 export function EmployeeCreatePanel({ onSuccess, onCancel }: Props) {
   const [form, setForm] = useState<EmployeeFormData>(INITIAL_FORM);
   const [avatarSrc, setAvatarSrc] = useState<string | null>(null);
@@ -79,10 +101,7 @@ export function EmployeeCreatePanel({ onSuccess, onCancel }: Props) {
 
     try {
       const data = await gqlRequest(CreateEmployeeDocument, {
-        input: {
-          ...(form as CreateEmployeeMutationVariables['input']),
-          createdAt: new Date().toISOString(),
-        },
+        input: normalizeCreateEmployeeInput(form),
       });
 
       handleReset();

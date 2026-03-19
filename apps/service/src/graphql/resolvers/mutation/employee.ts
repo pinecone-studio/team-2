@@ -4,6 +4,55 @@ import { getDB } from '../../../db';
 
 type EmployeeInput = (typeof employees)['$inferInsert'];
 
+function normalizeEmployeeInput(
+  input: EmployeeInput,
+  options?: { requireIdentity?: boolean },
+): EmployeeInput {
+  const normalized = {
+    ...input,
+    email: input.email?.trim(),
+    name: input.name?.trim(),
+    employeeRole: input.employeeRole?.trim() || undefined,
+    department: input.department?.trim() || undefined,
+    responsibilityLevel: input.responsibilityLevel?.trim() || undefined,
+    hireDate: input.hireDate?.trim() || undefined,
+    createdAt: input.createdAt?.trim() || undefined,
+    clerkUserId: input.clerkUserId?.trim() || undefined,
+  };
+
+  if (options?.requireIdentity && !normalized.email) {
+    throw new Error('Email is required');
+  }
+
+  if (options?.requireIdentity && !normalized.name) {
+    throw new Error('Name is required');
+  }
+
+  return normalized;
+}
+
+function toEmployeeMutationError(error: unknown): Error {
+  const message = error instanceof Error ? error.message : String(error);
+
+  if (message.includes('employees_email_unique')) {
+    return new Error('An employee with this email already exists');
+  }
+
+  if (message.includes('employees_clerk_user_id_unique')) {
+    return new Error('This Clerk user ID is already linked to another employee');
+  }
+
+  if (message.includes('UNIQUE constraint failed: employees.email')) {
+    return new Error('An employee with this email already exists');
+  }
+
+  if (message.includes('UNIQUE constraint failed: employees.clerk_user_id')) {
+    return new Error('This Clerk user ID is already linked to another employee');
+  }
+
+  return error instanceof Error ? error : new Error('Employee mutation failed');
+}
+
 export const employeeMutationResolvers = {
   createEmployee: async (
     _: unknown,
@@ -12,9 +61,17 @@ export const employeeMutationResolvers = {
   ) => {
     const db = getDB(ctx);
 
-    const [created] = await db.insert(employees).values(args.input).returning();
-    if (!created) throw new Error('Employee insert failed');
-    return created;
+    try {
+      const [created] = await db
+        .insert(employees)
+        .values(normalizeEmployeeInput(args.input, { requireIdentity: true }))
+        .returning();
+
+      if (!created) throw new Error('Employee insert failed');
+      return created;
+    } catch (error) {
+      throw toEmployeeMutationError(error);
+    }
   },
 
   deleteEmployee: async (
@@ -33,7 +90,14 @@ export const employeeMutationResolvers = {
   ) => {
     const db = getDB(ctx);
 
-    await db.update(employees).set(args.input).where(eq(employees.id, args.id));
+    try {
+      await db
+        .update(employees)
+        .set(normalizeEmployeeInput(args.input))
+        .where(eq(employees.id, args.id));
+    } catch (error) {
+      throw toEmployeeMutationError(error);
+    }
 
     const [updated] = await db
       .select()
