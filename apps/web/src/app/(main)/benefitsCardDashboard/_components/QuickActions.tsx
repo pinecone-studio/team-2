@@ -9,7 +9,17 @@ import {
   CircleSlash,
   ListTodo,
   XCircle,
+  Mail,
+  MessageCircleMore,
 } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@team/source-ui';
 import {
   GetBenefitRequestsByEmployeeQuery,
   GetBenefitsQuery,
@@ -33,6 +43,18 @@ type TimelineEvent = {
   time: string;
   icon: React.ReactNode;
   bgColor: string;
+};
+
+const hrContact = {
+  email: 'hr@company.com',
+  subject: 'Benefits Enrollment Support',
+  body: `Hello HR team,
+
+I need help with my employee benefits enrollment.
+
+My question:
+
+Thank you.`,
 };
 
 function formatRelativeTime(dateStr?: string | null) {
@@ -105,15 +127,90 @@ function getTimelineMeta(status?: RequestStatus | null) {
   }
 }
 
+function buildHrMailtoLink() {
+  const params = new URLSearchParams({
+    subject: hrContact.subject,
+    body: hrContact.body,
+  });
+
+  return `mailto:${hrContact.email}?${params.toString()}`;
+}
+
+function ContactHRDialog() {
+  const mailtoHref = buildHrMailtoLink();
+
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <button className="w-full rounded-xl border border-gray-100 bg-white/95 py-3.5 text-[13px] font-bold text-gray-700 shadow-sm transition-all hover:bg-white active:scale-[0.98]">
+          Contact HR
+        </button>
+      </DialogTrigger>
+
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle className="text-[20px] font-bold text-[#17233C]">
+            Contact HR
+          </DialogTitle>
+          <DialogDescription className="text-sm text-[#6F7C91]">
+            Reach out directly for enrollment questions, benefit eligibility, or
+            contract support.
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="space-y-4">
+          <div className="rounded-[18px] border border-[#E7ECF3] bg-[#F8FAFC] p-4">
+            <div className="flex items-start gap-3">
+              <div className="rounded-full bg-emerald-100 p-2">
+                <Mail className="h-4 w-4 text-emerald-600" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#7A8195]">
+                  HR Email
+                </p>
+                <p className="mt-1 text-sm font-semibold text-[#17233C]">
+                  {hrContact.email}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-[18px] border border-[#E7ECF3] bg-white p-4">
+            <div className="flex items-start gap-3">
+              <div className="rounded-full bg-orange-100 p-2">
+                <MessageCircleMore className="h-4 w-4 text-orange-500" />
+              </div>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#7A8195]">
+                  Suggested subject
+                </p>
+                <p className="mt-1 text-sm font-semibold text-[#17233C]">
+                  {hrContact.subject}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <a
+            href={mailtoHref}
+            className="flex w-full items-center justify-center rounded-xl bg-[#137FEC] px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#0F6FD0]"
+          >
+            Open Email App
+          </a>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 const QuickActions = ({ benefits, requests, counts }: QuickActionsProps) => {
   const requestsWithBenefits = requests
     .map((request) => ({
       request,
       benefit: benefits.find((benefit) => benefit.id === request.benefitId),
     }))
-    .filter(
-      (entry): entry is { request: BenefitRequest; benefit: Benefit } =>
-        Boolean(entry.benefit),
+    .filter((entry): entry is { request: BenefitRequest; benefit: Benefit } =>
+      Boolean(entry.benefit),
     );
 
   const timelineEvents: TimelineEvent[] = requestsWithBenefits
@@ -163,7 +260,7 @@ const QuickActions = ({ benefits, requests, counts }: QuickActionsProps) => {
           <span className="text-[#000] font-montserrat text-[15px] font-semibold leading-normal">
             View Contracts
           </span>
-          <p className="text-[#717182] font-montserrat text-[12px] font-semibold leading-normal mt-2">
+          <p className="mt-2 font-montserrat text-[12px] font-medium leading-normal tracking-[0.01em] text-[#717182]">
             {contractCount > 0
               ? `${contractCount} request${contractCount === 1 ? '' : 's'} have contract details ready to review`
               : 'No contract-backed requests yet'}
@@ -180,7 +277,7 @@ const QuickActions = ({ benefits, requests, counts }: QuickActionsProps) => {
           <span className="text-[#000] font-montserrat text-[15px] font-semibold leading-normal">
             My Requests
           </span>
-          <p className="text-[#717182] font-montserrat text-[12px] font-semibold leading-normal mt-2">
+          <p className="mt-2 font-montserrat text-[12px] font-medium leading-normal tracking-[0.01em] text-[#717182]">
             {pendingCount > 0
               ? `${pendingCount} pending request${pendingCount === 1 ? '' : 's'} and ${activeCount} active benefit${activeCount === 1 ? '' : 's'}`
               : `${requests.length} total request${requests.length === 1 ? '' : 's'} tracked so far`}
@@ -237,9 +334,7 @@ const QuickActions = ({ benefits, requests, counts }: QuickActionsProps) => {
           <p className="text-[#717182] font-montserrat text-[12px] font-semibold mt-2 mb-6 leading-relaxed">
             Contact HR directly for enrollment questions.
           </p>
-          <button className="w-full py-3.5 bg-white/95 border border-gray-100 rounded-xl text-[13px] font-bold text-gray-700 hover:bg-white transition-all shadow-sm active:scale-[0.98]">
-            Contact HR
-          </button>
+          <ContactHRDialog />
         </div>
         {/* Decorative Blur Effect */}
         <div className="absolute -right-6 -top-6 w-24 h-24 bg-emerald-200/30 blur-3xl rounded-full" />

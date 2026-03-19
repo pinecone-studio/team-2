@@ -1,7 +1,6 @@
 'use client';
 
 import {
-  Badge,
   Button,
   Dialog,
   DialogContent,
@@ -229,15 +228,6 @@ export function EmployeeBenefitDetailsDialog({
                           </p>
                         )}
                       </div>
-                      <Badge
-                        className={
-                          rule.isActive
-                            ? '!bg-green-100 !text-green-700 !rounded-full text-[10px] shrink-0'
-                            : '!bg-gray-100 !text-gray-500 !rounded-full text-[10px] shrink-0'
-                        }
-                      >
-                        {rule.isActive ? 'Active' : 'Inactive'}
-                      </Badge>
                     </div>
                   ))}
                 </div>
