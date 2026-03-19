@@ -10,13 +10,13 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@team/source-ui';
-import { gqlRequest } from 'apps/dash/src/graphql/helpers/graphql-client';
+import { gqlRequest } from '../../../graphql/helpers/graphql-client';
 import {
   UpdateBenefitRequestDocument,
   type GetBenefitRequestsQuery,
   RequestStatus,
-} from 'apps/dash/src/graphql/generated/graphql';
-import { CircleCheck } from 'lucide-react';
+} from '../../../graphql/generated/graphql';
+
 import { useState } from 'react';
 
 type BenefitRequest = GetBenefitRequestsQuery['benefitRequests'][number];
@@ -41,8 +41,8 @@ export const ApproveRequestDialog = ({ request, onUpdated }: Props) => {
       });
       onUpdated(data.updateBenefitRequest);
       setOpen(false);
-    } catch (e: any) {
-      setError(e.message ?? 'Failed to approve');
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : 'Failed to approve');
     } finally {
       setLoading(false);
     }
@@ -51,8 +51,8 @@ export const ApproveRequestDialog = ({ request, onUpdated }: Props) => {
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <button className="px-3 py-1 bg-green-50 text-green-500 hover:bg-green-100 rounded-lg flex items-center gap-1.5 transition-colors text-xs font-semibold">
-          <CircleCheck size={16} /> Approve
+        <button className="px-5 py-2.5 bg-[#DCFCE7] text-[#166534] hover:bg-[#BBF7D0] rounded-xl transition-colors text-xs font-bold border border-[#BBF7D0]">
+          Approve
         </button>
       </AlertDialogTrigger>
       <AlertDialogContent>
