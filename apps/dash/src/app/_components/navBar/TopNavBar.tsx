@@ -79,7 +79,7 @@ export const TopNavBar = () => {
           <div className="relative flex items-center justify-center w-8 h-8">
             {/* Ачаалж байх үед харагдах Skeleton */}
             <ClerkLoading>
-              <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse border border-gray-100" />
+              <div className="w-7 h-7 rounded-full bg-gray-200 animate-pulse border border-gray-100" />
             </ClerkLoading>
 
             {/* Ачаалж дууссаны дараа харагдах товчлуур */}

@@ -554,6 +554,27 @@ export default function ContractsPage() {
     setIsModalOpen(true);
   }
 
+  async function handleDownload() {
+    if (!selectedContractUrl) return;
+
+    try {
+      const res = await fetch(selectedContractUrl);
+      if (!res.ok) throw new Error('Download failed');
+
+      const blob = await res.blob();
+      const objectUrl = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = objectUrl;
+      a.download = `${selectedContractName}-contract`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(objectUrl);
+    } catch (e: any) {
+      setError(e.message ?? 'Failed to download contract');
+    }
+  }
+
   useEffect(() => {
     async function fetchData() {
       if (!user?.id) return;
@@ -664,8 +685,14 @@ export default function ContractsPage() {
       <div className="relative z-10">{content}</div>
 
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="w-full max-w-4xl rounded-2xl bg-white shadow-xl">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+          onClick={() => setIsModalOpen(false)}
+        >
+          <div
+            className="w-full max-w-4xl rounded-2xl bg-white shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-center justify-between border-b px-4 py-3">
               <h3 className="text-sm font-semibold text-[#17233C]">
                 {selectedContractName} contract
@@ -680,6 +707,15 @@ export default function ContractsPage() {
 
             <div className="h-[70vh] w-full bg-gray-50">
               <iframe src={selectedContractUrl} className="h-full w-full" />
+            </div>
+
+            <div className="flex justify-end gap-2 border-t px-4 py-3">
+              <button
+                onClick={handleDownload}
+                className="rounded-md bg-orange-400 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-orange-500"
+              >
+                Download
+              </button>
             </div>
           </div>
         </div>
