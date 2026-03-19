@@ -1,13 +1,14 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useUser } from '@clerk/nextjs';
+import { useUser, useAuth } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { findCurrentEmployee } from './employee/find-current-employee';
 import { BrandLoader } from '../../../_components/main/loading/BrandLoader';
 
 export function EmployeeGatePage() {
   const { user, isLoaded } = useUser();
+  const { sessionId } = useAuth();
   const router = useRouter();
 
   const [error, setError] = useState('');
@@ -19,8 +20,8 @@ export function EmployeeGatePage() {
       return;
     }
 
-    void routeUser(user.id, router, setError);
-  }, [isLoaded, user, router]);
+    void routeUser(user.id, sessionId, router, setError);
+  }, [isLoaded, user, sessionId, router]);
 
   if (!isLoaded) {
     return <BrandLoader className="min-h-screen" label="Loading account" />;
@@ -37,6 +38,7 @@ export function EmployeeGatePage() {
 
 async function routeUser(
   clerkUserId: string,
+  sessionId: string | null | undefined,
   router: ReturnType<typeof useRouter>,
   setError: (value: string) => void,
 ) {
@@ -44,6 +46,15 @@ async function routeUser(
     const employee = await findCurrentEmployee(clerkUserId);
 
     if (employee) {
+      const queuedForSession = sessionStorage.getItem(
+        'dashboardWelcomeQueuedForSession',
+      );
+
+      if (sessionId && queuedForSession !== sessionId) {
+        sessionStorage.setItem('showDashboardWelcome', 'true');
+        sessionStorage.setItem('dashboardWelcomeQueuedForSession', sessionId);
+      }
+
       router.replace('/dashboard');
       return;
     }

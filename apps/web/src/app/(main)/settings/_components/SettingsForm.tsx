@@ -24,6 +24,7 @@ import { Button } from '@team/source-ui';
 import { Calendar } from '@team/source-ui';
 import { cn } from '@team/source-ui';
 import { SecondaryPagesGradient } from '../../../_components/main/backgroundGradient/SecondaryPagesGradient';
+import { SettingsSavedPopup } from './SettingsSavedPopup';
 
 type Props = SettingsPageState;
 
@@ -44,6 +45,7 @@ export function SettingsForm(props: Props) {
 
   return (
     <div className="relative isolate min-h-[calc(100vh-72px)] overflow-hidden bg-white">
+      <SettingsSavedPopup open={saved} />
       <SecondaryPagesGradient />
 
       <div className="relative z-10 mx-auto mt-40 h-full max-w-[1027px]">
@@ -77,7 +79,7 @@ export function SettingsForm(props: Props) {
 
               <div className="mt-8 flex flex-col items-end gap-3">
                 <SubmitButton loading={loading} saved={saved} />
-                <StatusMessages saved={saved} error={error} />
+                <ErrorMessage error={error} />
               </div>
             </div>
           </form>
@@ -285,12 +287,9 @@ function SubmitButton({ loading, saved }: Pick<Props, 'loading' | 'saved'>) {
   );
 }
 
-function StatusMessages({ saved, error }: Pick<Props, 'saved' | 'error'>) {
+function ErrorMessage({ error }: Pick<Props, 'error'>) {
   return (
     <div className="min-h-[24px]">
-      {saved && (
-        <p className="text-sm text-green-600">Settings saved successfully.</p>
-      )}
       {error && <p className="text-sm text-red-500">{error}</p>}
     </div>
   );
