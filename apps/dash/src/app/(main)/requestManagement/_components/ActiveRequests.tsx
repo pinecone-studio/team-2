@@ -5,7 +5,7 @@ import {
   type GetBenefitRequestsQuery,
   type GetBenefitsQuery,
   type GetEmployeesQuery,
-} from '../../../graphql/generated/graphql';
+} from 'apps/dash/src/graphql/generated/graphql';
 import { ActiveRequestRow } from './ActiveRequestRow';
 
 type BenefitRequest = GetBenefitRequestsQuery['benefitRequests'][number];
@@ -34,21 +34,23 @@ const RequestTable = ({
     <table className="w-full text-left border-collapse min-w-[1000px]">
       <thead>
         <tr className="border-b border-gray-100">
-          <th className="px-4 py-4 text-[#0F172A] text-sm font-bold">
+          <th className="px-4 py-1 text-[#0F172A] text-sm font-[600]">
             Employee Name
           </th>
-          <th className="px-4 py-4 text-[#0F172A] text-sm font-bold">Role</th>
-          <th className="px-4 py-4 text-[#0F172A] text-sm font-bold">Benefit</th>
-          <th className="px-4 py-4 text-[#0F172A] text-sm font-bold text-center">
+          <th className="px-4 py-1 text-[#0F172A] text-sm font-[600]">Role</th>
+          <th className="px-4 py-1 text-[#0F172A] text-sm font-[600]">
+            Benefit
+          </th>
+          <th className="px-4 py-1 text-[#0F172A] text-sm font-[600] text-center">
             OKR
           </th>
-          <th className="px-4 py-4 text-[#0F172A] text-sm font-bold text-center">
+          <th className="px-4 py-1 text-[#0F172A] text-sm font-[600] text-center">
             Late Arrivals
           </th>
-          <th className="px-4 py-4 text-[#0F172A] text-sm font-bold">
+          <th className="px-4 py-1 text-[#0F172A] text-sm font-[600]">
             Request Date
           </th>
-          <th className="px-4 py-4 text-[#0F172A] text-sm font-bold text-center">
+          <th className="px-4 py-1 text-[#0F172A] text-sm font-[600] text-center">
             Actions
           </th>
         </tr>
@@ -92,10 +94,10 @@ export const ActiveRequests = ({
     employees.find((e) => e.id === employeeId);
 
   return (
-    <div className="bg-white rounded-[20px] w-full border border-gray-100 shadow-sm overflow-hidden mb-8">
+    <div className="bg-white rounded-lg w-full border border-gray-100 shadow-sm overflow-hidden mb-8">
       <div className="pt-8 pb-6 px-8">
-        <h2 className="text-[#0F172A] text-xl font-bold">Active requests</h2>
-        <p className="text-[#64748B] text-sm mt-1">
+        <h2 className="text-[#101828] text-xl font-[600]">Active requests</h2>
+        <p className="text-[#717182] font-[300] text-sm mt-1">
           {requests.length} requests awaiting review
         </p>
       </div>

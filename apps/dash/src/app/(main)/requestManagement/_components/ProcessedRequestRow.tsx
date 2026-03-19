@@ -5,7 +5,7 @@ import {
   type GetBenefitRequestsQuery,
   type GetEmployeesQuery,
   RequestStatus,
-} from '../../../graphql/generated/graphql';
+} from 'apps/dash/src/graphql/generated/graphql';
 import { CheckCircle2, XCircle } from 'lucide-react';
 
 type BenefitRequest = GetBenefitRequestsQuery['benefitRequests'][number];
@@ -29,11 +29,12 @@ const formatDate = (date?: string | null) => {
 const getEmployeeName = (employee?: Employee) => employee?.name || '—';
 const getEmployeeEmail = (employee?: Employee) => employee?.email || '—';
 const getEmployeeRole = (employee?: Employee) => employee?.employeeRole || '—';
-const getEmployeeLates = (employee?: Employee) => employee?.lateArrivalCount || 0;
+const getEmployeeLates = (employee?: Employee) =>
+  employee?.lateArrivalCount || 0;
 const getEmployeeOkr = (employee?: Employee) => Boolean(employee?.okrSubmitted);
 const getAvatarUrl = (employee?: Employee) =>
   `https://ui-avatars.com/api/?name=${encodeURIComponent(
-    employee?.name || '?'
+    employee?.name || '?',
   )}&background=random`;
 
 const EmployeeCell = ({ employee }: { employee?: Employee }) => {
@@ -91,7 +92,7 @@ const StatusBadge = ({ isApproved }: { isApproved: boolean }) => {
     return (
       <td className="px-4 py-4">
         <div className="flex justify-center">
-          <div className="px-5 py-2 rounded-xl text-xs font-bold border transition-colors bg-[#DCFCE7] text-[#166534] border-[#BBF7D0]">
+          <div className="px-2.5 py-1 rounded-lg text-xs font-[500] border transition-colors bg-[#DCFCE7] text-[#166534] border-[#BBF7D0]">
             Approved
           </div>
         </div>
@@ -102,7 +103,7 @@ const StatusBadge = ({ isApproved }: { isApproved: boolean }) => {
   return (
     <td className="px-4 py-4">
       <div className="flex justify-center">
-        <div className="px-5 py-2 rounded-xl text-xs font-bold border transition-colors bg-[#FFE4E6] text-[#991B1B] border-[#FECDD3]">
+        <div className="px-2.5 py-1 rounded-lg text-xs font-[500] border transition-colors bg-[#FFE4E6] text-[#991B1B] border-[#FECDD3]">
           Rejected
         </div>
       </div>
@@ -118,7 +119,9 @@ export const ProcessedRequestRow = ({
   return (
     <tr className="border-b border-gray-50 last:border-0 hover:bg-gray-50/50 transition-colors">
       <EmployeeCell employee={employee} />
-      <td className="px-4 py-4 text-[#334155] text-sm">{getEmployeeRole(employee)}</td>
+      <td className="px-4 py-4 text-[#334155] text-sm">
+        {getEmployeeRole(employee)}
+      </td>
       <td className="px-4 py-4 text-[#334155] text-sm">{benefitName}</td>
       <OKRStatus submitted={getEmployeeOkr(employee)} />
       <td className="px-4 py-4 text-center">
@@ -126,7 +129,7 @@ export const ProcessedRequestRow = ({
           {getEmployeeLates(employee)}
         </span>
       </td>
-      <td className="px-4 py-4 text-[#334155] text-sm">
+      <td className="px-4 py-4 text-[#334155] text-sm font-[300]">
         {formatDate(request.createdAt)}
       </td>
       <StatusBadge isApproved={request.status === RequestStatus.Approved} />

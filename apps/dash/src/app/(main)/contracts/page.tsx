@@ -63,7 +63,7 @@ export default function ContractsPage() {
 
   if (loading) {
     return (
-      <div className="w-full min-h-screen bg-[#F9FAFB] py-8">
+      <div className="w-full min-h-screen py-8">
         <div className="max-w-[1215px] mx-auto">
           <div className="h-8 w-48 bg-gray-200 rounded animate-pulse mb-2" />
           <div className="h-4 w-64 bg-gray-100 rounded animate-pulse mb-8" />
@@ -83,7 +83,7 @@ export default function ContractsPage() {
   if (error) return <p className="text-red-500 p-8">{error}</p>;
 
   return (
-    <div className="w-full min-h-screen bg-[#F9FAFB] py-8">
+    <div className="w-full min-h-screen py-8">
       <div className="max-w-[1215px] mx-auto">
         {/* Header */}
         <div className="mb-8">

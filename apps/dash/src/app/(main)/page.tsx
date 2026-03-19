@@ -72,7 +72,7 @@ export default function Page() {
               </div>
             </section>
             {/* <div className="bg-[#fafafa] py-10"> */}
-            <div className="relative left-1/2 right-1/2 w-screen -translate-x-1/2 bg-[#f5f5f5] py-10 pb-24 min-h-screen">
+            <div className="relative left-1/2 right-1/2 w-screen -translate-x-1/2 bg-[#fafafa] py-10 pb-24 min-h-screen">
               <div className="mx-auto max-w-[1215px] px-4">
                 <DashboardInsightsSection />
               </div>

@@ -73,7 +73,7 @@ const RequestManagementPage = () => {
   if (error) return <p className="text-red-500">{error}</p>;
 
   return (
-    <div className="w-full min-h-screen bg-[#F9FAFB] py-8">
+    <div className="w-full min-h-screen py-8">
       <div className="max-w-[1215px] mx-auto">
         <div className="flex flex-col justify-start items-start">
           <div className="flex flex-col mb-8">
