@@ -8,8 +8,12 @@ import {
   Calendar,
   Building2,
   Percent,
+  X,
 } from 'lucide-react';
-import { GetBenefitsDocument, GetBenefitsQuery } from 'apps/dash/src/graphql/generated/graphql';
+import {
+  GetBenefitsDocument,
+  GetBenefitsQuery,
+} from 'apps/dash/src/graphql/generated/graphql';
 import { gqlRequest } from 'apps/dash/src/graphql/helpers/graphql-client';
 
 type Benefit = GetBenefitsQuery['benefits'][number];
@@ -18,6 +22,9 @@ export default function ContractsPage() {
   const [benefits, setBenefits] = useState<Benefit[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedContractUrl, setSelectedContractUrl] = useState('');
+  const [selectedContractName, setSelectedContractName] = useState('');
 
   useEffect(() => {
     async function fetch() {
@@ -38,7 +45,26 @@ export default function ContractsPage() {
   function handleViewContract(benefit: Benefit) {
     if (!benefit.r2ObjectKey) return;
     const url = `https://team-service.nbhishgee22.workers.dev/api/images/${benefit.r2ObjectKey}`;
-    window.open(url, '_blank');
+    setSelectedContractUrl(url);
+    setSelectedContractName(benefit.name ?? 'contract');
+    setIsModalOpen(true);
+  }
+
+  async function handleDownload() {
+    if (!selectedContractUrl) return;
+
+    const res = await fetch(selectedContractUrl);
+    if (!res.ok) throw new Error('Download failed');
+
+    const blob = await res.blob();
+    const objectUrl = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = objectUrl;
+    a.download = `${selectedContractName}-contract`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(objectUrl);
   }
 
   function formatDate(dateStr?: string | null) {
@@ -254,6 +280,42 @@ export default function ContractsPage() {
           </div>
         )}
       </div>
+      {isModalOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+          onClick={() => setIsModalOpen(false)}
+        >
+          <div
+            className="w-full max-w-4xl rounded-2xl bg-white shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between border-b px-4 py-3">
+              <h3 className="text-sm font-semibold text-[#17233C]">
+                {selectedContractName} contract
+              </h3>
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="text-sm text-gray-500 hover:text-gray-700"
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            <div className="h-[70vh] w-full bg-gray-50">
+              <iframe src={selectedContractUrl} className="h-full w-full" />
+            </div>
+
+            <div className="flex justify-end gap-2 border-t px-4 py-3">
+              <button
+                onClick={handleDownload}
+                className="rounded-md bg-orange-400 px-4 py-2 text-sm font-semibold text-white hover:bg-orange-500"
+              >
+                Download
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
