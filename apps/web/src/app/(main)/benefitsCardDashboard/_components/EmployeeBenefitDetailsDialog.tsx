@@ -7,11 +7,18 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  Separator,
 } from '@team/source-ui';
 
 import { useState } from 'react';
-import { CheckCircle, Clock, XCircle, ShieldCheck } from 'lucide-react';
+import {
+  AlertTriangle,
+  Check,
+  CheckCircle,
+  Clock,
+  Code2,
+  X,
+  XCircle,
+} from 'lucide-react';
 import {
   CreateBenefitRequestDocument,
   RequestStatus,
@@ -55,12 +62,12 @@ const requestStatusConfig: Record<
   [RequestStatus.Pending]: {
     label: 'Pending',
     className: 'bg-yellow-100 text-yellow-700 border-yellow-200',
-    icon: <Clock size={14} />,
+    icon: <Clock size={22} />,
   },
   [RequestStatus.Rejected]: {
     label: 'Rejected',
-    className: 'bg-red-100 text-red-600 border-red-200',
-    icon: <XCircle size={14} />,
+    className: 'bg-red-100 text-red-600 border-red-100',
+    icon: <XCircle size={22} />,
   },
   [RequestStatus.Cancelled]: {
     label: 'Cancelled',
@@ -135,181 +142,156 @@ export function EmployeeBenefitDetailsDialog({
 
   const statusKey = existingRequest?.status ?? RequestStatus.Pending;
   const statusConfig = requestStatusConfig[statusKey];
+  const dialogMode = getDialogMode({
+    benefit,
+    existingRequest,
+    eligibility,
+  });
+  const unmetCount = eligibility?.errors.length ?? 0;
 
   return (
     <Dialog open={open} onOpenChange={handleOpen}>
       <DialogTrigger asChild>
         {children ?? (
-          <Button className="w-full !bg-[#137FEC] !rounded-[16px] hover:shadow-[2px_4px_3.8px_rgba(19,127,236,0.25)] transition-shadow duration-300">
+          <Button className="w-full !bg-[#137FEC] !rounded-[8px] hover:shadow-[2px_4px_3.8px_rgba(19,127,236,0.25)] transition-shadow duration-300">
             View Details
           </Button>
         )}
       </DialogTrigger>
 
-      <DialogContent className="sm:max-w-lg max-h-[85vh] overflow-y-auto">
-        <DialogHeader>
-          <div className="flex items-center gap-3">
-            <DialogTitle className="text-lg font-bold text-[#0F172A]">
-              {benefit.name}
-            </DialogTitle>
-            <span
-              className={`px-2 py-0.5 rounded-lg text-[11px] font-semibold border ${
-                benefit.isActive
-                  ? 'bg-[#EDF7EC] text-[#59AF4F] border-[#D1E9CF]'
-                  : 'bg-[#FEF2F2] text-[#EF4444] border-[#FEE2E2]'
-              }`}
-            >
-              {benefit.isActive ? 'Active' : 'Inactive'}
-            </span>
-          </div>
-          {benefit.description && (
-            <p className="text-sm text-[#64748B] mt-1">{benefit.description}</p>
-          )}
+      <DialogContent className="max-h-[90vh] overflow-y-auto rounded-[8px] border border-[#E7ECF3] bg-white p-4 shadow-[0_24px_60px_rgba(15,23,42,0.18)] sm:max-w-[430px]">
+        <DialogHeader className="sr-only">
+          <DialogTitle>{benefit.name}</DialogTitle>
         </DialogHeader>
+
+        <div className="pointer-events-none absolute left-0 top-[-34px] flex w-full items-center justify-between px-1">
+          <p
+            className={`text-[15px] font-normal lowercase ${getModeLabelClass(dialogMode)}`}
+          >
+            {getModeLabel(dialogMode)}
+          </p>
+          {dialogMode === 'eligible' ? (
+            <Code2 className="h-4 w-4 text-[#66B3FF]" strokeWidth={2}></Code2>
+          ) : (
+            <div className="h-4" />
+          )}
+        </div>
 
         {loadingData ? (
           <BenefitDetailsDialogSkeleton />
         ) : (
-          <div className="space-y-6 mt-2">
-            {/* ── Section 1: Benefit Details ── */}
-            <section>
-              <SectionTitle>Benefit Details</SectionTitle>
-              <div className="grid grid-cols-2 gap-3">
-                <DetailRow label="Category" value={benefit.category} />
-                <DetailRow label="Vendor" value={benefit.vendorName} />
-                <DetailRow
-                  label="Subsidy"
-                  value={
-                    benefit.subsidyPercent != null
-                      ? `${benefit.subsidyPercent}%`
-                      : null
-                  }
-                />
-                <DetailRow
-                  label="Requires Contract"
-                  value={benefit.requiresContract ? 'Yes' : 'No'}
-                />
-                <DetailRow
-                  label="Contract Expiry"
-                  value={benefit.contractExpiryDate ?? null}
-                />
-              </div>
-            </section>
+          <div className="space-y-4">
+            <div className="rounded-[8px] bg-[#F8F8F8] mt-4 px-[16px] py-[18px]">
+              <h2 className="text-[16px] font-normal leading-[1.2] text-[#0A0A0A]">
+                {benefit.name}
+              </h2>
+            </div>
 
-            <Separator />
+            <div>
+              <h3 className="text-[16px] font-normal text-[#262d39]">
+                Description
+              </h3>
+              <p className="mt-[2px] text-[13px] leading-[1.45] text-[#717182]">
+                {benefit.description ||
+                  'No description provided for this benefit.'}
+              </p>
+            </div>
 
-            {/* ── Section 2: Eligibility Rules ── */}
-            <section>
-              <SectionTitle>Eligibility Rules</SectionTitle>
+            <div className="grid grid-cols-2 gap-4">
+              <DetailRow label="Category" value={benefit.category} />
+              <DetailRow
+                label="Company Subsidy"
+                value={
+                  benefit.subsidyPercent != null
+                    ? `${benefit.subsidyPercent}%`
+                    : null
+                }
+              />
+
+              <DetailRow label="Vendor" value={benefit.vendorName} />
+              <DetailRow
+                label="Contract Required"
+                value={benefit.requiresContract ? 'Yes' : 'No'}
+              />
+            </div>
+
+            <div>
+              <h3 className="text-[14px] font-medium text-[#0E1629]">
+                Eligibility Rules
+              </h3>
+
               {rules.length === 0 ? (
-                <EmptyState message="No eligibility rules — everyone can apply." />
+                <div className="mt-4 rounded-[16px] px-4 py-4 text-center" />
               ) : (
-                <div className="space-y-2">
-                  {rules.map((rule) => (
-                    <div
-                      key={rule.id}
-                      className="flex items-start gap-3 rounded-lg border border-gray-100 bg-gray-50 px-4 py-3"
-                    >
-                      <ShieldCheck
-                        size={15}
-                        className="text-blue-400 mt-0.5 shrink-0"
+                <div className="mt-4 space-y-4">
+                  {rules.map((rule) => {
+                    const rulePassed = isRulePassing(
+                      rule,
+                      dialogMode,
+                      eligibility,
+                    );
+                    return (
+                      <EligibilityRuleCard
+                        key={rule.id}
+                        passed={rulePassed}
+                        title={formatRuleTitle(rule.ruleType)}
+                        description={formatRuleDescription(rule)}
                       />
-                      <div className="flex-1 min-w-0">
-                        {/* <p className="text-xs font-medium text-[#0F172A]">
-                          <span className="text-[#64748B]">
-                            {rule.ruleType}
-                          </span>{' '}
-                          {rule.operator}{' '}
-                          <span className="font-semibold">{rule.value}</span>
-                        </p> */}
-                        {rule.errorMessage && (
-                          <p className="text-xs font-normal text-[#0F172A] mt-0.5">
-                            {rule.errorMessage}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
-            </section>
+            </div>
 
-            <Separator />
+            {dialogMode === 'locked' && (
+              <LockedReasonCard unmetCount={unmetCount} />
+            )}
 
-            {/* ── Section 3: My Request ── */}
-            <section>
-              <SectionTitle>My Request</SectionTitle>
-
-              {existingRequest ? (
-                <div
-                  className={`flex items-center gap-3 rounded-lg border px-4 py-3 ${
-                    statusConfig?.className ?? 'bg-gray-50 border-gray-200'
-                  }`}
-                >
-                  {statusConfig?.icon}
-                  <div>
-                    <p className="text-sm font-semibold">
-                      {statusConfig?.label ?? existingRequest.status}
-                    </p>
-                    <p className="text-[11px] opacity-75">
-                      {existingRequest.createdAt
-                        ? `Submitted on ${new Date(existingRequest.createdAt).toLocaleDateString()}`
-                        : 'Request submitted'}
-                    </p>
-                  </div>
-                </div>
-              ) : eligibility && !eligibility.eligible ? (
-                <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 space-y-2">
-                  <p className="text-sm font-semibold text-red-600">
-                    ❌ You are not eligible for this benefit
+            {existingRequest && dialogMode === 'request' && (
+              <div
+                className={`flex items-center gap-3 rounded-[12px] px-[14px] py-[10px] ${
+                  statusConfig?.className ?? 'border-gray-200 bg-gray-50'
+                }`}
+              >
+                {statusConfig?.icon}
+                <div>
+                  <p className="text-[14px] font-normal text-[#7F1D1D]">
+                    {statusConfig?.label ?? existingRequest.status}
                   </p>
-                  <ul className="list-disc list-inside space-y-1">
-                    {eligibility.errors.map((err, i) => (
-                      <li key={i} className="text-xs text-red-500">
-                        {err}
-                      </li>
-                    ))}
-                  </ul>
+                  <p className="text-xs opacity-75">
+                    {existingRequest.createdAt
+                      ? `Submitted on ${new Date(existingRequest.createdAt).toLocaleDateString()}`
+                      : 'Request submitted'}
+                  </p>
                 </div>
-              ) : (
-                <div className="space-y-3">
-                  {eligibility?.eligible && (
-                    <div className="rounded-lg border border-green-200 bg-green-50 px-4 py-2">
-                      <p className="text-xs text-green-700 font-medium">
-                        ✅ You meet all eligibility requirements
-                      </p>
-                    </div>
-                  )}
-                  <EmptyState message="You have not applied for this benefit yet." />
-                  {applyError && (
-                    <p className="text-xs text-red-500">{applyError}</p>
-                  )}
-                  <Button
-                    className="w-full !bg-[#137FEC] !rounded-[16px] hover:shadow-[2px_4px_3.8px_rgba(19,127,236,0.25)] transition-shadow duration-300"
-                    onClick={handleApply}
-                    disabled={applying || !benefit.isActive}
-                  >
-                    {applying
-                      ? 'Submitting...'
-                      : !benefit.isActive
-                        ? 'Benefit Inactive'
-                        : 'Request Benefit'}
-                  </Button>
-                </div>
+              </div>
+            )}
+
+            {applyError && <p className="text-sm text-red-500">{applyError}</p>}
+
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                className="flex-1 !h-[33px] !rounded-[6px] !border-[#D8DEE7] font-normal !bg-white !text-[#111827] !shadow-none hover:!bg-[#F8FAFC]"
+                onClick={() => setOpen(false)}
+              >
+                {dialogMode === 'eligible' ? 'Cancel' : 'Close'}
+              </Button>
+
+              {dialogMode === 'eligible' && !existingRequest && (
+                <Button
+                  className="flex-1 !h-[33px] !rounded-[6px] !bg-[#FB923C] font-normal text-white hover:!bg-[#F27E1E]"
+                  onClick={handleApply}
+                  disabled={applying}
+                >
+                  {applying ? 'Sending request...' : 'Send request'}
+                </Button>
               )}
-            </section>
+            </div>
           </div>
         )}
       </DialogContent>
     </Dialog>
-  );
-}
-
-function SectionTitle({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="text-[11px] font-semibold text-[#94A3B8] uppercase tracking-wider mb-2">
-      {children}
-    </p>
   );
 }
 
@@ -321,19 +303,141 @@ function DetailRow({
   value: React.ReactNode;
 }) {
   return (
-    <div className="rounded-lg bg-gray-50 border border-gray-100 px-3 py-2">
-      <p className="text-[10px] text-[#94A3B8] font-medium uppercase tracking-wider mb-0.5">
-        {label}
-      </p>
-      <p className="text-sm font-medium text-[#0F172A]">{value ?? '—'}</p>
+    <div className="rounded-[6px] border border-[#E5E7EB] bg-[#F9FAFB] px-[10px] py-[7px] shadow-[0_6px_16px_rgba(15,23,42,0.03)]">
+      <p className="mb-1 text-[10px] font-normal text-[#364153]">{label}</p>
+      <p className="text-[12px] font-normal text-[#000000]">{value ?? '—-'}</p>
     </div>
   );
 }
 
-function EmptyState({ message }: { message: string }) {
+function EligibilityRuleCard({
+  title,
+  description,
+  passed,
+}: {
+  title: string;
+  description: string;
+  passed: boolean;
+}) {
   return (
-    <div className="rounded-lg border border-dashed border-gray-200 px-4 py-3 text-center">
-      <p className="text-xs text-gray-400">{message}</p>
+    <div
+      className={`flex items-start gap-4 rounded-[12px] px-[14px] py-[10px] ${
+        passed ? ' bg-[#ECFDF5]' : ' bg-[#FEF2F2]'
+      }`}
+    >
+      <div
+        className={`mt-1.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-[2px] ${
+          passed
+            ? 'border-[#0AA370] text-[#0AA370]'
+            : 'border-[#EF4444] text-[#EF4444]'
+        }`}
+      >
+        {passed ? (
+          <Check size={14} strokeWidth={3} />
+        ) : (
+          <X size={16} strokeWidth={2} />
+        )}
+      </div>
+      <div className="min-w-0">
+        <p
+          className={`text-[14px] font-normal ${passed ? 'text-[#064E3B]' : 'text-red-900'}`}
+        >
+          {title}
+        </p>
+        <p
+          className={`text-[12px] font-normal ${passed ? 'text-[#059669]' : 'text-red-600'}`}
+        >
+          {description}
+        </p>
+      </div>
     </div>
   );
+}
+
+function LockedReasonCard({ unmetCount }: { unmetCount: number }) {
+  return (
+    <div className="flex items-start gap-4 rounded-[12px] bg-[#FFFBE9] px-[14px] py-[10px]">
+      <AlertTriangle
+        className="mt-3 h-5 w-5 shrink-0 text-[#FB923C]"
+        strokeWidth={2.5}
+      />
+      <div>
+        <p className="text-[14px] font-normal text-[#7B3306]">
+          Why is this benefit locked?
+        </p>
+        <p className="text-[12px] font-normal text-[#973B00]">
+          You currently do not meet {unmetCount || 1} requirement
+          {unmetCount === 1 ? '' : 's'} for this benefit.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function getDialogMode({
+  benefit,
+  existingRequest,
+  eligibility,
+}: {
+  benefit: Benefit;
+  existingRequest: BenefitRequest | null;
+  eligibility: EligibilityResult | null;
+}) {
+  if (existingRequest?.status === RequestStatus.Approved) return 'active';
+  if (!benefit.isActive) return 'locked';
+  if (existingRequest) return 'request';
+  if (eligibility && !eligibility.eligible) return 'locked';
+  if (eligibility?.eligible) return 'eligible';
+  return 'request';
+}
+
+function getModeLabel(mode: 'active' | 'eligible' | 'locked' | 'request') {
+  switch (mode) {
+    case 'active':
+      return 'active details';
+    case 'eligible':
+      return 'eligible details';
+    case 'locked':
+      return 'locked details';
+    default:
+      return 'pending details';
+  }
+}
+
+function getModeLabelClass(mode: 'active' | 'eligible' | 'locked' | 'request') {
+  switch (mode) {
+    case 'eligible':
+      return 'text-[#46A3F9]';
+    case 'locked':
+      return 'text-[#7A7A7A]';
+    default:
+      return 'text-[#7A7A7A]';
+  }
+}
+
+function formatRuleTitle(ruleType?: string | null) {
+  if (!ruleType) return 'Requirement';
+
+  return ruleType
+    .split('_')
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' ');
+}
+
+function formatRuleDescription(rule: Rule) {
+  return rule.errorMessage ?? `${rule.operator} ${rule.value}`;
+}
+
+function isRulePassing(
+  rule: Rule,
+  mode: 'active' | 'eligible' | 'locked' | 'request',
+  eligibility: EligibilityResult | null,
+) {
+  if (mode === 'active' || mode === 'eligible') return true;
+
+  const errorMessage =
+    rule.errorMessage ??
+    `${rule.ruleType} ${rule.operator} ${rule.value} — not met`;
+
+  return !eligibility?.errors.includes(errorMessage);
 }

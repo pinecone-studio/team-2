@@ -240,14 +240,14 @@ export const TopNavBar = () => {
 
           <div className="relative flex items-center justify-center w-8 h-8">
             <ClerkLoading>
-              <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse border border-gray-100" />
+              <div className="w-7 h-7 rounded-full bg-gray-200 animate-pulse border border-gray-100" />
             </ClerkLoading>
 
             <ClerkLoaded>
               <UserButton
                 appearance={{
                   elements: {
-                    userButtonAvatarBox: 'w-8 h-8',
+                    userButtonAvatarBox: 'w-7 h-7', // Skeleton-той ижил хэмжээтэй байх
                   },
                 }}
               />
