@@ -21,6 +21,7 @@ import {
   BenefitStatus,
   deriveBenefitStatus,
 } from '../../benefitsCardDashboard/page';
+import { EmployeeBenefitDetailsDialog } from '../../benefitsCardDashboard/_components/EmployeeBenefitDetailsDialog';
 import { MyBenefitsDashboardSkeleton } from './skeletonComp/MyBenefitsDashboardSkeleton';
 
 type Employee = GetEmployeesQuery['employees'][number];
@@ -158,6 +159,32 @@ export default function MyBenefitsDashboard() {
     if (user?.id) fetchData();
   }, [user?.id]);
 
+  function handleApplied(updatedRequest: BenefitRequest) {
+    setRequests((prev) => {
+      const existing = prev.find((request) => request.id === updatedRequest.id);
+
+      if (existing) {
+        return prev.map((request) =>
+          request.id === updatedRequest.id ? updatedRequest : request,
+        );
+      }
+
+      const sameBenefit = prev.find(
+        (request) => request.benefitId === updatedRequest.benefitId,
+      );
+
+      if (sameBenefit) {
+        return prev.map((request) =>
+          request.benefitId === updatedRequest.benefitId
+            ? updatedRequest
+            : request,
+        );
+      }
+
+      return [...prev, updatedRequest];
+    });
+  }
+
   const benefitEntries = useMemo(() => {
     if (!employee) return [];
 
@@ -259,17 +286,31 @@ export default function MyBenefitsDashboard() {
                     >
                       {benefit.name}
                     </h3>
-                    <p className="mt-2 text-[15px] font-medium leading-6 text-[#6F7C91] md:mt-3 md:text-base">
-                      {formatSubmittedDate(request.createdAt)}
-                    </p>
+                    <div className="flex items-center justify-between ">
+                      <p className="mt-2 text-[15px] font-medium leading-6 text-[#6F7C91] md:mt-3 md:text-base">
+                        {formatSubmittedDate(request.createdAt)}
+                      </p>
+                      <EmployeeBenefitDetailsDialog
+                        benefit={benefit}
+                        employee={employee}
+                        existingRequest={request}
+                        onApplied={handleApplied}
+                      >
+                        <button className="w-fit pt-3 text-[13px] font-semibold text-[#459cf3] transition-colors hover:text-blue-600">
+                          View Details
+                        </button>
+                      </EmployeeBenefitDetailsDialog>
+                    </div>
                   </div>
 
                   <div className="mt-auto pt-8 md:pt-10">
                     <div className="h-px w-full bg-[#EEF2F6]" />
                     <div className="flex items-center justify-between gap-4 pt-4">
-                      <span className="text-[#6A7282] text-[14px] font-normal leading-normal">
-                        {formatRequestStatus(request.status)}
-                      </span>
+                      <div className="flex flex-col gap-2">
+                        <span className="text-[#6A7282] text-[14px] font-normal leading-normal">
+                          {formatRequestStatus(request.status)}
+                        </span>
+                      </div>
                       <span
                         className={`text-right text-sm font-semibold md:text-[15px] ${trailing.className}`}
                       >

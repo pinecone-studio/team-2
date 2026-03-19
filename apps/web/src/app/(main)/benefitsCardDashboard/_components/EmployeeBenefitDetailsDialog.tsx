@@ -216,15 +216,15 @@ export function EmployeeBenefitDetailsDialog({
                         className="text-blue-400 mt-0.5 shrink-0"
                       />
                       <div className="flex-1 min-w-0">
-                        <p className="text-xs font-medium text-[#0F172A]">
+                        {/* <p className="text-xs font-medium text-[#0F172A]">
                           <span className="text-[#64748B]">
                             {rule.ruleType}
                           </span>{' '}
                           {rule.operator}{' '}
                           <span className="font-semibold">{rule.value}</span>
-                        </p>
+                        </p> */}
                         {rule.errorMessage && (
-                          <p className="text-[11px] text-[#94A3B8] mt-0.5">
+                          <p className="text-xs font-normal text-[#0F172A] mt-0.5">
                             {rule.errorMessage}
                           </p>
                         )}

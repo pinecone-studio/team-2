@@ -45,13 +45,7 @@ export const BenefitFilterSkeleton = () => {
   return (
     <div className="mb-4 flex flex-wrap gap-2 animate-pulse">
       {widths.map((width, i) => (
-        <div
-          key={i}
-          className="flex h-11 items-center gap-2 rounded-[10px] border border-gray-100 bg-white/70 px-4"
-        >
-          <div className={`h-4 rounded-md bg-gray-200 ${width}`} />
-          <div className="h-4 w-6 rounded-md bg-gray-100" />
-        </div>
+        <div key={i} className={`h-11 rounded-[10px] bg-gray-200 ${width}`} />
       ))}
     </div>
   );

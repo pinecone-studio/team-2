@@ -1,7 +1,6 @@
 'use client';
 
 import { useUser } from '@clerk/nextjs';
-import { Skeleton } from '@team/source-ui';
 
 type HeaderProps = {
   isLoading?: boolean;
@@ -17,8 +16,8 @@ export function Header({ isLoading = false }: HeaderProps) {
       <div className={`${containerClassName} mb-6 mt-3 animate-[pulse_1.5s_infinite]`}>
         <div className="flex items-center justify-between">
           <div className="space-y-2">
-            <Skeleton className="h-8 w-64 rounded" />
-            <Skeleton className="h-4 w-96 rounded" />
+            <div className="h-10 w-[220px] rounded-md bg-gray-200" />
+            <div className="h-[30px] w-[360px] rounded-md bg-gray-200" />
           </div>
         </div>
       </div>
