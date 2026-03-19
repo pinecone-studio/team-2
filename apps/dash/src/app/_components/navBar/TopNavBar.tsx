@@ -11,6 +11,7 @@ const menuItems = [
   { path: '/benefitManagement', label: 'Benefits' },
   { path: '/requestManagement', label: 'Requests' },
   { path: '/contracts', label: 'Contracts' },
+  { path: '/ruleConfiguration', label: 'Rules' },
 ];
 
 export const TopNavBar = () => {
