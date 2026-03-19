@@ -25,6 +25,6 @@ export default function MainLayout({
         </main>
       </div>
     </SidebarProvider>
-    /* </AdminGuard> */
+    // </AdminGuard>
   );
 }

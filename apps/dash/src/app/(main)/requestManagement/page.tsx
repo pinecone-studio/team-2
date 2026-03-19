@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ActiveRequests } from './_components/ActiveRequests';
 import { ProcessedRequests } from './_components/ProcessedRequests';
 import { RequestLoadingOverlay } from './_components/RequestLoadingOverlay';
@@ -45,9 +45,17 @@ const RequestManagementPage = () => {
   const [actionLoading, setActionLoading] = useState(false);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    async function fetchData() {
-      setLoading(true);
+  const fetchInFlightRef = useRef(false);
+
+  const fetchData = useCallback(
+    async ({ silent = false }: { silent?: boolean } = {}) => {
+      if (fetchInFlightRef.current) return;
+      fetchInFlightRef.current = true;
+
+      if (!silent) {
+        setLoading(true);
+        setError('');
+      }
 
       try {
         const [requestsData, benefitsData, employeesData] = await Promise.all([
@@ -56,18 +64,45 @@ const RequestManagementPage = () => {
           gqlRequest(GetEmployeesDocument),
         ]);
 
-        setRequests(sortRequestsNewestFirst(requestsData.benefitRequests));
+        setRequests(requestsData.benefitRequests);
         setBenefits(benefitsData.benefits);
         setEmployees(employeesData.employees);
       } catch (e: unknown) {
-        setError(e instanceof Error ? e.message : 'Failed to load');
+        if (!silent) {
+          setError(e instanceof Error ? e.message : 'Failed to load');
+        }
       } finally {
-        setLoading(false);
+        if (!silent) {
+          setLoading(false);
+        }
+        fetchInFlightRef.current = false;
       }
-    }
+    },
+    [],
+  );
 
-    void fetchData();
-  }, []);
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  // Realtime polling: every 10s when tab is visible
+  useEffect(() => {
+    const id = window.setInterval(() => {
+      if (document.visibilityState === 'visible') {
+        fetchData({ silent: true });
+      }
+    }, 10000);
+
+    return () => window.clearInterval(id);
+  }, [fetchData]);
+
+  // Refresh when user returns to tab/window
+  useEffect(() => {
+    const onFocus = () => fetchData({ silent: true });
+    window.addEventListener('focus', onFocus);
+
+    return () => window.removeEventListener('focus', onFocus);
+  }, [fetchData]);
 
   function handleUpdated(updatedRequest: BenefitRequest) {
     setRequests((prev) =>
@@ -75,6 +110,9 @@ const RequestManagementPage = () => {
         prev.map((r) => (r.id === updatedRequest.id ? updatedRequest : r)),
       ),
     );
+
+    // Keep UI in sync with server state after mutation
+    void fetchData({ silent: true });
   }
 
   const activeRequests = requests.filter(
