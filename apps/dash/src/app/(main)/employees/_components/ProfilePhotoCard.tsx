@@ -14,7 +14,7 @@ export function ProfilePhotoCard({ avatarSrc, onPhotoChange }: Props) {
     reader.readAsDataURL(file);
   };
   return (
-    <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-7 mb-4">
+    <div className="bg-white rounded-[8px] border border-gray-200 shadow-sm p-5 mb-4">
       <h2 className="text-sm font-semibold text-gray-900">Profile Photo</h2>
       <p className="text-xs text-gray-500 mt-1 mb-5">
         Upload a professional photo for the employee profile

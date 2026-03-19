@@ -92,7 +92,7 @@ const StatusBadge = ({ isApproved }: { isApproved: boolean }) => {
     return (
       <td className="px-4 py-4">
         <div className="flex justify-center">
-          <div className="px-2.5 py-1 rounded-lg text-xs font-[500] border transition-colors bg-[#DCFCE7] text-[#166534] border-[#BBF7D0]">
+          <div className="px-2.5 py-1 rounded-lg text-xs font-[500] border transition-colors bg-[#DCFCE7] text-[#59AF4F] border-[#BBF7D0]">
             Approved
           </div>
         </div>
@@ -103,7 +103,7 @@ const StatusBadge = ({ isApproved }: { isApproved: boolean }) => {
   return (
     <td className="px-4 py-4">
       <div className="flex justify-center">
-        <div className="px-2.5 py-1 rounded-lg text-xs font-[500] border transition-colors bg-[#FFE4E6] text-[#991B1B] border-[#FECDD3]">
+        <div className="px-2.5 py-1 rounded-lg text-xs font-[500] border transition-colors bg-[#FFE4E6] text-[#E85172] border-[#FECDD3]">
           Rejected
         </div>
       </div>
@@ -125,11 +125,11 @@ export const ProcessedRequestRow = ({
       <td className="px-4 py-4 text-[#334155] text-sm">{benefitName}</td>
       <OKRStatus submitted={getEmployeeOkr(employee)} />
       <td className="px-4 py-4 text-center">
-        <span className="text-[#22C55E] text-sm font-bold">
+        <span className="text-[#22C55E]  text-sm font-medium">
           {getEmployeeLates(employee)}
         </span>
       </td>
-      <td className="px-4 py-4 text-[#334155] text-sm font-[300]">
+      <td className="px-4 py-4 text-[#334155] text-base font-[300]">
         {formatDate(request.createdAt)}
       </td>
       <StatusBadge isApproved={request.status === RequestStatus.Approved} />
