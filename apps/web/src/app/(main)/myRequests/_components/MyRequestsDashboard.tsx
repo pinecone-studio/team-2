@@ -118,12 +118,10 @@ export function MyRequestsDashboard() {
     );
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 space-y-8">
-      <div>
-        <h1 className="text-2xl font-bold text-[#0F172A] tracking-tight">
-          My Requests
-        </h1>
-        <p className="text-sm text-[#64748B] mt-1">
+    <div className="mx-auto mt-4 space-y-8 px-36 py-2">
+      <div className="mb-8">
+        <h1 className="text-gray-900 text-3xl font-bold">My Requests</h1>
+        <p className="text-[#666666]">
           Track the status of your benefit requests
         </p>
       </div>
@@ -131,44 +129,44 @@ export function MyRequestsDashboard() {
       {/* ── Pending Requests ── */}
       <section>
         <div className="mb-3">
-          <h2 className="text-base font-semibold text-[#0F172A]">
+          <h2 className="text-[18px] font-bold tracking-[-0.02em] text-[#17233C]">
             Pending Requests
           </h2>
-          <p className="text-xs text-[#64748B]">
+          <p className="mt-1 text-sm font-medium text-[#6F7C91]">
             {pendingRequests.length} awaiting review
           </p>
         </div>
 
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+        <div className="overflow-hidden rounded-[24px] border border-[#EEF2F6] bg-white/92 shadow-[0_14px_30px_rgba(15,23,42,0.08)]">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-gray-100">
-                <th className="px-4 py-3 text-xs font-semibold text-[#1E293B] tracking-wider">
+              <tr className="border-b border-[#EEF2F6]">
+                <th className="px-5 py-4 text-xs font-semibold uppercase tracking-[0.12em] text-[#6A7282]">
                   Benefit
                 </th>
-                <th className="px-4 py-3 text-xs font-semibold text-[#1E293B] tracking-wider">
+                <th className="px-5 py-4 text-xs font-semibold uppercase tracking-[0.12em] text-[#6A7282]">
                   Category
                 </th>
-                <th className="px-4 py-3 text-xs font-semibold text-[#1E293B] tracking-wider">
+                <th className="px-5 py-4 text-xs font-semibold uppercase tracking-[0.12em] text-[#6A7282]">
                   Vendor
                 </th>
-                <th className="px-4 py-3 text-xs font-semibold text-[#1E293B] tracking-wider">
+                <th className="px-5 py-4 text-xs font-semibold uppercase tracking-[0.12em] text-[#6A7282]">
                   Subsidy
                 </th>
-                <th className="px-4 py-3 text-xs font-semibold text-[#1E293B] tracking-wider">
+                <th className="px-5 py-4 text-xs font-semibold uppercase tracking-[0.12em] text-[#6A7282]">
                   Submitted
                 </th>
-                <th className="px-4 py-3 text-xs font-semibold text-[#1E293B] tracking-wider">
+                <th className="px-5 py-4 text-xs font-semibold uppercase tracking-[0.12em] text-[#6A7282]">
                   Status
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-[#EEF2F6]">
               {pendingRequests.length === 0 ? (
                 <tr>
                   <td
                     colSpan={6}
-                    className="px-4 py-8 text-center text-sm text-gray-400"
+                    className="px-5 py-10 text-center text-sm text-[#94A3B8]"
                   >
                     No pending requests
                   </td>
@@ -194,44 +192,44 @@ export function MyRequestsDashboard() {
       {/* ── Processed Requests ── */}
       <section>
         <div className="mb-3">
-          <h2 className="text-base font-semibold text-[#0F172A]">
+          <h2 className="text-[18px] font-bold tracking-[-0.02em] text-[#17233C]">
             Processed Requests
           </h2>
-          <p className="text-xs text-[#64748B]">
+          <p className="mt-1 text-sm font-medium text-[#6F7C91]">
             {processedRequests.length} reviewed requests
           </p>
         </div>
 
-        <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+        <div className="overflow-hidden rounded-[24px] border border-[#EEF2F6] bg-white/92 shadow-[0_14px_30px_rgba(15,23,42,0.08)]">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-gray-100">
-                <th className="px-4 py-3 text-xs font-semibold text-[#1E293B] tracking-wider">
+              <tr className="border-b border-[#EEF2F6]">
+                <th className="px-5 py-4 text-xs font-semibold uppercase tracking-[0.12em] text-[#6A7282]">
                   Benefit
                 </th>
-                <th className="px-4 py-3 text-xs font-semibold text-[#1E293B] tracking-wider">
+                <th className="px-5 py-4 text-xs font-semibold uppercase tracking-[0.12em] text-[#6A7282]">
                   Category
                 </th>
-                <th className="px-4 py-3 text-xs font-semibold text-[#1E293B] tracking-wider">
+                <th className="px-5 py-4 text-xs font-semibold uppercase tracking-[0.12em] text-[#6A7282]">
                   Vendor
                 </th>
-                <th className="px-4 py-3 text-xs font-semibold text-[#1E293B] tracking-wider">
+                <th className="px-5 py-4 text-xs font-semibold uppercase tracking-[0.12em] text-[#6A7282]">
                   Subsidy
                 </th>
-                <th className="px-4 py-3 text-xs font-semibold text-[#1E293B] tracking-wider">
+                <th className="px-5 py-4 text-xs font-semibold uppercase tracking-[0.12em] text-[#6A7282]">
                   Submitted
                 </th>
-                <th className="px-4 py-3 text-xs font-semibold text-[#1E293B] tracking-wider">
+                <th className="px-5 py-4 text-xs font-semibold uppercase tracking-[0.12em] text-[#6A7282]">
                   Status
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-[#EEF2F6]">
               {processedRequests.length === 0 ? (
                 <tr>
                   <td
                     colSpan={6}
-                    className="px-4 py-8 text-center text-sm text-gray-400"
+                    className="px-5 py-10 text-center text-sm text-[#94A3B8]"
                   >
                     No processed requests yet
                   </td>
@@ -275,21 +273,21 @@ function RequestRow({
   style?: { badge: string };
 }) {
   return (
-    <tr className="hover:bg-gray-50/50 transition-colors">
-      <td className="px-4 py-3 text-sm font-semibold text-[#0F172A]">
+    <tr className="transition-colors hover:bg-[#F8FAFC]/80">
+      <td className="px-5 py-4 text-sm font-semibold text-[#17233C]">
         {benefitName}
       </td>
-      <td className="px-4 py-3 text-sm text-[#64748B]">{category}</td>
-      <td className="px-4 py-3 text-sm text-[#64748B]">{vendor}</td>
-      <td className="px-4 py-3 text-sm font-bold text-[#137FEC]">{subsidy}%</td>
-      <td className="px-4 py-3 text-sm text-[#64748B]">
+      <td className="px-5 py-4 text-sm text-[#6F7C91]">{category}</td>
+      <td className="px-5 py-4 text-sm text-[#6F7C91]">{vendor}</td>
+      <td className="px-5 py-4 text-sm font-bold text-[#137FEC]">{subsidy}%</td>
+      <td className="px-5 py-4 text-sm text-[#6F7C91]">
         {request.createdAt
           ? new Date(request.createdAt).toLocaleDateString()
           : '—'}
       </td>
-      <td className="px-4 py-3">
+      <td className="px-5 py-4">
         <span
-          className={`px-[10px] py-1 rounded-lg text-[11px] font-semibold border capitalize ${
+          className={`rounded-full px-3 py-1 text-xs font-semibold capitalize border ${
             style?.badge ?? 'bg-gray-100 text-gray-500 border-gray-200'
           }`}
         >

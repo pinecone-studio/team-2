@@ -232,11 +232,9 @@ export default function MyBenefitsDashboard() {
 
   return (
     <div className="mx-auto px-36 mt-4 py-2">
-      <div className="mb-6">
-        <h1 className="text-[#101828] text-[30px] font-bold leading-[40px] tracking-[0.396px] antialiased">
-          My Benefits
-        </h1>
-        <p className="text-[#717182] text-[16px] font-normal leading-[30px] tracking-[0.396px]">
+      <div className="mb-8">
+        <h1 className="text-gray-900 text-3xl font-bold">My Benefits</h1>
+        <p className="text-[#666666]">
           Your comprenhensive benefits package overview{' '}
         </p>
       </div>

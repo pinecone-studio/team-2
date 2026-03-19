@@ -1,5 +1,7 @@
 import { Skeleton } from '@team/source-ui';
 
+const accentSkeletonStyles = ['bg-[#F9DDE7]', 'bg-[#FCE3E9]', 'bg-[#F9DDE7]'];
+
 export function MyBenefitsDashboardSkeleton() {
   return (
     <div className="mx-auto px-36 mt-4 py-2">
@@ -10,13 +12,15 @@ export function MyBenefitsDashboardSkeleton() {
       </div>
 
       {/* Cards grid */}
-      <div className="grid grid-cols-1 justify-items-start gap-3 xl:grid-cols-[repeat(2,minmax(0,604px))] xl:gap-x-3">
+      <div className="grid grid-cols-1 justify-items-start gap-4 xl:grid-cols-[repeat(3,minmax(0,1fr))] xl:gap-x-6">
         {Array.from({ length: 3 }).map((_, i) => (
           <div
             key={i}
-            className="relative w-full max-w-[604px] min-h-[261px] overflow-hidden rounded-[24px] border border-gray-100 bg-white p-6 shadow-[0_14px_30px_rgba(15,23,42,0.08)] md:p-7"
+            className="relative w-full min-h-[261px] overflow-hidden rounded-[24px] border border-gray-100 bg-white p-6 shadow-[0_14px_30px_rgba(15,23,42,0.08)] md:p-7"
           >
-            <div className="absolute right-0 top-0 h-[132px] w-[132px] rounded-bl-[132px] bg-[#F3E8FF] opacity-80 md:h-[144px] md:w-[144px] md:rounded-bl-[144px]" />
+            <div
+              className={`absolute right-0 top-0 h-[132px] w-[132px] rounded-bl-[132px] opacity-80 md:h-[144px] md:w-[144px] md:rounded-bl-[144px] ${accentSkeletonStyles[i % accentSkeletonStyles.length]}`}
+            />
 
             <div className="relative z-10 flex min-h-[210px] flex-col md:min-h-[224px]">
               <Skeleton className="h-12 w-12 rounded-[16px] md:h-14 md:w-14" />

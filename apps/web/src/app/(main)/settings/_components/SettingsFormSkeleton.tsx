@@ -1,21 +1,14 @@
 'use client';
 
 import { Skeleton } from '@team/source-ui';
+import { SecondaryPagesGradient } from '../../../_components/main/backgroundGradient/SecondaryPagesGradient';
 
 export function SettingsFormSkeleton() {
   return (
-    <div className="relative h-[calc(100vh-72px)] overflow-hidden bg-white">
-      <div
-        className="pointer-events-none absolute inset-x-0 bottom-[-120px] h-[420px] blur-3xl opacity-90"
-        style={{
-          background: `
-            radial-gradient(55% 85% at 22% 100%, rgba(251,146,60,0.95) 0%, rgba(251,146,60,0.75) 28%, rgba(251,146,60,0.35) 52%, rgba(251,146,60,0.12) 68%, transparent 82%),
-            radial-gradient(55% 85% at 78% 100%, rgba(251,146,60,0.95) 0%, rgba(251,146,60,0.75) 28%, rgba(251,146,60,0.35) 52%, rgba(251,146,60,0.12) 68%, transparent 82%)
-          `,
-        }}
-      />
+    <div className="relative isolate min-h-[calc(100vh-72px)] overflow-hidden bg-white">
+      <SecondaryPagesGradient />
 
-      <div className="relative mx-auto flex h-full max-w-[1027px] items-center">
+      <div className="relative z-10 mx-auto flex h-full max-w-[1027px] items-center">
         <div className="w-full bg-transparent shadow-none">
           <div className="mb-10 flex flex-col items-center md:items-start">
             <Skeleton className="h-6 w-28 rounded-md" />

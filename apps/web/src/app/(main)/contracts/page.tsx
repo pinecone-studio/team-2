@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type ReactNode } from 'react';
 import { useUser } from '@clerk/nextjs';
+import { Skeleton } from '@team/source-ui';
 import {
   GetBenefitRequestsByEmployeeDocument,
   GetBenefitRequestsByEmployeeQuery,
@@ -12,6 +13,7 @@ import {
 } from 'apps/web/src/graphql/generated/graphql';
 import { gqlRequest } from 'apps/web/src/graphql/helpers/graphql-client';
 import { ExternalLink } from 'lucide-react';
+import { SecondaryPagesGradient } from '../../_components/main/backgroundGradient/SecondaryPagesGradient';
 
 type Benefit = GetBenefitsQuery['benefits'][number];
 type BenefitRequest =
@@ -47,54 +49,54 @@ function ContractTable({
   showViewContract?: boolean;
 }) {
   return (
-    <div className="rounded-xl border border-gray-100 overflow-hidden bg-white">
+    <div className="overflow-hidden rounded-[24px] border border-[#EEF2F6] bg-white/92 shadow-[0_14px_30px_rgba(15,23,42,0.08)]">
       <table className="w-full text-left text-sm">
         <thead>
-          <tr className="border-b border-gray-100">
-            <th className="px-5 py-3 font-semibold text-[#1E293B] text-xs tracking-wide">
+          <tr className="border-b border-[#EEF2F6]">
+            <th className="px-5 py-4 text-xs font-semibold uppercase tracking-[0.12em] text-[#6A7282]">
               Benefit
             </th>
-            <th className="px-5 py-3 font-semibold text-[#1E293B] text-xs tracking-wide">
+            <th className="px-5 py-4 text-xs font-semibold uppercase tracking-[0.12em] text-[#6A7282]">
               Category
             </th>
-            <th className="px-5 py-3 font-semibold text-[#1E293B] text-xs tracking-wide">
+            <th className="px-5 py-4 text-xs font-semibold uppercase tracking-[0.12em] text-[#6A7282]">
               Vendor
             </th>
-            <th className="px-5 py-3 font-semibold text-[#1E293B] text-xs tracking-wide">
+            <th className="px-5 py-4 text-xs font-semibold uppercase tracking-[0.12em] text-[#6A7282]">
               Subsidy
             </th>
-            <th className="px-5 py-3 font-semibold text-[#1E293B] text-xs tracking-wide">
+            <th className="px-5 py-4 text-xs font-semibold uppercase tracking-[0.12em] text-[#6A7282]">
               Submitted
             </th>
-            <th className="px-5 py-3 font-semibold text-[#1E293B] text-xs tracking-wide">
+            <th className="px-5 py-4 text-xs font-semibold uppercase tracking-[0.12em] text-[#6A7282]">
               Status
             </th>
             {showViewContract && (
-              <th className="px-5 py-3 font-semibold text-[#1E293B] text-xs tracking-wide">
+              <th className="px-5 py-4 text-xs font-semibold uppercase tracking-[0.12em] text-[#6A7282]">
                 Contract
               </th>
             )}
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-100">
+        <tbody className="divide-y divide-[#EEF2F6]">
           {entries.map(({ benefit, request }) => (
             <tr
               key={request.id}
-              className="hover:bg-gray-50/50 transition-colors"
+              className="transition-colors hover:bg-[#F8FAFC]/80"
             >
-              <td className="px-5 py-4 font-bold text-[#0F172A]">
+              <td className="px-5 py-4 font-semibold text-[#17233C]">
                 {benefit.name}
               </td>
-              <td className="px-5 py-4 text-[#64748B]">
+              <td className="px-5 py-4 text-[#6F7C91]">
                 {benefit.category ?? '—'}
               </td>
-              <td className="px-5 py-4 text-[#64748B]">
+              <td className="px-5 py-4 text-[#6F7C91]">
                 {benefit.vendorName ?? '—'}
               </td>
               <td className="px-5 py-4 font-bold text-[#137FEC]">
                 {benefit.subsidyPercent ?? 0}%
               </td>
-              <td className="px-5 py-4 text-[#64748B]">
+              <td className="px-5 py-4 text-[#6F7C91]">
                 {formatDate(request.createdAt)}
               </td>
               <td className="px-5 py-4">
@@ -111,10 +113,55 @@ function ContractTable({
                       View
                     </button>
                   ) : (
-                    <span className="text-xs text-gray-300">—</span>
+                    <span className="text-xs text-[#CBD5E1]">—</span>
                   )}
                 </td>
               )}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function ContractTableSkeleton({ rows = 3 }: { rows?: number }) {
+  return (
+    <div className="overflow-hidden rounded-[24px] border border-[#EEF2F6] bg-white/92 shadow-[0_14px_30px_rgba(15,23,42,0.08)]">
+      <table className="w-full text-left text-sm">
+        <thead>
+          <tr className="border-b border-[#EEF2F6]">
+            {Array.from({ length: 7 }).map((_, index) => (
+              <th key={index} className="px-5 py-4">
+                <Skeleton className="h-3 w-20" />
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-[#EEF2F6]">
+          {Array.from({ length: rows }).map((_, index) => (
+            <tr key={index}>
+              <td className="px-5 py-4">
+                <Skeleton className="h-4 w-32" />
+              </td>
+              <td className="px-5 py-4">
+                <Skeleton className="h-4 w-24" />
+              </td>
+              <td className="px-5 py-4">
+                <Skeleton className="h-4 w-24" />
+              </td>
+              <td className="px-5 py-4">
+                <Skeleton className="h-4 w-12" />
+              </td>
+              <td className="px-5 py-4">
+                <Skeleton className="h-4 w-24" />
+              </td>
+              <td className="px-5 py-4">
+                <Skeleton className="h-6 w-20 rounded-full" />
+              </td>
+              <td className="px-5 py-4">
+                <Skeleton className="h-4 w-14" />
+              </td>
             </tr>
           ))}
         </tbody>
@@ -138,7 +185,7 @@ function StatusBadge({ status }: { status?: RequestStatus | null }) {
     : '—';
   return (
     <span
-      className={`px-3 py-1 rounded-full text-xs font-semibold ${styles[status ?? ''] ?? 'bg-gray-100 text-gray-500'}`}
+      className={`rounded-full border px-3 py-1 text-xs font-semibold ${styles[status ?? ''] ?? 'bg-gray-100 text-gray-500 border-gray-200'}`}
     >
       {label}
     </span>
@@ -209,79 +256,100 @@ export default function ContractsPage() {
     fetchData();
   }, [user?.id]);
 
+  let content: ReactNode;
+
   if (!isClerkLoaded || loading) {
-    return (
-      <div className="mx-auto px-20 py-8 space-y-8">
-        <div className="h-7 w-36 bg-gray-200 rounded animate-pulse" />
-        <div className="h-4 w-56 bg-gray-100 rounded animate-pulse" />
-        <div className="bg-white rounded-xl h-40 animate-pulse border border-gray-100" />
-        <div className="bg-white rounded-xl h-40 animate-pulse border border-gray-100" />
+    content = (
+      <div className="mx-auto mt-4 space-y-8 px-36 py-2">
+        <div className="mb-8">
+          <Skeleton className="h-9 w-40" />
+          <Skeleton className="mt-2 h-5 w-80" />
+        </div>
+        <section>
+          <div className="mb-3">
+            <Skeleton className="h-6 w-44" />
+            <Skeleton className="mt-2 h-4 w-32" />
+          </div>
+          <ContractTableSkeleton rows={4} />
+        </section>
+        <section>
+          <div className="mb-3">
+            <Skeleton className="h-6 w-48" />
+            <Skeleton className="mt-2 h-4 w-32" />
+          </div>
+          <ContractTableSkeleton rows={4} />
+        </section>
+      </div>
+    );
+  } else if (error) {
+    content = <p className="mx-auto mt-4 px-36 py-2 text-red-500">{error}</p>;
+  } else {
+    content = (
+      <div className="mx-auto mt-4 px-36 py-2">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-gray-900 text-3xl font-bold">Contracts</h1>
+          <p className="text-[#666666]">
+            View contracts for your benefit requests
+          </p>
+        </div>
+
+        {/* Pending */}
+        <div className="mb-8">
+          <div className="mb-3">
+            <h2 className="text-[18px] font-bold tracking-[-0.02em] text-[#17233C]">
+              Pending Contracts
+            </h2>
+            <p className="mt-1 text-sm font-medium text-[#6F7C91]">
+              {pending.length} awaiting review
+            </p>
+          </div>
+          {pending.length === 0 ? (
+            <div className="rounded-[24px] border-2 border-dashed border-[#E2E8F0] bg-white/70 px-6 py-8 text-center">
+              <p className="text-sm font-semibold text-[#0F172A]">
+                No Pending Contracts
+              </p>
+              <p className="text-xs text-[#94A3B8] mt-1">
+                You have no pending benefit contracts.
+              </p>
+            </div>
+          ) : (
+            <ContractTable entries={pending} showViewContract />
+          )}
+        </div>
+
+        {/* Processed */}
+        <div>
+          <div className="mb-3">
+            <h2 className="text-[18px] font-bold tracking-[-0.02em] text-[#17233C]">
+              Processed Contracts
+            </h2>
+            <p className="mt-1 text-sm font-medium text-[#6F7C91]">
+              {processed.length} reviewed request
+              {processed.length !== 1 ? 's' : ''}
+            </p>
+          </div>
+          {processed.length === 0 ? (
+            <div className="rounded-[24px] border-2 border-dashed border-[#E2E8F0] bg-white/70 px-6 py-8 text-center">
+              <p className="text-sm font-semibold text-[#0F172A]">
+                No Processed Contracts
+              </p>
+              <p className="text-xs text-[#94A3B8] mt-1">
+                No reviewed contracts yet.
+              </p>
+            </div>
+          ) : (
+            <ContractTable entries={processed} showViewContract />
+          )}
+        </div>
       </div>
     );
   }
 
-  if (error) return <p className="text-red-500 px-20 py-8">{error}</p>;
-
   return (
-    <div className="mx-auto px-20 py-8">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-[#0F172A] tracking-tight">
-          Contracts
-        </h1>
-        <p className="text-sm font-medium text-[#64748B] mt-1">
-          View contracts for your benefit requests
-        </p>
-      </div>
-
-      {/* Pending */}
-      <div className="mb-8">
-        <div className="mb-3">
-          <h2 className="text-base font-bold text-[#0F172A]">
-            Pending Contracts
-          </h2>
-          <p className="text-xs text-[#64748B] mt-0.5">
-            {pending.length} awaiting review
-          </p>
-        </div>
-        {pending.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-[#E2E8F0] px-6 py-8 text-center">
-            <p className="text-sm font-semibold text-[#0F172A]">
-              No Pending Contracts
-            </p>
-            <p className="text-xs text-[#94A3B8] mt-1">
-              You have no pending benefit contracts.
-            </p>
-          </div>
-        ) : (
-          <ContractTable entries={pending} showViewContract />
-        )}
-      </div>
-
-      {/* Processed */}
-      <div>
-        <div className="mb-3">
-          <h2 className="text-base font-bold text-[#0F172A]">
-            Processed Contracts
-          </h2>
-          <p className="text-xs text-[#64748B] mt-0.5">
-            {processed.length} reviewed request
-            {processed.length !== 1 ? 's' : ''}
-          </p>
-        </div>
-        {processed.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-[#E2E8F0] px-6 py-8 text-center">
-            <p className="text-sm font-semibold text-[#0F172A]">
-              No Processed Contracts
-            </p>
-            <p className="text-xs text-[#94A3B8] mt-1">
-              No reviewed contracts yet.
-            </p>
-          </div>
-        ) : (
-          <ContractTable entries={processed} showViewContract />
-        )}
-      </div>
+    <div className="relative isolate min-h-screen">
+      <SecondaryPagesGradient />
+      <div className="relative z-10">{content}</div>
     </div>
   );
 }
