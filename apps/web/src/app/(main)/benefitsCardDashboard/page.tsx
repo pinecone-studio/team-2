@@ -60,6 +60,9 @@ export function deriveBenefitStatus(
 }
 
 export default function BenefitsCardDashboard() {
+  const pageContainerClassName =
+    'mx-auto w-full max-w-[1640px] px-2 sm:px-4 lg:px-5 2xl:px-6';
+
   // isLoaded: Clerk-ийн хэрэгдэгчийн мэдээлэл ачаалж дууссан эсэх
   const { user, isLoaded: isClerkLoaded } = useUser();
 
@@ -162,21 +165,28 @@ export default function BenefitsCardDashboard() {
   // --- Скелетонуудыг нэгэн зэрэг харуулах нөхцөл ---
   if (!isClerkLoaded || loading) {
     return (
-      <div className="flex flex-col lg:flex-row gap-12 items-start py-4 animate-pulse">
-        <div className="flex-1 w-full order-2 lg:order-1">
-          <BenefitFilterSkeleton />
-          <div className="mt-8">
-            <BenefitsCardSkeleton />
+      <div className={pageContainerClassName}>
+        <div className="flex flex-col items-start gap-12 py-4 animate-pulse lg:flex-row">
+          <div className="order-2 w-full flex-1 lg:order-1 lg:min-w-0">
+            <BenefitFilterSkeleton />
+            <div className="mt-8">
+              <BenefitsCardSkeleton />
+            </div>
           </div>
+          <aside className="order-1 w-full lg:order-2 lg:w-[360px] lg:flex-none lg:sticky lg:top-8">
+            <QuickActionsSkeleton />
+          </aside>
         </div>
-        <aside className="w-full lg:w-[360px] lg:sticky lg:top-8 order-1 lg:order-2">
-          <QuickActionsSkeleton />
-        </aside>
       </div>
     );
   }
 
-  if (error) return <p className="p-6 text-red-500 font-medium">{error}</p>;
+  if (error)
+    return (
+      <div className={pageContainerClassName}>
+        <p className="p-6 text-red-500 font-medium">{error}</p>
+      </div>
+    );
   if (!data.employee)
     return (
       <div className="w-[100vw] h-[100vh] flex items-center justify-center">
@@ -185,46 +195,52 @@ export default function BenefitsCardDashboard() {
     );
 
   return (
-    <div className="flex flex-col lg:flex-row gap-12 items-start py-6 animate-in fade-in duration-500">
-      {/* LEFT SIDE: Benefits List */}
-      <div className="flex-1 w-full order-2 lg:order-1">
-        <BenefitFilter onChange={setFilter} counts={counts} />
+    <div className={pageContainerClassName}>
+      <div className="flex flex-col items-start gap-12 py-6 animate-in fade-in duration-500 lg:flex-row">
+        {/* LEFT SIDE: Benefits List */}
+        <div className="order-2 w-full flex-1 lg:order-1 lg:min-w-0">
+          <BenefitFilter onChange={setFilter} counts={counts} />
 
-        <div className="mt-8">
-          {filtered.length === 0 ? (
-            <div className="bg-white/40 backdrop-blur-md rounded-[32px] p-20 text-center border border-dashed border-gray-200">
-              <p className="text-[18px] font-bold text-[#0F172A]">
-                No {filter === 'All' ? '' : filter} Benefits Found
-              </p>
-              <p className="text-sm text-[#717182] mt-2 italic">
-                Nothing to show here right now.
-              </p>
-            </div>
-          ) : (
-            <div className="flex flex-wrap gap-x-4 gap-y-8 justify-start items-stretch">
-              {filtered.map(({ benefit, request, status }) => (
-                <div
-                  key={benefit.id}
-                  className="w-full sm:w-[calc(50%-18px)] xl:w-[calc(50%-18px)] 2xl:w-[calc(33.33%-18px)] max-w-[320px]"
-                >
-                  <BenefitCard
-                    benefit={benefit}
-                    employee={data.employee!}
-                    request={request ?? null}
-                    status={status}
-                    onApplied={handleApplied}
-                  />
-                </div>
-              ))}
-            </div>
-          )}
+          <div className="mt-8">
+            {filtered.length === 0 ? (
+              <div className="rounded-[32px] border border-dashed border-gray-200 bg-white/40 p-20 text-center backdrop-blur-md">
+                <p className="text-[18px] font-bold text-[#0F172A]">
+                  No {filter === 'All' ? '' : filter} Benefits Found
+                </p>
+                <p className="mt-2 text-sm italic text-[#717182]">
+                  Nothing to show here right now.
+                </p>
+              </div>
+            ) : (
+              <div className="flex flex-wrap items-stretch justify-start gap-x-4 gap-y-8">
+                {filtered.map(({ benefit, request, status }) => (
+                  <div
+                    key={benefit.id}
+                    className="w-full max-w-[320px] sm:w-[calc(50%-18px)] xl:w-[calc(50%-18px)] 2xl:w-[calc(33.33%-18px)]"
+                  >
+                    <BenefitCard
+                      benefit={benefit}
+                      employee={data.employee!}
+                      request={request ?? null}
+                      status={status}
+                      onApplied={handleApplied}
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
-      </div>
 
-      {/* RIGHT SIDE: Quick Actions */}
-      <aside className="w-full lg:w-[360px] lg:sticky lg:top-8 order-1 lg:order-2">
-        <QuickActions />
-      </aside>
+        {/* RIGHT SIDE: Quick Actions */}
+        <aside className="order-1 w-full lg:order-2 lg:w-[360px] lg:flex-none lg:sticky lg:top-8">
+          <QuickActions
+            benefits={data.benefits}
+            requests={data.requests}
+            counts={counts}
+          />
+        </aside>
+      </div>
     </div>
   );
 }

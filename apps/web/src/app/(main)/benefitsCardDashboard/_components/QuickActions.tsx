@@ -1,50 +1,148 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import {
   FileText,
-  HelpCircle,
   CheckCircle2,
   Clock,
-  CheckSquare,
-  AlertCircle,
+  CircleSlash,
+  ListTodo,
+  XCircle,
 } from 'lucide-react';
+import {
+  GetBenefitRequestsByEmployeeQuery,
+  GetBenefitsQuery,
+  RequestStatus,
+} from 'apps/web/src/graphql/generated/graphql';
 
-const QuickActions = () => {
-  const timelineEvents = [
-    {
-      id: 1,
-      title: 'Remote Work Approved',
-      description: 'Your remote work request has been approved for 3 days.',
-      time: '2 hours ago',
-      icon: <CheckCircle2 className="w-5 h-5 text-emerald-500" />,
-      bgColor: 'bg-emerald-50',
-    },
-    {
-      id: 2,
-      title: 'Travel Subsidy Pending',
-      description: 'Awaiting manager pre-approval for conference travel.',
-      time: '1 day ago',
-      icon: <Clock className="w-5 h-5 text-amber-500" />,
-      bgColor: 'bg-amber-50',
-    },
-    {
-      id: 3,
-      title: 'PineFit Contract Signed',
-      description: 'You accepted the gym membership contract.',
-      time: '3 days ago',
-      icon: <CheckSquare className="w-5 h-5 text-indigo-500" />,
-      bgColor: 'bg-indigo-50',
-    },
-    {
-      id: 4,
-      title: 'OKR Deadline Approaching',
-      description: 'Q1 2026 OKR submission due in 5 days.',
-      time: '5 days ago',
-      icon: <AlertCircle className="w-5 h-5 text-pink-500" />,
-      bgColor: 'bg-pink-50',
-    },
-  ];
+type Benefit = GetBenefitsQuery['benefits'][number];
+type BenefitRequest =
+  GetBenefitRequestsByEmployeeQuery['benefitRequestsByEmployee'][number];
+
+type QuickActionsProps = {
+  benefits: Benefit[];
+  requests: BenefitRequest[];
+  counts: Record<string, number>;
+};
+
+type TimelineEvent = {
+  id: number;
+  title: string;
+  description: string;
+  time: string;
+  icon: React.ReactNode;
+  bgColor: string;
+};
+
+function formatRelativeTime(dateStr?: string | null) {
+  if (!dateStr) return 'Recently';
+
+  const timestamp = new Date(dateStr).getTime();
+  if (Number.isNaN(timestamp)) return 'Recently';
+
+  const diffMs = Date.now() - timestamp;
+  const diffMinutes = Math.max(1, Math.floor(diffMs / (1000 * 60)));
+
+  if (diffMinutes < 60) {
+    return `${diffMinutes} minute${diffMinutes === 1 ? '' : 's'} ago`;
+  }
+
+  const diffHours = Math.floor(diffMinutes / 60);
+  if (diffHours < 24) {
+    return `${diffHours} hour${diffHours === 1 ? '' : 's'} ago`;
+  }
+
+  const diffDays = Math.floor(diffHours / 24);
+  if (diffDays < 7) {
+    return `${diffDays} day${diffDays === 1 ? '' : 's'} ago`;
+  }
+
+  return new Date(timestamp).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
+}
+
+function getTimelineMeta(status?: RequestStatus | null) {
+  switch (status) {
+    case RequestStatus.Approved:
+      return {
+        icon: <CheckCircle2 className="w-5 h-5 text-emerald-500" />,
+        bgColor: 'bg-emerald-50',
+        statusLabel: 'Approved',
+        description: 'Your request is now active in the system.',
+      };
+    case RequestStatus.Pending:
+      return {
+        icon: <Clock className="w-5 h-5 text-amber-500" />,
+        bgColor: 'bg-amber-50',
+        statusLabel: 'Pending',
+        description: 'Submitted and waiting for review.',
+      };
+    case RequestStatus.Rejected:
+      return {
+        icon: <XCircle className="w-5 h-5 text-rose-500" />,
+        bgColor: 'bg-rose-50',
+        statusLabel: 'Rejected',
+        description: 'Reviewed and not approved this time.',
+      };
+    case RequestStatus.Cancelled:
+      return {
+        icon: <CircleSlash className="w-5 h-5 text-slate-500" />,
+        bgColor: 'bg-slate-100',
+        statusLabel: 'Cancelled',
+        description: 'This request is no longer active.',
+      };
+    default:
+      return {
+        icon: <Clock className="w-5 h-5 text-slate-400" />,
+        bgColor: 'bg-slate-100',
+        statusLabel: 'Updated',
+        description: 'There is a recent update on your request.',
+      };
+  }
+}
+
+const QuickActions = ({ benefits, requests, counts }: QuickActionsProps) => {
+  const requestsWithBenefits = requests
+    .map((request) => ({
+      request,
+      benefit: benefits.find((benefit) => benefit.id === request.benefitId),
+    }))
+    .filter(
+      (entry): entry is { request: BenefitRequest; benefit: Benefit } =>
+        Boolean(entry.benefit),
+    );
+
+  const timelineEvents: TimelineEvent[] = requestsWithBenefits
+    .sort((a, b) => {
+      const aTime = new Date(a.request.createdAt ?? 0).getTime();
+      const bTime = new Date(b.request.createdAt ?? 0).getTime();
+      return bTime - aTime;
+    })
+    .slice(0, 4)
+    .map(({ request, benefit }) => {
+      const meta = getTimelineMeta(request.status);
+
+      return {
+        id: request.id,
+        title: `${benefit.name} request`,
+        description: `Current status: ${meta.statusLabel}. ${meta.description} Submitted for ${benefit.vendorName ?? benefit.category ?? 'this benefit'}.`,
+        time: formatRelativeTime(request.createdAt),
+        icon: meta.icon,
+        bgColor: meta.bgColor,
+      };
+    });
+
+  const contractCount = requestsWithBenefits.filter(
+    ({ benefit }) => benefit.requiresContract || Boolean(benefit.r2ObjectKey),
+  ).length;
+  const pendingCount = requests.filter(
+    (request) => request.status === RequestStatus.Pending,
+  ).length;
+  const activeCount = counts.Active || 0;
 
   return (
     <div className="w-full max-w-[400px] flex flex-col gap-6">
@@ -55,7 +153,10 @@ const QuickActions = () => {
 
       {/* Action Buttons Grid - Томруулсан хувилбар */}
       <div className="grid grid-cols-2 gap-5">
-        <button className="flex flex-col items-start p-7 bg-white/70 backdrop-blur-md border border-[rgba(217,217,217,0)] rounded-[16px] shadow-[0_4px_6px_0_rgba(0,0,0,0.09)] hover:shadow-md transition-all text-left group min-h-[170px]">
+        <Link
+          href="/contracts"
+          className="flex min-h-[170px] flex-col items-start rounded-[16px] border border-[rgba(217,217,217,0)] bg-white/70 p-7 text-left shadow-[0_4px_6px_0_rgba(0,0,0,0.09)] transition-all hover:shadow-md group backdrop-blur-md"
+        >
           <div className="p-3 bg-orange-50 rounded-xl mb-4 group-hover:bg-orange-100 transition-colors">
             <FileText className="w-6 h-6 text-orange-500" />
           </div>
@@ -63,51 +164,67 @@ const QuickActions = () => {
             View Contracts
           </span>
           <p className="text-[#717182] font-montserrat text-[12px] font-semibold leading-normal mt-2">
-            Review your accepted contracts
+            {contractCount > 0
+              ? `${contractCount} request${contractCount === 1 ? '' : 's'} have contract details ready to review`
+              : 'No contract-backed requests yet'}
           </p>
-        </button>
+        </Link>
 
-        <button className="flex flex-col items-start p-7 bg-white/70 backdrop-blur-md border border-[rgba(217,217,217,0)] rounded-[16px] shadow-[0_4px_6px_0_rgba(0,0,0,0.09)] hover:shadow-md transition-all text-left group min-h-[170px]">
+        <Link
+          href="/myRequests"
+          className="flex min-h-[170px] flex-col items-start rounded-[16px] border border-[rgba(217,217,217,0)] bg-white/70 p-7 text-left shadow-[0_4px_6px_0_rgba(0,0,0,0.09)] transition-all hover:shadow-md group backdrop-blur-md"
+        >
           <div className="p-3 bg-pink-50 rounded-xl mb-4 group-hover:bg-pink-100 transition-colors">
-            <HelpCircle className="w-6 h-6 text-pink-400" />
+            <ListTodo className="w-6 h-6 text-pink-400" />
           </div>
           <span className="text-[#000] font-montserrat text-[15px] font-semibold leading-normal">
-            Get Help
+            My Requests
           </span>
           <p className="text-[#717182] font-montserrat text-[12px] font-semibold leading-normal mt-2">
-            Contact HR support
+            {pendingCount > 0
+              ? `${pendingCount} pending request${pendingCount === 1 ? '' : 's'} and ${activeCount} active benefit${activeCount === 1 ? '' : 's'}`
+              : `${requests.length} total request${requests.length === 1 ? '' : 's'} tracked so far`}
           </p>
-        </button>
+        </Link>
       </div>
 
       {/* Timeline Card - Илүү уудам padding-тай */}
       <div className="bg-white/70 backdrop-blur-md border border-[rgba(217,217,217,0)] rounded-[16px] p-8 shadow-[0_4px_6px_0_rgba(0,0,0,0.09)]">
         <div className="relative flex flex-col gap-9">
           {/* Vertical Line */}
-          <div className="absolute left-[19px] top-2 bottom-2 w-[1px] bg-gray-100/80" />
+          {timelineEvents.length > 0 && (
+            <div className="absolute left-[19px] top-2 bottom-2 w-[1px] bg-gray-100/80" />
+          )}
 
-          {timelineEvents.map((event) => (
-            <div key={event.id} className="relative flex items-start pl-12">
-              {/* Icon Circle */}
-              <div
-                className={`absolute left-0 p-2.5 rounded-full z-10 ${event.bgColor} shadow-sm`}
-              >
-                {event.icon}
-              </div>
-
-              <div className="flex flex-col pt-0.5">
-                <h4 className="text-[#000] font-montserrat text-[14px] font-semibold leading-normal">
-                  {event.title}
-                </h4>
-                <p className="text-[rgba(0,0,0,0.60)] font-montserrat text-[12px] font-medium leading-normal">
-                  {event.description}
-                </p>
-                <span className="text-[rgba(0,0,0,0.60)] font-montserrat text-[12px] font-normal leading-normal">
-                  {event.time}
-                </span>
-              </div>
+          {timelineEvents.length === 0 ? (
+            <div className="pl-12 text-sm text-[rgba(0,0,0,0.60)]">
+              No requests yet. Once you apply for a benefit, updates will show
+              up here.
             </div>
-          ))}
+          ) : (
+            timelineEvents.map((event) => (
+              <div key={event.id} className="relative flex items-start pl-12">
+                {/* Icon Circle */}
+                <div
+                  className={`absolute left-0 p-2.5 rounded-full z-10 ${event.bgColor} shadow-sm`}
+                >
+                  {event.icon}
+                </div>
+
+                <div className="flex flex-col pt-0.5">
+                  <h4 className="text-[#000] font-montserrat text-[14px] font-semibold leading-normal">
+                    {event.title}
+                  </h4>
+                  <p className="text-[rgba(0,0,0,0.60)] font-montserrat text-[12px] font-medium leading-normal">
+                    {event.description}
+                  </p>
+                  <span className="text-[rgba(0,0,0,0.60)] font-montserrat text-[12px] font-normal leading-normal">
+                    {event.time}
+                  </span>
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </div>
 

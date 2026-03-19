@@ -2,38 +2,37 @@ import { Skeleton } from '@team/source-ui';
 
 export function MyBenefitsDashboardSkeleton() {
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8">
+    <div className="mx-auto px-36 mt-4 py-2">
       {/* Header */}
       <div className="mb-6">
-        <Skeleton className="h-8 w-36" />
-        <Skeleton className="h-4 w-56 mt-2" />
-      </div>
-
-      {/* Tabs */}
-      <div className="flex gap-2 mb-[38px]">
-        <Skeleton className="h-8 w-16 rounded-2xl" />
-        <Skeleton className="h-8 w-16 rounded-2xl" />
+        <Skeleton className="h-10 w-44" />
+        <Skeleton className="h-6 w-72 mt-2" />
       </div>
 
       {/* Cards grid */}
-      <div className="grid 2xl:grid-cols-4 xl:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-9">
-        {Array.from({ length: 6 }).map((_, i) => (
+      <div className="grid grid-cols-1 justify-items-start gap-3 xl:grid-cols-[repeat(2,minmax(0,604px))] xl:gap-x-3">
+        {Array.from({ length: 3 }).map((_, i) => (
           <div
             key={i}
-            className="rounded-[24px] border border-gray-100 p-6 flex flex-col gap-4 min-h-[240px]"
+            className="relative w-full max-w-[604px] min-h-[261px] overflow-hidden rounded-[24px] border border-gray-100 bg-white p-6 shadow-[0_14px_30px_rgba(15,23,42,0.08)] md:p-7"
           >
-            <div className="flex items-center gap-3">
-              <Skeleton className="h-10 w-10 rounded-xl shrink-0" />
-              <div className="flex flex-col gap-1.5 flex-1">
-                <Skeleton className="h-4 w-3/4" />
-                <Skeleton className="h-3 w-1/2" />
+            <div className="absolute right-0 top-0 h-[132px] w-[132px] rounded-bl-[132px] bg-[#F3E8FF] opacity-80 md:h-[144px] md:w-[144px] md:rounded-bl-[144px]" />
+
+            <div className="relative z-10 flex min-h-[210px] flex-col md:min-h-[224px]">
+              <Skeleton className="h-12 w-12 rounded-[16px] md:h-14 md:w-14" />
+
+              <div className="mt-8 md:mt-9">
+                <Skeleton className="h-8 w-2/3" />
+                <Skeleton className="mt-3 h-5 w-1/2" />
               </div>
-              <Skeleton className="h-6 w-16 rounded-full shrink-0" />
-            </div>
-            <Skeleton className="h-3 w-full" />
-            <Skeleton className="h-3 w-5/6" />
-            <div className="mt-auto">
-              <Skeleton className="h-10 w-full rounded-xl" />
+
+              <div className="mt-auto pt-8 md:pt-10">
+                <div className="h-px w-full bg-[#EEF2F6]" />
+                <div className="flex items-center justify-between gap-4 pt-4">
+                  <Skeleton className="h-4 w-20" />
+                  <Skeleton className="h-4 w-28" />
+                </div>
+              </div>
             </div>
           </div>
         ))}
