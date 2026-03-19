@@ -5,7 +5,6 @@ import {
   formatDate,
   formatEmployeeCode,
   getEmployeeDepartment,
-  getEmployeeEmail,
   getEmployeeName,
   getEmployeeRole,
   getEmployeeStatusLabel,
@@ -26,7 +25,7 @@ type RowProps = {
 
 function EmployeeTableRow({ employee }: RowProps) {
   const employeeName = getEmployeeName(employee);
-  const employeeEmail = getEmployeeEmail(employee);
+  // const employeeEmail = getEmployeeEmail(employee);
   const employeeDepartment = getEmployeeDepartment(employee);
   const employeeRole = getEmployeeRole(employee);
   const employeeStatusLabel = getEmployeeStatusLabel(employee);
@@ -34,38 +33,40 @@ function EmployeeTableRow({ employee }: RowProps) {
   return (
     <tr
       key={employee.id}
-      className="border-b border-[#F2F4F7] text-sm text-[#344054]"
+      className="border-b border-[#F2F4F7] text-xs leading-[12.384px] text-[#344054]"
     >
-      <td className="border-b border-[#F2F4F7] px-6 py-5">
-        <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#D8ECFF] text-xs font-semibold text-[#155DFC]">
+      <td className="border-b border-[#F2F4F7] px-6 py-[7px]">
+        <div className="flex items-center gap-[9px]">
+          <div className="flex h-[41px] w-[41px] shrink-0 items-center justify-center rounded-full bg-[#D8ECFF] text-xs font-semibold text-[#155DFC]">
             {getInitials(employee.name)}
           </div>
 
           <div className="min-w-0">
-            <p className="truncate font-semibold text-[#101828]">
+            <p className="truncate font-semibold text-xs leading-5 text-[#101828]">
               {employeeName}
             </p>
-            <p className="truncate text-xs text-[#667085]">{employeeEmail}</p>
+            {/* <p className="truncate text-xs text-[#667085]">{employeeEmail}</p> */}
           </div>
         </div>
       </td>
 
-      <td className="border-b border-[#F2F4F7] px-6 py-5 text-[#667085]">
+      <td className="border-b border-[#F2F4F7] text-xs px-6 py-[7px] text-[#667085]">
         {formatEmployeeCode(employee.id)}
       </td>
 
-      <td className="border-b border-[#F2F4F7] px-6 py-5">
+      <td className="border-b border-[#F2F4F7] px-6 py-[7px] tracking-[ -0.116px]">
         {employeeDepartment}
       </td>
 
-      <td className="border-b border-[#F2F4F7] px-6 py-5">{employeeRole}</td>
+      <td className="border-b border-[#F2F4F7] px-6 py-[7px]">
+        {employeeRole}
+      </td>
 
-      <td className="border-b border-[#F2F4F7] px-6 py-5 text-[#667085]">
+      <td className="border-b border-[#F2F4F7] px-6 py-[7px] text-[#667085]">
         {formatDate(employee.hireDate)}
       </td>
 
-      <td className="border-b border-[#F2F4F7] px-6 py-5">
+      <td className="border-b border-[#F2F4F7] px-6 py-[7px]">
         <span
           className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${getStatusStyles(employee.employmentStatus)}`}
         >
@@ -73,7 +74,7 @@ function EmployeeTableRow({ employee }: RowProps) {
         </span>
       </td>
 
-      <td className="border-b border-[#F2F4F7] px-6 py-5 text-center">
+      <td className="border-b border-[#F2F4F7] px-6 py-[7px] text-center">
         <button
           type="button"
           className="text-xl leading-none text-[#98A2B3] transition hover:text-[#344054]"
@@ -91,7 +92,7 @@ export function EmployeesTable({ employees }: Props) {
     <table className="min-w-full border-separate border-spacing-0">
       <thead>
         <tr className="bg-[#F8FAFC] text-left text-xs font-[400] leading-normal text-[#6A7282]">
-          <th className=" px-6 py-3">
+          <th className=" pl-[19px] py-3">
             <p className="flex items-center gap-2">
               Employee Name
               <span>
@@ -99,7 +100,7 @@ export function EmployeesTable({ employees }: Props) {
               </span>
             </p>
           </th>
-          <th className="px-6 py-3">
+          <th className="pl-[19px] py-3">
             <p className="flex items-center gap-2">
               Employee ID
               <span>
@@ -107,7 +108,7 @@ export function EmployeesTable({ employees }: Props) {
               </span>
             </p>
           </th>
-          <th className="px-6 py-3">
+          <th className="pl-[19px] py-3">
             <p className="flex items-center gap-2">
               Department
               <span>
@@ -115,7 +116,7 @@ export function EmployeesTable({ employees }: Props) {
               </span>
             </p>
           </th>
-          <th className="px-6 py-3">
+          <th className="pl-[19px] py-3">
             <p className="flex items-center gap-2">
               Position
               <span>
@@ -123,7 +124,7 @@ export function EmployeesTable({ employees }: Props) {
               </span>
             </p>
           </th>
-          <th className="px-6 py-3">
+          <th className="pl-[19px] py-3">
             <p className="flex items-center gap-2">
               Join Date
               <span>
@@ -131,7 +132,7 @@ export function EmployeesTable({ employees }: Props) {
               </span>
             </p>
           </th>
-          <th className="px-6 py-3">
+          <th className="pl-[19px] py-3">
             <p className="flex items-center gap-2">
               Status
               <span>
@@ -139,7 +140,7 @@ export function EmployeesTable({ employees }: Props) {
               </span>
             </p>
           </th>
-          <th className=" px-6 py-3 text-center">
+          <th className=" pl-[19px] py-3 text-center">
             <p className="flex items-center gap-2">
               Action
               <span>

@@ -143,6 +143,11 @@ export const ActiveRequestRow = ({
       </td>
 
       <td className="px-4 py-4 text-sm font-[300] text-[#334155]">
+        <span className="text-[#22C55E] text-sm font-medium">
+          {getEmployeeLates(employee)}
+        </span>
+      </td>
+      <td className="px-4 py-4 text-[#334155] text-base font-[300]">
         {formatDate(request.createdAt)}
       </td>
 
