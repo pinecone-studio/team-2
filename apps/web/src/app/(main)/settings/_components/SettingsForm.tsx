@@ -26,6 +26,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@team/source-ui';
 import { Button } from '@team/source-ui';
 import { Calendar } from '@team/source-ui';
 import { cn } from '@team/source-ui';
+import { SecondaryPagesGradient } from '../../../_components/main/backgroundGradient/SecondaryPagesGradient';
 
 type Props = SettingsPageState;
 
@@ -45,18 +46,10 @@ export function SettingsForm(props: Props) {
   const { form, loading, saved, error, onSubmit, updateField } = props;
 
   return (
-    <div className="relative h-[calc(100vh-72px)] overflow-hidden bg-white ">
-      <div
-        className="pointer-events-none absolute inset-x-0 bottom-[-120px] h-[420px] blur-3xl opacity-90 "
-        style={{
-          background: `
-            radial-gradient(55% 85% at 22% 100%, rgba(251,146,60,0.95) 0%, rgba(251,146,60,0.75) 28%, rgba(251,146,60,0.35) 52%, rgba(251,146,60,0.12) 68%, transparent 82%),
-            radial-gradient(55% 85% at 78% 100%, rgba(251,146,60,0.95) 0%, rgba(251,146,60,0.75) 28%, rgba(251,146,60,0.35) 52%, rgba(251,146,60,0.12) 68%, transparent 82%)
-          `,
-        }}
-      />
+    <div className="relative isolate min-h-[calc(100vh-72px)] overflow-hidden bg-white">
+      <SecondaryPagesGradient />
 
-      <div className="relative mx-auto mt-40 h-full max-w-[1027px] ">
+      <div className="relative z-10 mx-auto mt-40 h-full max-w-[1027px]">
         <div className="w-full bg-transparent shadow-none">
           <Title />
 
