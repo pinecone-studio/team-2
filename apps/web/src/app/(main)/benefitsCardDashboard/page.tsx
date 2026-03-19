@@ -169,11 +169,11 @@ export default function BenefitsCardDashboard() {
         <div className="flex flex-col items-start gap-12 py-4 animate-pulse lg:flex-row">
           <div className="order-2 w-full flex-1 lg:order-1 lg:min-w-0">
             <BenefitFilterSkeleton />
-            <div className="mt-8">
+            <div className="mt-2">
               <BenefitsCardSkeleton />
             </div>
           </div>
-          <aside className="order-1 w-full lg:order-2 lg:w-[360px] lg:flex-none lg:sticky lg:top-8">
+          <aside className="order-1 w-full lg:order-2 lg:w-[360px] lg:flex-none">
             <QuickActionsSkeleton />
           </aside>
         </div>
@@ -199,7 +199,7 @@ export default function BenefitsCardDashboard() {
         <div className="order-2 w-full flex-1 lg:order-1 lg:min-w-0">
           <BenefitFilter onChange={setFilter} counts={counts} />
 
-          <div className="mt-8">
+          <div className="mt-2">
             {filtered.length === 0 ? (
               <div className="rounded-[32px] border border-dashed border-gray-200 bg-white/40 p-20 text-center backdrop-blur-md">
                 <p className="text-[18px] font-bold text-[#0F172A]">
@@ -214,7 +214,7 @@ export default function BenefitsCardDashboard() {
                 {filtered.map(({ benefit, request, status }) => (
                   <div
                     key={benefit.id}
-                    className="w-full max-w-[320px] sm:w-[calc(50%-18px)] xl:w-[calc(50%-18px)] 2xl:w-[calc(33.33%-18px)]"
+                    className="w-full max-w-[320px] sm:w-[calc((100%-1rem)/2)] xl:w-[calc((100%-2rem)/3)] xl:max-w-none"
                   >
                     <BenefitCard
                       benefit={benefit}
@@ -231,7 +231,7 @@ export default function BenefitsCardDashboard() {
         </div>
 
         {/* RIGHT SIDE: Quick Actions */}
-        <aside className="order-1 w-full lg:order-2 lg:w-[360px] lg:flex-none lg:sticky lg:top-8">
+        <aside className="order-1 w-full lg:order-2 lg:w-[360px] lg:flex-none">
           <QuickActions
             benefits={data.benefits}
             requests={data.requests}

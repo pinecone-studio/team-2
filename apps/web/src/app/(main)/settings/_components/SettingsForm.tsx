@@ -7,13 +7,10 @@ import { format } from 'date-fns';
 import { CalendarIcon, Pencil } from 'lucide-react';
 
 import {
-  asChecked,
-  asNumber,
   asText,
   getSaveLabel,
   type SettingsPageState,
 } from './settings-form.helpers';
-import { EmploymentStatus } from 'apps/web/src/graphql/generated/graphql';
 
 import {
   Select,
@@ -189,7 +186,7 @@ function EditableFields({
         </Select>
       </FieldGroup>
 
-      <FieldGroup label="Employment Status">
+      {/* <FieldGroup label="Employment Status">
         <Select
           value={form.employmentStatus ?? EmploymentStatus.Active}
           onValueChange={(val) =>
@@ -210,7 +207,7 @@ function EditableFields({
             </SelectItem>
           </SelectContent>
         </Select>
-      </FieldGroup>
+      </FieldGroup> */}
 
       <FieldGroup label="Hire Date">
         <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
@@ -244,7 +241,7 @@ function EditableFields({
         </Popover>
       </FieldGroup>
 
-      <FieldGroup label="Late Arrival Count">
+      {/* <FieldGroup label="Late Arrival Count">
         <input
           type="number"
           className={inputStyles}
@@ -253,9 +250,9 @@ function EditableFields({
             updateField('lateArrivalCount', Number(e.target.value))
           }
         />
-      </FieldGroup>
+      </FieldGroup> */}
 
-      <div className="col-span-full flex items-center gap-3 pt-2">
+      {/* <div className="col-span-full flex items-center gap-3 pt-2">
         <input
           type="checkbox"
           id="okr"
@@ -266,7 +263,7 @@ function EditableFields({
         <label htmlFor="okr" className="text-sm font-medium text-gray-600">
           OKR Submitted
         </label>
-      </div>
+      </div> */}
     </>
   );
 }

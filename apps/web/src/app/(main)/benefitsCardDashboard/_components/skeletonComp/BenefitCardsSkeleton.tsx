@@ -12,9 +12,9 @@ export function BenefitsCardSkeleton() {
       {Array.from({ length: 8 }).map((_, i) => (
         <div
           key={i}
-          className="w-full max-w-[320px] sm:w-[calc(50%-18px)] xl:w-[calc(50%-18px)] 2xl:w-[calc(33.33%-18px)]"
+          className="w-full max-w-[320px] sm:w-[calc((100%-1rem)/2)] xl:w-[calc((100%-2rem)/3)] xl:max-w-none"
         >
-          <Card className="w-full max-w-[320px] animate-pulse overflow-hidden rounded-[12px] border border-gray-200 bg-gradient-to-b from-[#EFF6FF] via-white to-white shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+          <Card className="w-full max-w-[320px] animate-pulse overflow-hidden rounded-[12px] border border-gray-200 bg-gradient-to-b from-[#EFF6FF] via-white to-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] xl:max-w-none">
             <CardHeader className="px-6 pt-8 pb-4">
               <div className="flex flex-row items-start justify-between">
                 <div className="h-14 w-14 rounded-2xl bg-gray-200" />
