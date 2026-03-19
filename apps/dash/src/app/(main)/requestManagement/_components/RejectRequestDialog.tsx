@@ -1,5 +1,6 @@
 'use client';
 
+import type { Dispatch, SetStateAction } from 'react';
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -17,7 +18,6 @@ import {
   type GetBenefitRequestsQuery,
   RequestStatus,
 } from 'apps/dash/src/graphql/generated/graphql';
-
 import { useState } from 'react';
 
 type BenefitRequest = GetBenefitRequestsQuery['benefitRequests'][number];
@@ -25,26 +25,37 @@ type BenefitRequest = GetBenefitRequestsQuery['benefitRequests'][number];
 type Props = {
   request: BenefitRequest;
   onUpdated: (updated: BenefitRequest) => void;
+  setActionLoading: Dispatch<SetStateAction<boolean>>;
 };
 
-export const RejectRequestDialog = ({ request, onUpdated }: Props) => {
+export const RejectRequestDialog = ({
+  request,
+  onUpdated,
+  setActionLoading,
+}: Props) => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   async function handleReject() {
-    setLoading(true);
     setError('');
+    setLoading(true);
+    setOpen(false);
+
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    setActionLoading(true);
+
     try {
       const data = await gqlRequest(UpdateBenefitRequestDocument, {
         id: request.id,
         input: { status: RequestStatus.Rejected },
       });
+
       onUpdated(data.updateBenefitRequest);
-      setOpen(false);
-    } catch (e: any) {
-      setError(e.message ?? 'Failed to reject');
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : 'Failed to reject');
     } finally {
+      setActionLoading(false);
       setLoading(false);
     }
   }
@@ -52,12 +63,11 @@ export const RejectRequestDialog = ({ request, onUpdated }: Props) => {
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        {/* <button className="px-5 py-2.5 bg-[#FFE4E6] text-[#991B1B] hover:bg-[#FECDD3] rounded-xl transition-colors text-xs font-bold border border-[#FECDD3]"> */}
-
-        <button className="px-2.5 py-1 bg-[#E851722E] text-[#E85172] hover:bg-[#FECDD3] rounded-lg transition-colors text-xs font-[500] border border-[#E85172]">
+        <button className="rounded-lg border border-[#E85172] bg-[#E851722E] px-2.5 py-1 text-xs font-[500] text-[#E85172] transition-colors hover:bg-[#FECDD3]">
           Reject
         </button>
       </AlertDialogTrigger>
+
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Reject this request?</AlertDialogTitle>
@@ -66,7 +76,9 @@ export const RejectRequestDialog = ({ request, onUpdated }: Props) => {
             request #{request.id}.
           </AlertDialogDescription>
         </AlertDialogHeader>
-        {error && <p className="text-red-500 text-sm px-1">{error}</p>}
+
+        {error && <p className="px-1 text-sm text-red-500">{error}</p>}
+
         <AlertDialogFooter>
           <AlertDialogCancel disabled={loading}>Cancel</AlertDialogCancel>
           <Button

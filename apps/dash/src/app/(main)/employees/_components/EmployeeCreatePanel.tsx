@@ -121,7 +121,7 @@ export function EmployeeCreatePanel({ onSuccess, onCancel }: Props) {
     <div className="flex flex-col gap-6 max-h-[80vh] overflow-y-auto scrollbar-hide">
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-semibold tracking-tight text-[#101828]">
+          <h2 className="text-3xl leading-10 font-bold tracking-[0.396px] text-[#101828]">
             Add New Employee
           </h2>
           <p className="mt-1 text-sm text-[#667085]">

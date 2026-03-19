@@ -35,7 +35,7 @@ export function EmployeeForm({
     <>
       <ProfilePhotoCard avatarSrc={avatarSrc} onPhotoChange={onPhotoChange} />
 
-      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden mt-6">
+      <div className="bg-white rounded-[8px] border border-gray-200 shadow-sm overflow-hidden mt-6">
         <EmployeeFormFields form={form} onChange={onChange} />
 
         <div className="bg-gray-50/80 px-7 py-5 border-t border-gray-100 flex justify-end gap-3">

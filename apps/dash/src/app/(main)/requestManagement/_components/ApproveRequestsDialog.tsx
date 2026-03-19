@@ -1,5 +1,6 @@
 'use client';
 
+import type { Dispatch, SetStateAction } from 'react';
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -16,7 +17,6 @@ import {
   type GetBenefitRequestsQuery,
   RequestStatus,
 } from 'apps/dash/src/graphql/generated/graphql';
-
 import { useState } from 'react';
 
 type BenefitRequest = GetBenefitRequestsQuery['benefitRequests'][number];
@@ -24,37 +24,48 @@ type BenefitRequest = GetBenefitRequestsQuery['benefitRequests'][number];
 type Props = {
   request: BenefitRequest;
   onUpdated: (updated: BenefitRequest) => void;
+  setActionLoading: Dispatch<SetStateAction<boolean>>;
 };
 
-export const ApproveRequestDialog = ({ request, onUpdated }: Props) => {
+export const ApproveRequestDialog = ({
+  request,
+  onUpdated,
+  setActionLoading,
+}: Props) => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   async function handleApprove() {
-    setLoading(true);
     setError('');
+    setLoading(true);
+    setOpen(false);
+
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    setActionLoading(true);
+
     try {
       const data = await gqlRequest(UpdateBenefitRequestDocument, {
         id: request.id,
         input: { status: RequestStatus.Approved },
       });
+
       onUpdated(data.updateBenefitRequest);
-      setOpen(false);
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : 'Failed to approve');
     } finally {
+      setActionLoading(false);
       setLoading(false);
     }
   }
-
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <button className="px-2.5 py-1 bg-[#EDF7EC] text-[#59AF4F] hover:bg-[#BBF7D0] rounded-lg transition-colors text-xs font-[500] border border-[#BBF7D0]">
+        <button className="rounded-lg border border-[#BBF7D0] bg-[#EDF7EC] px-2.5 py-1 text-xs font-[500] text-[#59AF4F] transition-colors hover:bg-[#BBF7D0]">
           Approve
         </button>
       </AlertDialogTrigger>
+
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Approve this request?</AlertDialogTitle>
@@ -63,13 +74,15 @@ export const ApproveRequestDialog = ({ request, onUpdated }: Props) => {
             cannot be undone.
           </AlertDialogDescription>
         </AlertDialogHeader>
-        {error && <p className="text-red-500 text-sm px-1">{error}</p>}
+
+        {error && <p className="px-1 text-sm text-red-500">{error}</p>}
+
         <AlertDialogFooter>
           <AlertDialogCancel disabled={loading}>Cancel</AlertDialogCancel>
           <button
             onClick={handleApprove}
             disabled={loading}
-            className="bg-green-600 text-white hover:bg-green-700 px-4 py-1 rounded-lg disabled:opacity-50"
+            className="rounded-lg bg-green-600 px-4 py-1 text-white hover:bg-green-700 disabled:opacity-50"
           >
             {loading ? 'Approving...' : 'Approve'}
           </button>

@@ -10,7 +10,7 @@ import {
   DialogTrigger,
 } from '@team/source-ui';
 
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { gqlRequest } from 'apps/dash/src/graphql/helpers/graphql-client';
 import {
   GetBenefitRequestsByBenefitDocument,
@@ -28,6 +28,7 @@ type BenefitRequest =
 
 type Props = {
   benefit: Benefit;
+  trigger?: ReactNode;
 };
 
 const requestStatusStyles: Record<string, string> = {
@@ -36,7 +37,7 @@ const requestStatusStyles: Record<string, string> = {
   rejected: '!bg-red-100 !text-red-600 !rounded-full',
 };
 
-export const BenefitDetailsDialog = ({ benefit }: Props) => {
+export const BenefitDetailsDialog = ({ benefit, trigger }: Props) => {
   const [open, setOpen] = useState(false);
   const [rules, setRules] = useState<Rule[]>([]);
   const [requests, setRequests] = useState<BenefitRequest[]>([]);
@@ -73,13 +74,15 @@ export const BenefitDetailsDialog = ({ benefit }: Props) => {
   return (
     <Dialog open={open} onOpenChange={handleOpen}>
       <DialogTrigger asChild>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="text-xs text-[#137FEC] hover:text-blue-700 hover:bg-blue-50 font-medium"
-        >
-          View Details
-        </Button>
+        {trigger ?? (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-xs text-[#137FEC] hover:text-blue-700 hover:bg-blue-50 font-medium"
+          >
+            View Details
+          </Button>
+        )}
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-xl max-h-[85vh] overflow-y-auto">
