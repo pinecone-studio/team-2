@@ -1,8 +1,8 @@
 'use client';
 
+import type { FormEvent } from 'react';
 import { useEffect, useState } from 'react';
 import { useUser } from '@clerk/nextjs';
-import { useRouter } from 'next/navigation';
 
 import {
   buildUpdateInput,
@@ -16,9 +16,19 @@ import { gqlRequest } from 'apps/web/src/graphql/helpers/graphql-client';
 import { UpdateEmployeeDocument } from 'apps/web/src/graphql/generated/graphql';
 import { findCurrentEmployee } from '../../userProfile/_components/employee/find-current-employee';
 
+type ClerkUser = NonNullable<ReturnType<typeof useUser>['user']>;
+
+type SaveSettingsArgs = {
+  employeeId: string;
+  user: ClerkUser;
+  form: EmployeeUpdateInput;
+  setLoading: (value: boolean) => void;
+  setError: (value: string) => void;
+  setSaved: (value: boolean) => void;
+};
+
 export function useSettingsPage(): SettingsPageState {
   const { user, isLoaded } = useUser();
-  const router = useRouter();
 
   const [status, setStatus] = useState<SettingsPageStatus>('loading-user');
   const [employeeId, setEmployeeId] = useState<string | null>(null);
@@ -38,7 +48,7 @@ export function useSettingsPage(): SettingsPageState {
     );
   }, [isLoaded, user?.id]);
 
-  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     if (!user) {
@@ -55,7 +65,6 @@ export function useSettingsPage(): SettingsPageState {
       employeeId,
       user,
       form,
-      router,
       setLoading,
       setError,
       setSaved,
@@ -115,16 +124,6 @@ async function loadEmployee(
     setStatus('ready');
   }
 }
-
-type SaveSettingsArgs = {
-  employeeId: string;
-  user: NonNullable<ReturnType<typeof import('@clerk/nextjs').useUser>['user']>;
-  form: EmployeeUpdateInput;
-  router: ReturnType<typeof useRouter>;
-  setLoading: (value: boolean) => void;
-  setError: (value: string) => void;
-  setSaved: (value: boolean) => void;
-};
 
 async function saveSettings({
   employeeId,

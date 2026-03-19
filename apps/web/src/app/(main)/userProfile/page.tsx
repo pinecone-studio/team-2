@@ -1,8 +1,8 @@
 'use client';
 
-import { Spinner } from '@team/source-ui';
 import { useUserProfilePage } from './_components/use-user-profile-page';
 import { UserProfileForm } from './_components/UserProfileForm';
+import { SettingsFormSkeleton } from '../settings/_components/SettingsFormSkeleton';
 
 export default function UserProfilePage() {
   const state = useUserProfilePage();
