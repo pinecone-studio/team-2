@@ -20,7 +20,6 @@ import {
   XCircle,
 } from 'lucide-react';
 import {
-  CreateBenefitRequestDocument,
   RequestStatus,
   GetBenefitRequestsByEmployeeQuery,
   GetBenefitsQuery,
@@ -34,6 +33,7 @@ import {
 } from 'apps/web/src/lib/check-eligibility';
 import { gqlRequest } from 'apps/web/src/graphql/helpers/graphql-client';
 import { BenefitDetailsDialogSkeleton } from './skeletonComp/BenefitDetailsDialogSkeleton';
+import { BenefitRequestDialog } from './BenefitRequestDialog';
 
 type Benefit = GetBenefitsQuery['benefits'][number];
 type Rule =
@@ -84,16 +84,16 @@ export function EmployeeBenefitDetailsDialog({
   children,
 }: Props) {
   const [open, setOpen] = useState(false);
+  const [requestOpen, setRequestOpen] = useState(false);
   const [rules, setRules] = useState<Rule[]>([]);
   const [eligibility, setEligibility] = useState<EligibilityResult | null>(
     null,
   );
   const [loadingData, setLoadingData] = useState(false);
-  const [applying, setApplying] = useState(false);
-  const [applyError, setApplyError] = useState('');
 
   async function handleOpen(isOpen: boolean) {
     setOpen(isOpen);
+
     if (isOpen) {
       setLoadingData(true);
       try {
@@ -101,6 +101,7 @@ export function EmployeeBenefitDetailsDialog({
           GetEligibilityRulesByBenefitDocument,
           { benefitId: benefit.id },
         );
+
         setRules(rulesData.eligibilityRulesByBenefit);
         setEligibility(
           checkEligibility(employee, rulesData.eligibilityRulesByBenefit),
@@ -114,30 +115,9 @@ export function EmployeeBenefitDetailsDialog({
     }
   }
 
-  async function handleApply() {
-    setApplying(true);
-    setApplyError('');
-    try {
-      const employeeId = Number.parseInt(employee.id, 10);
-
-      if (Number.isNaN(employeeId)) {
-        throw new Error('Invalid employee id');
-      }
-
-      const data = await gqlRequest(CreateBenefitRequestDocument, {
-        input: {
-          benefitId: benefit.id,
-          employeeId: parseInt(employee.id, 10),
-          status: RequestStatus.Pending,
-          createdAt: new Date().toISOString(),
-        },
-      });
-      onApplied(data.createBenefitRequest);
-    } catch (e: any) {
-      setApplyError(e.message ?? 'Failed to submit request');
-    } finally {
-      setApplying(false);
-    }
+  function handleOpenRequestDialog() {
+    setOpen(false);
+    setRequestOpen(true);
   }
 
   const statusKey = existingRequest?.status ?? RequestStatus.Pending;
@@ -150,148 +130,156 @@ export function EmployeeBenefitDetailsDialog({
   const unmetCount = eligibility?.errors.length ?? 0;
 
   return (
-    <Dialog open={open} onOpenChange={handleOpen}>
-      <DialogTrigger asChild>
-        {children ?? (
-          <Button className="w-full !bg-[#137FEC] !rounded-[8px] hover:shadow-[2px_4px_3.8px_rgba(19,127,236,0.25)] transition-shadow duration-300">
-            View Details
-          </Button>
-        )}
-      </DialogTrigger>
-
-      <DialogContent className="max-h-[90vh] overflow-y-auto rounded-[8px] border border-[#E7ECF3] bg-white p-4 shadow-[0_24px_60px_rgba(15,23,42,0.18)] sm:max-w-[430px]">
-        <DialogHeader className="sr-only">
-          <DialogTitle>{benefit.name}</DialogTitle>
-        </DialogHeader>
-
-        <div className="pointer-events-none absolute left-0 top-[-34px] flex w-full items-center justify-between px-1">
-          <p
-            className={`text-[15px] font-normal lowercase ${getModeLabelClass(dialogMode)}`}
-          >
-            {getModeLabel(dialogMode)}
-          </p>
-          {dialogMode === 'eligible' ? (
-            <Code2 className="h-4 w-4 text-[#66B3FF]" strokeWidth={2}></Code2>
-          ) : (
-            <div className="h-4" />
+    <>
+      <Dialog open={open} onOpenChange={handleOpen}>
+        <DialogTrigger asChild>
+          {children ?? (
+            <Button className="w-full !rounded-[8px] !bg-[#137FEC] transition-shadow duration-300 hover:shadow-[2px_4px_3.8px_rgba(19,127,236,0.25)]">
+              View Details
+            </Button>
           )}
-        </div>
+        </DialogTrigger>
 
-        {loadingData ? (
-          <BenefitDetailsDialogSkeleton />
-        ) : (
-          <div className="space-y-4">
-            <div className="rounded-[8px] bg-[#F8F8F8] mt-4 px-[16px] py-[18px]">
-              <h2 className="text-[16px] font-normal leading-[1.2] text-[#0A0A0A]">
-                {benefit.name}
-              </h2>
-            </div>
+        <DialogContent className="max-h-[90vh] overflow-y-auto rounded-[8px] border border-[#E7ECF3] bg-white p-4 shadow-[0_24px_60px_rgba(15,23,42,0.18)] sm:max-w-[430px]">
+          <DialogHeader className="sr-only">
+            <DialogTitle>{benefit.name}</DialogTitle>
+          </DialogHeader>
 
-            <div>
-              <h3 className="text-[16px] font-normal text-[#262d39]">
-                Description
-              </h3>
-              <p className="mt-[2px] text-[13px] leading-[1.45] text-[#717182]">
-                {benefit.description ||
-                  'No description provided for this benefit.'}
-              </p>
-            </div>
+          <div className="pointer-events-none absolute left-0 top-[-34px] flex w-full items-center justify-between px-1">
+            <p
+              className={`text-[15px] font-normal lowercase ${getModeLabelClass(dialogMode)}`}
+            >
+              {getModeLabel(dialogMode)}
+            </p>
 
-            <div className="grid grid-cols-2 gap-4">
-              <DetailRow label="Category" value={benefit.category} />
-              <DetailRow
-                label="Company Subsidy"
-                value={
-                  benefit.subsidyPercent != null
-                    ? `${benefit.subsidyPercent}%`
-                    : null
-                }
-              />
-
-              <DetailRow label="Vendor" value={benefit.vendorName} />
-              <DetailRow
-                label="Contract Required"
-                value={benefit.requiresContract ? 'Yes' : 'No'}
-              />
-            </div>
-
-            <div>
-              <h3 className="text-[14px] font-medium text-[#0E1629]">
-                Eligibility Rules
-              </h3>
-
-              {rules.length === 0 ? (
-                <div className="mt-4 rounded-[16px] px-4 py-4 text-center" />
-              ) : (
-                <div className="mt-4 space-y-4">
-                  {rules.map((rule) => {
-                    const rulePassed = isRulePassing(
-                      rule,
-                      dialogMode,
-                      eligibility,
-                    );
-                    return (
-                      <EligibilityRuleCard
-                        key={rule.id}
-                        passed={rulePassed}
-                        title={formatRuleTitle(rule.ruleType)}
-                        description={formatRuleDescription(rule)}
-                      />
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-
-            {dialogMode === 'locked' && (
-              <LockedReasonCard unmetCount={unmetCount} />
+            {dialogMode === 'eligible' ? (
+              <Code2 className="h-4 w-4 text-[#66B3FF]" strokeWidth={2} />
+            ) : (
+              <div className="h-4" />
             )}
-
-            {existingRequest && dialogMode === 'request' && (
-              <div
-                className={`flex items-center gap-3 rounded-[12px] px-[14px] py-[10px] ${
-                  statusConfig?.className ?? 'border-gray-200 bg-gray-50'
-                }`}
-              >
-                {statusConfig?.icon}
-                <div>
-                  <p className="text-[14px] font-normal text-[#7F1D1D]">
-                    {statusConfig?.label ?? existingRequest.status}
-                  </p>
-                  <p className="text-xs opacity-75">
-                    {existingRequest.createdAt
-                      ? `Submitted on ${new Date(existingRequest.createdAt).toLocaleDateString()}`
-                      : 'Request submitted'}
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {applyError && <p className="text-sm text-red-500">{applyError}</p>}
-
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                className="flex-1 !h-[33px] !rounded-[6px] !border-[#D8DEE7] font-normal !bg-white !text-[#111827] !shadow-none hover:!bg-[#F8FAFC]"
-                onClick={() => setOpen(false)}
-              >
-                {dialogMode === 'eligible' ? 'Cancel' : 'Close'}
-              </Button>
-
-              {dialogMode === 'eligible' && !existingRequest && (
-                <Button
-                  className="flex-1 !h-[33px] !rounded-[6px] !bg-[#FB923C] font-normal text-white hover:!bg-[#F27E1E]"
-                  onClick={handleApply}
-                  disabled={applying}
-                >
-                  {applying ? 'Sending request...' : 'Send request'}
-                </Button>
-              )}
-            </div>
           </div>
-        )}
-      </DialogContent>
-    </Dialog>
+
+          {loadingData ? (
+            <BenefitDetailsDialogSkeleton />
+          ) : (
+            <div className="space-y-4">
+              <div className="mt-4 rounded-[8px] bg-[#F8F8F8] px-[16px] py-[18px]">
+                <h2 className="text-[16px] font-normal leading-[1.2] text-[#0A0A0A]">
+                  {benefit.name}
+                </h2>
+              </div>
+
+              <div>
+                <h3 className="text-[16px] font-normal text-[#262d39]">
+                  Description
+                </h3>
+                <p className="mt-[2px] text-[13px] leading-[1.45] text-[#717182]">
+                  {benefit.description ||
+                    'No description provided for this benefit.'}
+                </p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <DetailRow label="Category" value={benefit.category} />
+                <DetailRow
+                  label="Company Subsidy"
+                  value={
+                    benefit.subsidyPercent != null
+                      ? `${benefit.subsidyPercent}%`
+                      : null
+                  }
+                />
+                <DetailRow label="Vendor" value={benefit.vendorName} />
+                <DetailRow
+                  label="Contract Required"
+                  value={benefit.requiresContract ? 'Yes' : 'No'}
+                />
+              </div>
+
+              <div>
+                <h3 className="text-[14px] font-medium text-[#0E1629]">
+                  Eligibility Rules
+                </h3>
+
+                {rules.length === 0 ? (
+                  <div className="mt-4 rounded-[16px] px-4 py-4 text-center" />
+                ) : (
+                  <div className="mt-4 space-y-4">
+                    {rules.map((rule) => {
+                      const rulePassed = isRulePassing(
+                        rule,
+                        dialogMode,
+                        eligibility,
+                      );
+
+                      return (
+                        <EligibilityRuleCard
+                          key={rule.id}
+                          passed={rulePassed}
+                          title={formatRuleTitle(rule.ruleType)}
+                          description={formatRuleDescription(rule)}
+                        />
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+
+              {dialogMode === 'locked' && (
+                <LockedReasonCard unmetCount={unmetCount} />
+              )}
+
+              {existingRequest && dialogMode === 'request' && (
+                <div
+                  className={`flex items-center gap-3 rounded-[12px] px-[14px] py-[10px] ${
+                    statusConfig?.className ?? 'border-gray-200 bg-gray-50'
+                  }`}
+                >
+                  {statusConfig?.icon}
+                  <div>
+                    <p className="text-[14px] font-normal text-[#7F1D1D]">
+                      {statusConfig?.label ?? existingRequest.status}
+                    </p>
+                    <p className="text-xs opacity-75">
+                      {existingRequest.createdAt
+                        ? `Submitted on ${new Date(existingRequest.createdAt).toLocaleDateString()}`
+                        : 'Request submitted'}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  className="flex-1 !h-[33px] !rounded-[6px] !border-[#D8DEE7] !bg-white !text-[#111827] !shadow-none font-normal hover:!bg-[#F8FAFC]"
+                  onClick={() => setOpen(false)}
+                >
+                  {dialogMode === 'eligible' ? 'Cancel' : 'Close'}
+                </Button>
+
+                {dialogMode === 'eligible' && !existingRequest && (
+                  <Button
+                    className="flex-1 !h-[33px] !rounded-[6px] !bg-[#FB923C] font-normal text-white hover:!bg-[#F27E1E]"
+                    onClick={handleOpenRequestDialog}
+                  >
+                    Send request
+                  </Button>
+                )}
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      <BenefitRequestDialog
+        open={requestOpen}
+        onOpenChange={setRequestOpen}
+        benefit={benefit}
+        employee={employee}
+        onApplied={onApplied}
+      />
+    </>
   );
 }
 
@@ -322,7 +310,7 @@ function EligibilityRuleCard({
   return (
     <div
       className={`flex items-start gap-4 rounded-[12px] px-[14px] py-[10px] ${
-        passed ? ' bg-[#ECFDF5]' : ' bg-[#FEF2F2]'
+        passed ? 'bg-[#ECFDF5]' : 'bg-[#FEF2F2]'
       }`}
     >
       <div
@@ -338,14 +326,19 @@ function EligibilityRuleCard({
           <X size={16} strokeWidth={2} />
         )}
       </div>
+
       <div className="min-w-0">
         <p
-          className={`text-[14px] font-normal ${passed ? 'text-[#064E3B]' : 'text-red-900'}`}
+          className={`text-[14px] font-normal ${
+            passed ? 'text-[#064E3B]' : 'text-red-900'
+          }`}
         >
           {title}
         </p>
         <p
-          className={`text-[12px] font-normal ${passed ? 'text-[#059669]' : 'text-red-600'}`}
+          className={`text-[12px] font-normal ${
+            passed ? 'text-[#059669]' : 'text-red-600'
+          }`}
         >
           {description}
         </p>
