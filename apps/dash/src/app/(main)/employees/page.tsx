@@ -1,136 +1,148 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { EmployeeForm } from './_components/EmployeeForm';
-import type { EmployeeFormData } from './_components/EmployeeForm';
-import { EmployeeFormSkeleton } from './_components/EmployeeFormSkeleton';
+import { Search, SlidersHorizontal } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
 import {
-  CreateEmployeeDocument,
-  CreateEmployeeMutationVariables,
-  EmploymentStatus,
+  GetEmployeesDocument,
+  type GetEmployeesQuery,
 } from 'apps/dash/src/graphql/generated/graphql';
 import { gqlRequest } from 'apps/dash/src/graphql/helpers/graphql-client';
+import { getSearchableEmployeeValues } from './employeeDirectoryUtils';
+import { EmployeesTable } from './_components/EmployeesTable';
+import { AddEmployeeModal } from './_components/AddEmployeeModal';
 
-const INITIAL_FORM: EmployeeFormData = {
-  email: '',
-  name: '',
-  employeeRole: '',
-  department: '',
-  responsibilityLevel: '',
-  employmentStatus: EmploymentStatus.Active,
-  hireDate: '',
-  okrSubmitted: false,
-  lateArrivalCount: 0,
-  clerkUserId: '',
-};
+type Employee = GetEmployeesQuery['employees'][number];
 
-const DEMO_FORM: EmployeeFormData = {
-  name: 'John Doe',
-  email: 'john.doe@company.com',
-  employeeRole: 'Software Engineer',
-  department: 'Engineering',
-  responsibilityLevel: 'SENIOR',
-  employmentStatus: 'ACTIVE',
-  hireDate: '2024-03-14',
-  okrSubmitted: true,
-  lateArrivalCount: 2,
-  clerkUserId: 'demo-user-id',
-};
-
-export default function Employees() {
-  const [form, setForm] = useState<EmployeeFormData>(INITIAL_FORM);
-  const [avatarSrc, setAvatarSrc] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true); // 👈 start as true
+export default function EmployeesPage() {
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [query, setQuery] = useState('');
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [showAddEmployee, setShowAddEmployee] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 1500);
-    return () => clearTimeout(timer);
+    async function fetchEmployees() {
+      setLoading(true);
+      setError('');
+
+      try {
+        const data = await gqlRequest(GetEmployeesDocument);
+        setEmployees(data.employees);
+      } catch (fetchError: unknown) {
+        setError(
+          fetchError instanceof Error
+            ? fetchError.message
+            : 'Failed to load employees',
+        );
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchEmployees();
   }, []);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-  ) => {
-    const { name, value, type } = e.target;
+  const filteredEmployees = useMemo(() => {
+    const normalizedQuery = query.trim().toLowerCase();
 
-    let finalValue: string | number | boolean = value;
-    if (type === 'checkbox')
-      finalValue = (e.target as HTMLInputElement).checked;
-    else if (type === 'number') finalValue = parseInt(value) || 0;
+    if (!normalizedQuery) return employees;
 
-    setForm((prev) => ({ ...prev, [name]: finalValue }));
-  };
+    return employees.filter((employee) =>
+      getSearchableEmployeeValues(employee).some((value) =>
+        value.toLowerCase().includes(normalizedQuery),
+      ),
+    );
+  }, [employees, query]);
 
-  const handleDemo = () => setForm(DEMO_FORM);
-
-  const handleReset = () => {
-    setForm(INITIAL_FORM);
-    setAvatarSrc(null);
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
-
-    try {
-      await gqlRequest(CreateEmployeeDocument, {
-        input: {
-          ...(form as CreateEmployeeMutationVariables['input']),
-          createdAt: new Date().toISOString(),
-        },
-      });
-
-      alert('Employee created successfully');
-      handleReset();
-    } catch (e: any) {
-      setError(e.message ?? 'Create failed');
-    } finally {
-      setLoading(false);
-    }
+  const handleEmployeeCreated = (employee: Employee) => {
+    setEmployees((prev) => [employee, ...prev]);
+    setShowAddEmployee(false);
   };
 
   return (
-    <div className="w-full min-h-screen px-5 py-10">
-      <div className="max-w-[800px] mx-auto">
-        {/* Header always visible */}
-        <header className="mb-8 flex justify-between items-end">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
-              Add New Employee
-            </h1>
-            <p className="text-sm text-gray-500 mt-1">
-              Complete the form below to register a new staff member.
-            </p>
+    <div className="min-h-screen  px-4 py-8 md:px-6">
+      <div className="mx-auto flex max-w-[1215px] flex-col gap-6">
+        {/* <div className="flex flex-col gap-2">
+          <h1 className="text-3xl font-semibold tracking-tight text-[#101828]">
+            Employees
+          </h1>
+          <p className="text-sm text-[#667085]">
+            View your employee directory and add new team members from one
+            place.
+          </p>
+        </div> */}
+
+        <section className="overflow-hidden rounded-xl border border-[#EAECF0] bg-white shadow-[0_12px_40px_rgba(15,23,42,0.08)]">
+          <div className="flex flex-col gap-5 border-b border-[#F0F2F5] px-6 py-6 md:px-8">
+            <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+              <div>
+                <h2 className="text-lg font-medium text-[#101828]">Employee</h2>
+                <p className="mt-1 text-xs text-[#4A5565]">
+                  Showing {filteredEmployees.length} of {employees.length}
+                  employees
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setShowAddEmployee(true)}
+                className="inline-flex  items-center justify-center rounded-lg bg-[#FF9B45] p-2.5 text-sm font-[500] text-white transition hover:bg-[#F1882B]"
+              >
+                Add Employee
+              </button>
+            </div>
+
+            <div className="flex flex-col gap-3 md:flex-row md:items-center">
+              <label className="relative block">
+                <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#98A2B3]" />
+                <input
+                  value={query}
+                  onChange={(event) => setQuery(event.target.value)}
+                  placeholder="Search employees"
+                  className="h-9 w-full min-w-[260px] rounded-xl border border-[#E4E7EC] bg-white pl-11 pr-4 text-sm text-[#101828] outline-none transition placeholder:text-[#98A2B3] focus:border-[#FDBA74] md:w-[320px]"
+                />
+              </label>
+
+              <button
+                type="button"
+                className="inline-flex h-9 items-center gap-2 rounded-xl border border-[#E4E7EC] bg-white px-4 text-sm font-medium text-[#344054] transition hover:bg-[#F9FAFB]"
+              >
+                <SlidersHorizontal size={16} color="#616162" />
+                Filter
+              </button>
+            </div>
           </div>
-          <button
-            type="button"
-            onClick={handleDemo}
-            disabled={loading} // 👈 disable while loading
-            className="flex items-center gap-2 px-4 py-2 text-sm font-semibold bg-white rounded-lg hover:bg-indigo-50 hover:border-indigo-300 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Demo Button
-          </button>
-        </header>
 
-        {loading ? (
-          <EmployeeFormSkeleton />
-        ) : (
-          <form onSubmit={handleSubmit}>
-            <EmployeeForm
-              form={form}
-              avatarSrc={avatarSrc}
-              onPhotoChange={setAvatarSrc}
-              onChange={handleChange}
-              onReset={handleReset}
-            />
-          </form>
-        )}
-
-        {error && <p className="text-red-500 mt-4">{error}</p>}
+          <div className="overflow-x-auto px-4 py-6 md:px-8">
+            {loading ? (
+              <div className="space-y-3">
+                {Array.from({ length: 8 }).map((_, index) => (
+                  <div
+                    key={index}
+                    className="h-16 animate-pulse rounded-2xl bg-slate-100"
+                  />
+                ))}
+              </div>
+            ) : error ? (
+              <div className="rounded-2xl border border-red-100 bg-red-50 px-4 py-6 text-sm text-red-500">
+                {error}
+              </div>
+            ) : filteredEmployees.length === 0 ? (
+              <div className="rounded-2xl border border-dashed border-slate-200 px-4 py-12 text-center text-sm text-slate-500">
+                No employees matched your search.
+              </div>
+            ) : (
+              <EmployeesTable employees={filteredEmployees} />
+            )}
+          </div>
+        </section>
       </div>
+
+      <AddEmployeeModal
+        open={showAddEmployee}
+        onClose={() => setShowAddEmployee(false)}
+        onSuccess={handleEmployeeCreated}
+      />
     </div>
   );
 }

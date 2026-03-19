@@ -7,7 +7,7 @@ import React from 'react';
 
 const menuItems = [
   { path: '/', label: 'Dashboard' },
-  { path: '/employees', label: 'Add Employees' },
+  { path: '/employees', label: 'Employees' },
   { path: '/benefitManagement', label: 'Benefits' },
   { path: '/requestManagement', label: 'Requests' },
   { path: '/contracts', label: 'Contracts' },
@@ -29,7 +29,6 @@ export const TopNavBar = () => {
         {/* Brand */}
         <div className="flex items-center space-x-2 shrink-0">
           <Link href={'/'}>
-            {' '}
             <div className="w-12 h-12 flex items-center justify-center">
               <img src="/pinecone.svg" alt="Logo" width={60} height={60} />
             </div>
