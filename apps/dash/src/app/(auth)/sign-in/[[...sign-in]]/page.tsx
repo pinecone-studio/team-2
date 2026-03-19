@@ -3,5 +3,12 @@ import { SignIn } from '@clerk/nextjs';
 export const runtime = 'edge';
 
 export default function Page() {
-  return <SignIn />;
+  return (
+    <SignIn
+      fallbackRedirectUrl="/"
+      forceRedirectUrl="/"
+      transferable={false}
+      withSignUp={false}
+    />
+  );
 }
