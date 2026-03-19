@@ -232,7 +232,7 @@ export const TopNavBar = () => {
               >
                 <Bell size={20} />
                 {notifications.length > 0 && (
-                  <span className="absolute right-1 top-1 h-2.5 w-2.5 rounded-full bg-red-500" />
+                  <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-red-500" />
                 )}
               </button>
             )}
@@ -315,7 +315,6 @@ export const TopNavBar = () => {
                         {item.benefitName}
                       </p>
                       <p className="mt-1 text-[11px] text-gray-400">
-                        #{item.id} ·{' '}
                         {item.createdAt
                           ? new Date(item.createdAt).toLocaleString()
                           : 'No date'}

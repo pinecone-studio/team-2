@@ -164,7 +164,7 @@ export const TopNavBar = () => {
                 EBMS
               </h1>
             </div>
-          </div> */}
+          </div>
 
           <div className="flex items-center gap-3">
             {menuItems.map(({ path, label }) => (

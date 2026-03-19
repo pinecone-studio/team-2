@@ -105,7 +105,6 @@ export const NotificationBell = ({
                     </p>
                     <p className="text-xs text-gray-600">{item.benefitName}</p>
                     <p className="mt-1 text-[11px] text-gray-400">
-                      #{item.id} ·{' '}
                       {item.createdAt
                         ? new Date(item.createdAt).toLocaleString()
                         : 'No date'}
