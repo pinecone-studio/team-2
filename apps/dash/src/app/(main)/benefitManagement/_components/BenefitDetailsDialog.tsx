@@ -26,6 +26,23 @@ type Rule =
 type BenefitRequest =
   GetBenefitRequestsByBenefitQuery['benefitRequestsByBenefit'][number];
 
+function sortRequestsNewestFirst(requests: BenefitRequest[]) {
+  return [...requests].sort((first, second) => {
+    const firstCreatedAt = first.createdAt
+      ? new Date(first.createdAt).getTime()
+      : 0;
+    const secondCreatedAt = second.createdAt
+      ? new Date(second.createdAt).getTime()
+      : 0;
+
+    if (secondCreatedAt !== firstCreatedAt) {
+      return secondCreatedAt - firstCreatedAt;
+    }
+
+    return second.id - first.id;
+  });
+}
+
 type Props = {
   benefit: Benefit;
   trigger?: ReactNode;
@@ -60,7 +77,9 @@ export const BenefitDetailsDialog = ({ benefit, trigger }: Props) => {
           }),
         ]);
         setRules(rulesData.eligibilityRulesByBenefit);
-        setRequests(requestsData.benefitRequestsByBenefit);
+        setRequests(
+          sortRequestsNewestFirst(requestsData.benefitRequestsByBenefit),
+        );
       } catch {
         setRules([]);
         setRequests([]);

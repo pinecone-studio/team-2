@@ -20,6 +20,23 @@ type BenefitRequest = GetBenefitRequestsQuery['benefitRequests'][number];
 type Benefit = GetBenefitsQuery['benefits'][number];
 type Employee = GetEmployeesQuery['employees'][number];
 
+function sortRequestsNewestFirst(requests: BenefitRequest[]) {
+  return [...requests].sort((first, second) => {
+    const firstCreatedAt = first.createdAt
+      ? new Date(first.createdAt).getTime()
+      : 0;
+    const secondCreatedAt = second.createdAt
+      ? new Date(second.createdAt).getTime()
+      : 0;
+
+    if (secondCreatedAt !== firstCreatedAt) {
+      return secondCreatedAt - firstCreatedAt;
+    }
+
+    return second.id - first.id;
+  });
+}
+
 const RequestManagementPage = () => {
   const [requests, setRequests] = useState<BenefitRequest[]>([]);
   const [benefits, setBenefits] = useState<Benefit[]>([]);
@@ -39,7 +56,7 @@ const RequestManagementPage = () => {
           gqlRequest(GetEmployeesDocument),
         ]);
 
-        setRequests(requestsData.benefitRequests);
+        setRequests(sortRequestsNewestFirst(requestsData.benefitRequests));
         setBenefits(benefitsData.benefits);
         setEmployees(employeesData.employees);
       } catch (e: unknown) {
@@ -54,7 +71,9 @@ const RequestManagementPage = () => {
 
   function handleUpdated(updatedRequest: BenefitRequest) {
     setRequests((prev) =>
-      prev.map((r) => (r.id === updatedRequest.id ? updatedRequest : r)),
+      sortRequestsNewestFirst(
+        prev.map((r) => (r.id === updatedRequest.id ? updatedRequest : r)),
+      ),
     );
   }
 
