@@ -10,6 +10,7 @@ import { gqlRequest } from 'apps/dash/src/graphql/helpers/graphql-client';
 import { getSearchableEmployeeValues } from './employeeDirectoryUtils';
 import { EmployeesTable } from './_components/EmployeesTable';
 import { AddEmployeeModal } from './_components/AddEmployeeModal';
+import { Pagination } from './_components/Pagination';
 
 type Employee = GetEmployeesQuery['employees'][number];
 
@@ -19,6 +20,8 @@ export default function EmployeesPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [showAddEmployee, setShowAddEmployee] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 10;
 
   useEffect(() => {
     async function fetchEmployees() {
@@ -53,6 +56,13 @@ export default function EmployeesPage() {
       ),
     );
   }, [employees, query]);
+
+  const totalPages = Math.ceil(filteredEmployees.length / ITEMS_PER_PAGE);
+
+  const paginatedEmployees = useMemo(() => {
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    return filteredEmployees.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  }, [filteredEmployees, currentPage]);
 
   const handleEmployeeCreated = (employee: Employee) => {
     setEmployees((prev) => [employee, ...prev]);
@@ -97,7 +107,10 @@ export default function EmployeesPage() {
                 <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#98A2B3]" />
                 <input
                   value={query}
-                  onChange={(event) => setQuery(event.target.value)}
+                  onChange={(event) => {
+                    setQuery(event.target.value);
+                    setCurrentPage(1);
+                  }}
                   placeholder="Search employees"
                   className="h-9 w-full min-w-[260px] rounded-xl border border-[#E4E7EC] bg-white pl-11 pr-4 text-sm text-[#101828] outline-none transition placeholder:text-[#98A2B3] focus:border-[#FDBA74] md:w-[320px]"
                 />
@@ -132,7 +145,14 @@ export default function EmployeesPage() {
                 No employees matched your search.
               </div>
             ) : (
-              <EmployeesTable employees={filteredEmployees} />
+              <>
+                <EmployeesTable employees={paginatedEmployees} />
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                />
+              </>
             )}
           </div>
         </section>
