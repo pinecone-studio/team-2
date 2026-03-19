@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { findCurrentEmployee } from './employee/find-current-employee';
-import { Spinner } from 'libs/ui/src/components/spinner';
+import { BrandLoader } from '../../../_components/main/loading/BrandLoader';
 
 export function EmployeeGatePage() {
   const { user, isLoaded } = useUser();
@@ -23,11 +23,7 @@ export function EmployeeGatePage() {
   }, [isLoaded, user, router]);
 
   if (!isLoaded) {
-    return (
-      <div className="w-[100vw] h-[100vh] flex items-center justify-center">
-        <Spinner className="w-16 h-16 opacity-30" />
-      </div>
-    );
+    return <BrandLoader className="min-h-screen" label="Loading account" />;
   }
 
   if (error) {
@@ -35,9 +31,7 @@ export function EmployeeGatePage() {
   }
 
   return (
-    <div className="w-[100vw] h-[100vh] flex items-center justify-center">
-      <Spinner className="w-16 h-16 opacity-30" />
-    </div>
+    <BrandLoader className="min-h-screen" label="Checking employee access" />
   );
 }
 
