@@ -140,7 +140,6 @@ export const AddBenefitDialog = ({ onCreated }: Props) => {
     setLoading(true);
     setError('');
     try {
-      // Step 1: upload file to R2 via Worker if a file was selected
       let uploadedKey: string | undefined;
       if (contractFile) {
         const fd = new FormData();
@@ -157,7 +156,6 @@ export const AddBenefitDialog = ({ onCreated }: Props) => {
         uploadedKey = uploadJson.key;
       }
 
-      // Step 2: create benefit in D1, attaching the R2 key if we got one
       const data = await gqlRequest(CreateBenefitDocument, {
         input: {
           ...form,

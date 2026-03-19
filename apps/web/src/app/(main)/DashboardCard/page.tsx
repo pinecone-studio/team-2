@@ -1,19 +1,15 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { useUser } from '@clerk/nextjs';
 import { Header } from '../DashboardCard/_components';
 
 const DashboardCard = () => {
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 1500);
-    return () => clearTimeout(timer);
-  }, []);
+  const { isLoaded } = useUser();
 
   return (
     <div>
-      <Header isLoading={loading} />
+      <Header isLoading={!isLoaded} />
       {/* <Card isLoading={loading} /> */}
     </div>
   );

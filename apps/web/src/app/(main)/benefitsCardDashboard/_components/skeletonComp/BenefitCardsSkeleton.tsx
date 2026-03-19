@@ -1,38 +1,55 @@
-import { Skeleton } from '@team/source-ui';
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  Separator,
+} from '@team/source-ui';
 
 export function BenefitsCardSkeleton() {
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8">
-      {/* Filter skeleton */}
-      <div className="flex gap-2">
-        {Array.from({ length: 5 }).map((_, i) => (
-          <Skeleton key={i} className="px-[24px] py-[10px] rounded-full" />
-        ))}
-      </div>
-
-      {/* Cards grid skeleton */}
-      <div className="mt-[38px] grid 2xl:grid-cols-4 xl:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-9">
-        {Array.from({ length: 8 }).map((_, i) => (
-          <div
-            key={i}
-            className="rounded-[24px] border border-gray-100 p-6 flex flex-col gap-4 min-h-[240px]"
-          >
-            <div className="flex items-center gap-3">
-              <Skeleton className="h-10 w-10 rounded-xl" />
-              <div className="flex flex-col gap-1.5 flex-1">
-                <Skeleton className="h-4 w-3/4" />
-                <Skeleton className="h-3 w-1/2" />
+    <div className="flex flex-wrap items-stretch justify-start gap-x-4 gap-y-8">
+      {Array.from({ length: 8 }).map((_, i) => (
+        <div
+          key={i}
+          className="w-full max-w-[320px] sm:w-[calc(50%-18px)] xl:w-[calc(50%-18px)] 2xl:w-[calc(33.33%-18px)]"
+        >
+          <Card className="w-full max-w-[320px] animate-pulse overflow-hidden rounded-[12px] border border-gray-200 bg-gradient-to-b from-[#EFF6FF] via-white to-white shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+            <CardHeader className="px-6 pt-8 pb-4">
+              <div className="flex flex-row items-start justify-between">
+                <div className="h-14 w-14 rounded-2xl bg-gray-200" />
+                <div className="h-6 w-[84px] rounded-full bg-gray-200" />
               </div>
-              <Skeleton className="h-6 w-16 rounded-full" />
-            </div>
-            <Skeleton className="h-3 w-full" />
-            <Skeleton className="h-3 w-5/6" />
-            <div className="mt-auto">
-              <Skeleton className="h-10 w-full rounded-xl" />
-            </div>
-          </div>
-        ))}
-      </div>
+            </CardHeader>
+
+            <CardContent className="flex flex-1 flex-col justify-between space-y-4 px-6">
+              <div className="space-y-2">
+                <div className="h-7 w-3/4 rounded-md bg-gray-200" />
+                <div className="h-10 space-y-2">
+                  <div className="h-3 w-full rounded-md bg-gray-100" />
+                  <div className="h-3 w-5/6 rounded-md bg-gray-100" />
+                </div>
+              </div>
+
+              <div className="pt-2">
+                <div className="flex items-center justify-between text-sm">
+                  <div className="h-3 w-14 rounded-md bg-gray-100" />
+                  <div className="h-3 w-10 rounded-md bg-gray-200" />
+                </div>
+                <Separator className="my-3 bg-[#F1F5F9]" />
+                <div className="flex items-center justify-between text-sm">
+                  <div className="h-3 w-12 rounded-md bg-gray-100" />
+                  <div className="h-3 w-20 rounded-md bg-gray-200" />
+                </div>
+              </div>
+            </CardContent>
+
+            <CardFooter className="px-6 pt-4 pb-8">
+              <div className="h-12 w-full rounded-[12px] bg-gray-200" />
+            </CardFooter>
+          </Card>
+        </div>
+      ))}
     </div>
   );
 }

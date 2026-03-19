@@ -40,10 +40,12 @@ export const QuickActionsSkeleton = () => {
 };
 
 export const BenefitFilterSkeleton = () => {
+  const widths = ['w-20', 'w-24', 'w-28', 'w-24', 'w-[88px]'];
+
   return (
-    <div className="flex gap-4 mb-4 animate-pulse">
-      {[1, 2, 3, 4, 5].map((i) => (
-        <div key={i} className="h-11 w-32 bg-gray-200 rounded-[10px]" />
+    <div className="mb-4 flex flex-wrap gap-2 animate-pulse">
+      {widths.map((width, i) => (
+        <div key={i} className={`h-11 rounded-[10px] bg-gray-200 ${width}`} />
       ))}
     </div>
   );

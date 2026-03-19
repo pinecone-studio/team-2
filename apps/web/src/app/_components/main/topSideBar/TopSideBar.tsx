@@ -16,6 +16,11 @@ export const TopNavBar = () => {
   const router = useRouter();
   const pathname = usePathname();
 
+  const isDashboardPage = pathname === '/' || pathname === '/dashboard';
+  const inactiveHoverClass = isDashboardPage
+    ? 'text-black hover:bg-white/60 hover:text-gray-900'
+    : 'text-black hover:bg-gray-100 hover:text-gray-900 hover:shadow-[0_6px_18px_rgba(255,255,255,0.45)]';
+
   const isActive = (path: string) => {
     if (path === '/') return pathname === '/' || pathname === '/dashboard';
     return pathname === path;
@@ -34,9 +39,13 @@ export const TopNavBar = () => {
             </div>
           </Link>
 
-          <div>
-            <h1 className="text-xl font-bold text-black leading-tight">EBMS</h1>
-          </div>
+          <Link href={'/'}>
+            <div>
+              <h1 className="text-xl font-bold text-black leading-tight">
+                EBMS
+              </h1>
+            </div>
+          </Link>
         </div>
 
         {/* Nav Items */}
@@ -48,7 +57,7 @@ export const TopNavBar = () => {
               className={`flex items-center gap-4 px-4 py-2 rounded-[8px] text-sm font-medium transition-all duration-200 ${
                 isActive(path)
                   ? 'bg-[#FB923C] text-white shadow-sm'
-                  : 'text-black hover:bg-gray-200 hover:text-gray-900'
+                  : inactiveHoverClass
               }`}
             >
               {label}
