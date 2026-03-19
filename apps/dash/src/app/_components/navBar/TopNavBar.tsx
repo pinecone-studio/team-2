@@ -150,7 +150,7 @@ export const TopNavBar = () => {
 
   return (
     <>
-      <nav className="w-screen bg-white/50 sticky top-0 z-50 px-20 py-2 backdrop-blur-sm border-b border-white/20">
+      <nav className="w-screen bg-[#FAFAFAB2] sticky top-0 z-50 px-20 backdrop-blur-sm border-b border-white/20">
         <div className="flex items-center justify-between px-6 h-14">
           <div className="flex items-center space-x-2 shrink-0">
             <Link href="/">
@@ -164,7 +164,7 @@ export const TopNavBar = () => {
                 EBMS
               </h1>
             </div>
-          </div> */}
+          </div>
 
           <div className="flex items-center gap-3">
             {menuItems.map(({ path, label }) => (
@@ -210,7 +210,7 @@ export const TopNavBar = () => {
                 <UserButton
                   appearance={{
                     elements: {
-                      userButtonAvatarBox: 'w-8 h-8',
+                      userButtonAvatarBox: 'w-7 h-7',
                     },
                   }}
                 />
