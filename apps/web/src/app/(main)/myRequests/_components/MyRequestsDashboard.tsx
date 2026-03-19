@@ -19,6 +19,23 @@ type Benefit = GetBenefitsQuery['benefits'][number];
 type BenefitRequest =
   GetBenefitRequestsByEmployeeQuery['benefitRequestsByEmployee'][number];
 
+function sortRequestsNewestFirst(requests: BenefitRequest[]) {
+  return [...requests].sort((first, second) => {
+    const firstCreatedAt = first.createdAt
+      ? new Date(first.createdAt).getTime()
+      : 0;
+    const secondCreatedAt = second.createdAt
+      ? new Date(second.createdAt).getTime()
+      : 0;
+
+    if (secondCreatedAt !== firstCreatedAt) {
+      return secondCreatedAt - firstCreatedAt;
+    }
+
+    return second.id - first.id;
+  });
+}
+
 const statusStyles: Record<string, { badge: string }> = {
   [RequestStatus.Pending]: {
     badge: 'bg-amber-50 text-amber-600 border-amber-200',
@@ -70,7 +87,9 @@ export function MyRequestsDashboard() {
             GetBenefitRequestsByEmployeeDocument,
             { employeeId },
           );
-          setRequests(requestsData.benefitRequestsByEmployee);
+          setRequests(
+            sortRequestsNewestFirst(requestsData.benefitRequestsByEmployee),
+          );
         }
       } catch (e: any) {
         setError(e.message ?? 'Failed to load');

@@ -356,7 +356,7 @@
 
 'use client';
 
-import { useState, useEffect, type ReactNode } from 'react';
+import { useState, useEffect, useMemo, type ReactNode } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { Skeleton } from '@team/source-ui';
 import {
@@ -387,6 +387,23 @@ type ContractEntry = {
   benefit: Benefit;
   request: BenefitRequest;
 };
+
+function sortContractEntriesNewestFirst(entries: ContractEntry[]) {
+  return [...entries].sort((first, second) => {
+    const firstCreatedAt = first.request.createdAt
+      ? new Date(first.request.createdAt).getTime()
+      : 0;
+    const secondCreatedAt = second.request.createdAt
+      ? new Date(second.request.createdAt).getTime()
+      : 0;
+
+    if (secondCreatedAt !== firstCreatedAt) {
+      return secondCreatedAt - firstCreatedAt;
+    }
+
+    return second.request.id - first.request.id;
+  });
+}
 
 function formatDate(dateStr?: string | null) {
   if (!dateStr) return '—';
@@ -544,7 +561,10 @@ export default function ContractsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedContractUrl, setSelectedContractUrl] = useState('');
   const [selectedContractName, setSelectedContractName] = useState('');
-  const contractEntries = [...pending, ...processed];
+  const contractEntries = useMemo(
+    () => sortContractEntriesNewestFirst([...pending, ...processed]),
+    [pending, processed],
+  );
 
   function handleViewContract(benefit: Benefit) {
     const url = buildContractUrl(benefit);
@@ -557,22 +577,18 @@ export default function ContractsPage() {
   async function handleDownload() {
     if (!selectedContractUrl) return;
 
-    try {
-      const res = await fetch(selectedContractUrl);
-      if (!res.ok) throw new Error('Download failed');
+    const res = await fetch(selectedContractUrl);
+    if (!res.ok) throw new Error('Download failed');
 
-      const blob = await res.blob();
-      const objectUrl = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = objectUrl;
-      a.download = `${selectedContractName}-contract`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(objectUrl);
-    } catch (e: any) {
-      setError(e.message ?? 'Failed to download contract');
-    }
+    const blob = await res.blob();
+    const objectUrl = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = objectUrl;
+    a.download = `${selectedContractName}-contract`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(objectUrl);
   }
 
   useEffect(() => {
@@ -606,22 +622,26 @@ export default function ContractsPage() {
         }
 
         setPending(
-          allRequests
-            .filter((r) => r.status === RequestStatus.Pending)
-            .map(toEntry)
-            .filter(Boolean) as ContractEntry[],
+          sortContractEntriesNewestFirst(
+            allRequests
+              .filter((r) => r.status === RequestStatus.Pending)
+              .map(toEntry)
+              .filter(Boolean) as ContractEntry[],
+          ),
         );
 
         setProcessed(
-          allRequests
-            .filter(
-              (r) =>
-                r.status === RequestStatus.Approved ||
-                r.status === RequestStatus.Rejected ||
-                r.status === RequestStatus.Cancelled,
-            )
-            .map(toEntry)
-            .filter(Boolean) as ContractEntry[],
+          sortContractEntriesNewestFirst(
+            allRequests
+              .filter(
+                (r) =>
+                  r.status === RequestStatus.Approved ||
+                  r.status === RequestStatus.Rejected ||
+                  r.status === RequestStatus.Cancelled,
+              )
+              .map(toEntry)
+              .filter(Boolean) as ContractEntry[],
+          ),
         );
       } catch (e: any) {
         setError(e.message ?? 'Failed to load contracts');
@@ -712,7 +732,7 @@ export default function ContractsPage() {
             <div className="flex justify-end gap-2 border-t px-4 py-3">
               <button
                 onClick={handleDownload}
-                className="rounded-md bg-orange-400 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-orange-500"
+                className="rounded-md bg-orange-400 px-4 py-2 text-sm font-semibold text-white hover:bg-orange-500"
               >
                 Download
               </button>

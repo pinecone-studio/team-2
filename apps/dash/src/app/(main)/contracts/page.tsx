@@ -18,6 +18,23 @@ import { gqlRequest } from 'apps/dash/src/graphql/helpers/graphql-client';
 
 type Benefit = GetBenefitsQuery['benefits'][number];
 
+function sortBenefitsNewestFirst(benefits: Benefit[]) {
+  return [...benefits].sort((first, second) => {
+    const firstUploadedAt = first.contractUploadedAt
+      ? new Date(first.contractUploadedAt).getTime()
+      : 0;
+    const secondUploadedAt = second.contractUploadedAt
+      ? new Date(second.contractUploadedAt).getTime()
+      : 0;
+
+    if (secondUploadedAt !== firstUploadedAt) {
+      return secondUploadedAt - firstUploadedAt;
+    }
+
+    return second.id - first.id;
+  });
+}
+
 export default function ContractsPage() {
   const [benefits, setBenefits] = useState<Benefit[]>([]);
   const [loading, setLoading] = useState(false);
@@ -32,7 +49,9 @@ export default function ContractsPage() {
       try {
         const data = await gqlRequest(GetBenefitsDocument);
         // only benefits that have a contract uploaded
-        setBenefits(data.benefits.filter((b) => b.r2ObjectKey));
+        setBenefits(
+          sortBenefitsNewestFirst(data.benefits.filter((b) => b.r2ObjectKey)),
+        );
       } catch (e: any) {
         setError(e.message ?? 'Failed to fetch benefits');
       } finally {

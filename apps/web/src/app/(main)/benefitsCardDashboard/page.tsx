@@ -34,6 +34,27 @@ type BenefitRequest =
   GetBenefitRequestsByEmployeeQuery['benefitRequestsByEmployee'][number];
 type EligibilityRule = GetEligibilityRulesQuery['eligibilityRules'][number];
 
+function sortBenefitsNewestFirst(benefits: Benefit[]) {
+  return [...benefits].sort((first, second) => second.id - first.id);
+}
+
+function sortRequestsNewestFirst(requests: BenefitRequest[]) {
+  return [...requests].sort((first, second) => {
+    const firstCreatedAt = first.createdAt
+      ? new Date(first.createdAt).getTime()
+      : 0;
+    const secondCreatedAt = second.createdAt
+      ? new Date(second.createdAt).getTime()
+      : 0;
+
+    if (secondCreatedAt !== firstCreatedAt) {
+      return secondCreatedAt - firstCreatedAt;
+    }
+
+    return second.id - first.id;
+  });
+}
+
 export type BenefitStatus =
   | 'Active'
   | 'Pending'
@@ -101,11 +122,13 @@ export default function BenefitsCardDashboard() {
             employeeId: parseInt(matchedEmployee.id, 10),
           });
 
-          employeeRequests = reqs.benefitRequestsByEmployee;
+          employeeRequests = sortRequestsNewestFirst(
+            reqs.benefitRequestsByEmployee,
+          );
         }
 
         setData({
-          benefits: benefitsData.benefits,
+          benefits: sortBenefitsNewestFirst(benefitsData.benefits),
           employee: matchedEmployee ?? null,
           requests: employeeRequests,
           rules: rulesData.eligibilityRules,
@@ -154,11 +177,13 @@ export default function BenefitsCardDashboard() {
   const handleApplied = (newRequest: BenefitRequest) => {
     setData((prev) => ({
       ...prev,
-      requests: prev.requests.some((r) => r.benefitId === newRequest.benefitId)
-        ? prev.requests.map((r) =>
-            r.benefitId === newRequest.benefitId ? newRequest : r,
-          )
-        : [...prev.requests, newRequest],
+      requests: sortRequestsNewestFirst(
+        prev.requests.some((r) => r.benefitId === newRequest.benefitId)
+          ? prev.requests.map((r) =>
+              r.benefitId === newRequest.benefitId ? newRequest : r,
+            )
+          : [...prev.requests, newRequest],
+      ),
     }));
   };
 
