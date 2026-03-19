@@ -42,6 +42,10 @@ const DAY_IN_MS = 24 * 60 * 60 * 1000;
 
 type ArchiveDateMap = Record<string, string>;
 
+function sortBenefitsNewestFirst(benefits: Benefit[]) {
+  return [...benefits].sort((first, second) => second.id - first.id);
+}
+
 function formatToolbarDate(value: Date) {
   return value.toLocaleDateString('en-US', {
     day: 'numeric',
@@ -122,7 +126,7 @@ export default function BenefitsManagement() {
 
       try {
         const data = await gqlRequest(GetBenefitsDocument);
-        setBenefits(data.benefits);
+        setBenefits(sortBenefitsNewestFirst(data.benefits));
       } catch (error: unknown) {
         setError(getErrorMessage(error, 'Failed to fetch benefits'));
       } finally {
@@ -223,12 +227,14 @@ export default function BenefitsManagement() {
     });
 
     setBenefits((prev) =>
-      prev.map((item) => (item.id === benefit.id ? data.updateBenefit : item)),
+      sortBenefitsNewestFirst(
+        prev.map((item) => (item.id === benefit.id ? data.updateBenefit : item)),
+      ),
     );
   }
 
   function handleCreated(benefit: Benefit) {
-    setBenefits((prev) => [...prev, benefit]);
+    setBenefits((prev) => sortBenefitsNewestFirst([...prev, benefit]));
   }
 
   function handleDeleted(id: number) {
