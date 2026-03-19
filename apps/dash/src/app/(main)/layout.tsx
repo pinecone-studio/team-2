@@ -15,16 +15,16 @@ export default function MainLayout({
   const isDashboardPage = pathname === '/' || pathname === '/dashboard';
 
   return (
-    <AdminGuard>
-      <SidebarProvider>
-        <div className="flex h-screen w-full flex-col bg-[#FCFAF7]">
-          <TopNavBar />
-          <main className="relative flex-1 overflow-y-auto p-8 text-gray-900">
-            {!isDashboardPage && <SecondaryPagesGradient />}
-            <div className="relative z-10">{children}</div>
-          </main>
-        </div>
-      </SidebarProvider>
-    </AdminGuard>
+    // <AdminGuard>
+    <SidebarProvider>
+      <div className="flex h-screen w-full flex-col bg-[#FCFAF7]">
+        <TopNavBar />
+        <main className="relative flex-1 overflow-y-auto p-8 text-gray-900">
+          {!isDashboardPage && <SecondaryPagesGradient />}
+          <div className="relative z-10">{children}</div>
+        </main>
+      </div>
+    </SidebarProvider>
+    // </AdminGuard>
   );
 }
