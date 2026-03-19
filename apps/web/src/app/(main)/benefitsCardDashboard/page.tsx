@@ -25,7 +25,7 @@ import {
 } from './_components/skeletonComp/QuickActionsSkeleton';
 
 import QuickActions from './_components/QuickActions';
-import { Spinner } from 'libs/ui/src/components/spinner';
+import { BrandLoader } from '../../_components/main/loading/BrandLoader';
 
 // Types
 type Employee = GetEmployeesQuery['employees'][number];
@@ -189,9 +189,7 @@ export default function BenefitsCardDashboard() {
     );
   if (!data.employee)
     return (
-      <div className="w-[100vw] h-[100vh] flex items-center justify-center">
-        <Spinner className="w-16 h-16 opacity-30" />
-      </div>
+      <BrandLoader className="min-h-screen" label="Loading your benefits" />
     );
 
   return (

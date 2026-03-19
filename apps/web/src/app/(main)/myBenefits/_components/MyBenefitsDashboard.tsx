@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useUser } from '@clerk/nextjs';
 
-import { Spinner } from '@team/source-ui';
 import { Ban, CheckCircle2, Clock, Home, Lock, LucideIcon } from 'lucide-react';
 import {
   GetBenefitRequestsByEmployeeDocument,
@@ -23,6 +22,7 @@ import {
 } from '../../benefitsCardDashboard/page';
 import { EmployeeBenefitDetailsDialog } from '../../benefitsCardDashboard/_components/EmployeeBenefitDetailsDialog';
 import { MyBenefitsDashboardSkeleton } from './skeletonComp/MyBenefitsDashboardSkeleton';
+import { BrandLoader } from '../../../_components/main/loading/BrandLoader';
 
 type Employee = GetEmployeesQuery['employees'][number];
 type Benefit = GetBenefitsQuery['benefits'][number];
@@ -218,9 +218,7 @@ export default function MyBenefitsDashboard() {
   if (error) return <p className="text-red-500">{error}</p>;
   if (!employee)
     return (
-      <div className="w-[100vw] h-[100vh] flex items-center justify-center">
-        <Spinner className="w-16 h-16 opacity-30" />
-      </div>
+      <BrandLoader className="min-h-screen" label="Loading your benefits" />
     );
 
   return (
