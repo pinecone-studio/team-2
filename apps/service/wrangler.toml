@@ -12,3 +12,8 @@ migrations_dir = "drizzle"
 [[r2_buckets]]
 binding = "BUCKET"
 bucket_name = "benefit"
+
+ [[kv_namespaces]]
+binding = "KV"
+id = "9e4442d006f244f2931faf9cbd89cf51"
+preview_id = "6b61033ee1ec4ddb9aba704f7332bee4"
