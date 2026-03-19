@@ -168,28 +168,22 @@ export const BenefitDetailsDialog = ({ benefit, trigger }: Props) => {
               <EmptyState message="No eligibility rules defined for this benefit." />
             ) : (
               <SimpleTable
-                headers={[
-                  'Rule Type',
-                  'Operator',
-                  'Value',
-                  'Error Message',
-                  'Status',
-                ]}
+                headers={['Rule Type', 'Operator', 'Value', 'Error Message']}
                 rows={rules.map((rule) => [
                   rule.ruleType ?? '—',
                   rule.operator ?? '—',
                   rule.value ?? '—',
                   rule.errorMessage ?? '—',
-                  <Badge
-                    key={rule.id}
-                    className={
-                      rule.isActive
-                        ? '!bg-green-100 !text-green-700 !rounded-full text-[10px]'
-                        : '!bg-gray-100 !text-gray-500 !rounded-full text-[10px]'
-                    }
-                  >
-                    {rule.isActive ? 'Active' : 'Inactive'}
-                  </Badge>,
+                  // <Badge
+                  //   key={rule.id}
+                  //   className={
+                  //     rule.isActive
+                  //       ? '!bg-green-100 !text-green-700 !rounded-full text-[10px]'
+                  //       : '!bg-gray-100 !text-gray-500 !rounded-full text-[10px]'
+                  //   }
+                  // >
+                  //   {rule.isActive ? 'Active' : 'Inactive'}
+                  // </Badge>,
                 ])}
               />
             )}

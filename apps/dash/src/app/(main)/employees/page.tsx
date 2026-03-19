@@ -115,7 +115,7 @@ export default function EmployeesPage() {
                     setCurrentPage(1);
                   }}
                   placeholder="Search employees"
-                  className="h-9 w-full min-w-[260px] rounded-xl border border-[#E4E7EC] bg-white pl-11 pr-4 text-sm text-[#101828] outline-none transition placeholder:text-[#98A2B3] focus:border-[#FDBA74] md:w-[320px]"
+                  className="h-9 w-full min-w-[180px] rounded-xl border border-[#E4E7EC] bg-white pl-4 pr-4 text-xs text-[#101828] outline-none transition placeholder:text-[#98A2B3] focus:border-[#FDBA74] md:w-[240px]"
                 />
               </label>
 
