@@ -16,7 +16,7 @@ export function BenefitFilter({ onChange, counts }: BenefitFilterProps) {
     onChange(value);
   };
 
-  const tabs = ['All', 'Active', 'Eligible', 'Pending', 'Locked'];
+  const tabs = ['All', 'Pending', 'Locked'];
 
   return (
     <Tabs value={filter} onValueChange={handleChange} className="w-full">

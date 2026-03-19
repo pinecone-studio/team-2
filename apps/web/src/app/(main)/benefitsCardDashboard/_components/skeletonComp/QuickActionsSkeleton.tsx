@@ -40,7 +40,7 @@ export const QuickActionsSkeleton = () => {
 };
 
 export const BenefitFilterSkeleton = () => {
-  const widths = ['w-20', 'w-24', 'w-28', 'w-24', 'w-[88px]'];
+  const widths = ['w-20', 'w-24', 'w-[88px]'];
 
   return (
     <div className="mb-4 flex flex-wrap gap-2 animate-pulse">

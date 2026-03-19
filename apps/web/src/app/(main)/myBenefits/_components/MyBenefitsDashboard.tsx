@@ -108,6 +108,13 @@ function getTrailingLabel(
     };
   }
 
+  if (status === 'Eligible') {
+    return {
+      text: 'Ready to apply',
+      className: 'text-[#3B82F6]',
+    };
+  }
+
   return {
     text: formatRequestStatus(request?.status),
     className: 'text-[#64748B]',
@@ -199,24 +206,10 @@ export default function MyBenefitsDashboard() {
           status,
         };
       })
-      .filter(
-        (
-          entry,
-        ): entry is {
-          benefit: Benefit;
-          request: BenefitRequest;
-          status: BenefitStatus;
-        } =>
-          Boolean(entry.request) &&
-          (entry.status === 'Active' || entry.status === 'Pending'),
-      )
+      .filter((entry) => entry.status === 'Active' || entry.status === 'Eligible')
       .sort((a, b) => {
-        if (a.status !== b.status) {
-          return a.status === 'Active' ? -1 : 1;
-        }
-
-        const aTime = new Date(a.request.createdAt ?? 0).getTime();
-        const bTime = new Date(b.request.createdAt ?? 0).getTime();
+        const aTime = new Date(a.request?.createdAt ?? 0).getTime();
+        const bTime = new Date(b.request?.createdAt ?? 0).getTime();
         return bTime - aTime;
       });
   }, [benefits, requests, rules, employee]);
@@ -240,18 +233,18 @@ export default function MyBenefitsDashboard() {
       </div>
 
       {benefitEntries.length === 0 ? (
-        <div className="flex min-h-[261px] max-w-[604px] items-center justify-center rounded-[24px] border-2 border-dashed border-[#E2E8F0] p-8 text-center">
+        <div className="flex min-h-[261px] w-full items-center justify-center rounded-[24px] border-2 border-dashed border-[#E2E8F0] p-8 text-center xl:max-w-[calc((100%-3rem)/3)]">
           <div>
             <p className="text-sm font-semibold text-[#0F172A]">
               No benefits to show yet
             </p>
             <p className="mt-1 text-xs text-[#94A3B8]">
-              Approved or pending benefit requests will appear here.
+              Your active and eligible benefits will appear here.
             </p>
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 justify-items-start gap-4 xl:grid-cols-[repeat(2,minmax(0,604px))] xl:gap-x-12">
+        <div className="grid grid-cols-1 justify-items-start gap-4 xl:grid-cols-[repeat(3,minmax(0,1fr))] xl:gap-x-6">
           {benefitEntries.map(({ benefit, request, status }, index) => {
             const StatusIcon = statusIcons[status];
             const iconStyle = statusIconStyles[status];
@@ -260,7 +253,7 @@ export default function MyBenefitsDashboard() {
             return (
               <div
                 key={benefit.id}
-                className="relative w-full max-w-[604px] min-h-[261px] overflow-hidden rounded-[24px] border border-[#EEF2F6] bg-white/92 p-6 shadow-[0_14px_30px_rgba(15,23,42,0.08)] md:p-7"
+                className="relative w-full min-h-[261px] overflow-hidden rounded-[24px] border border-[#EEF2F6] bg-white/92 p-6 shadow-[0_14px_30px_rgba(15,23,42,0.08)] md:p-7"
               >
                 <div
                   className={`pointer-events-none absolute right-0 top-0 h-[132px] w-[132px] rounded-bl-[132px] opacity-85 md:h-[144px] md:w-[144px] md:rounded-bl-[144px] ${accentStyles[index % accentStyles.length]}`}
@@ -279,19 +272,21 @@ export default function MyBenefitsDashboard() {
 
                   <div className="mt-8 md:mt-9">
                     <h3
-                      className="text-[22px] font-bold leading-[1.2] tracking-[-0.02em] text-[#17233C] md:text-[24px]"
+                      className="text-[22px] font-bold leading-[1.2] tracking-[-0.02em] truncate text-[#17233C] md:text-[24px]"
                       title={benefit.name}
                     >
                       {benefit.name}
                     </h3>
                     <div className="flex items-center justify-between ">
                       <p className="mt-2 text-[15px] font-medium leading-6 text-[#6F7C91] md:mt-3 md:text-base">
-                        {formatSubmittedDate(request.createdAt)}
+                        {status === 'Eligible'
+                          ? 'Ready to apply'
+                          : formatSubmittedDate(request?.createdAt)}
                       </p>
                       <EmployeeBenefitDetailsDialog
                         benefit={benefit}
                         employee={employee}
-                        existingRequest={request}
+                        existingRequest={request ?? null}
                         onApplied={handleApplied}
                       >
                         <button className="w-fit pt-3 text-[13px] font-semibold text-[#459cf3] transition-colors hover:text-blue-600">
@@ -306,7 +301,9 @@ export default function MyBenefitsDashboard() {
                     <div className="flex items-center justify-between gap-4 pt-4">
                       <div className="flex flex-col gap-2">
                         <span className="text-[#6A7282] text-[14px] font-normal leading-normal">
-                          {formatRequestStatus(request.status)}
+                          {status === 'Eligible'
+                            ? 'Eligible'
+                            : formatRequestStatus(request?.status)}
                         </span>
                       </div>
                       <span
