@@ -1,11 +1,14 @@
 'use client';
 
-import { Search, Plus } from 'lucide-react';
+import { Search, SlidersHorizontal } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 
-import {GetEmployeesDocument, type GetEmployeesQuery} from 'apps/dash/src/graphql/generated/graphql';
-import {gqlRequest} from 'apps/dash/src/graphql/helpers/graphql-client';
+import {
+  GetEmployeesDocument,
+  type GetEmployeesQuery,
+} from 'apps/dash/src/graphql/generated/graphql';
+import { gqlRequest } from 'apps/dash/src/graphql/helpers/graphql-client';
 
 type Employee = GetEmployeesQuery['employees'][number];
 
@@ -49,7 +52,7 @@ function getStatusStyles(status?: string | null) {
 }
 
 export function EmployeeSearchPanel() {
-  const router = useRouter();
+  // const router = useRouter();
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(false);
@@ -92,41 +95,30 @@ export function EmployeeSearchPanel() {
   }, [employees, query]);
 
   return (
-    <section className="rounded-[28px] border border-white/70 bg-white/85 p-5 shadow-[0_12px_40px_rgba(15,23,42,0.08)] backdrop-blur-md">
-      <div className="flex flex-col gap-4 border-b border-slate-200 pb-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h2 className="text-[18px] font-semibold text-[#0F172A]">Employees</h2>
-          <p className="text-sm text-[#64748B]">
-            Search and scan your team at a glance
-          </p>
+    <section className="rounded-lg border border-white/70 bg-white/85 p-5 shadow-[0_4px_6px_0_rgba(0,0,0,0.09)] backdrop-blur-md">
+      <div className="mt-5 flex flex-col gap-4">
+        <div className="flex justify-between items-center">
+          <label className="relative block">
+            <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#00000099]" />
+            <input
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Search"
+              className="h-8 w-70 rounded-lg border border-[#0000001A] bg-[#F3F3F5] pl-11 pr-4 text-xs text-slate-900 outline-none transition placeholder:text-[#00000080] focus:border-[#155DFC] focus:bg-white"
+            />
+          </label>
+          <button className="bg-[#F3F3F5] border border-[#0000001A] py-1.5 px-4 rounded-lg text-xs font-[400] flex gap-2.5 items-center">
+            <SlidersHorizontal size={20} color="#616162" />
+            Departments
+          </button>
         </div>
 
-        <button
-          onClick={() => router.push('./employees')}
-          className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-[#155DFC] px-4 text-sm font-semibold text-white transition hover:bg-[#1259F1]"
-        >
-          <Plus className="h-4 w-4" />
-          Add Employee
-        </button>
-      </div>
-
-      <div className="mt-5 flex flex-col gap-4">
-        <label className="relative block">
-          <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-          <input
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search employee, department, or role"
-            className="h-11 w-full rounded-2xl border border-slate-200 bg-slate-50 pl-11 pr-4 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-[#155DFC] focus:bg-white"
-          />
-        </label>
-
-        <div className="grid grid-cols-[minmax(180px,2fr)_minmax(110px,1fr)_minmax(120px,1fr)_minmax(100px,0.9fr)] gap-4 px-2 text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">
+        {/* <div className="grid grid-cols-[minmax(180px,2fr)_minmax(110px,1fr)_minmax(120px,1fr)_minmax(100px,0.9fr)] gap-4 px-2 text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">
           <span>Employee</span>
           <span>ID</span>
           <span>Department</span>
           <span>Status</span>
-        </div>
+        </div> */}
 
         <div className="flex flex-col">
           {loading ? (
@@ -150,39 +142,44 @@ export function EmployeeSearchPanel() {
             filteredEmployees.slice(0, 8).map((employee) => (
               <div
                 key={employee.id}
-                className="grid grid-cols-[minmax(180px,2fr)_minmax(110px,1fr)_minmax(120px,1fr)_minmax(100px,0.9fr)] items-center gap-4 border-t border-slate-100 px-2 py-4"
+                className="grid grid-cols-[minmax(180px,2fr)_repeat(4,minmax(100px,1fr))] items-center gap-4 border-b border-slate-100 px-2 py-4"
               >
                 <div className="flex min-w-0 items-center gap-3">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#D8ECFF] text-sm font-semibold text-[#155DFC]">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#D8ECFF] text-xs font-semibold text-[#155DFC]">
                     {getInitials(employee.name)}
                   </div>
 
                   <div className="min-w-0">
-                    <p className="truncate text-sm font-semibold text-[#0F172A]">
+                    <p className="truncate text-sm font-[500] leading-5 text-[#000000]">
                       {employee.name ?? 'Unnamed employee'}
                     </p>
-                    <p className="truncate text-sm text-[#64748B]">
+                    {/* <p className="truncate text-sm text-[#64748B]">
                       {employee.employeeRole ?? formatDate(employee.hireDate)}
-                    </p>
+                    </p> */}
                   </div>
                 </div>
 
-                <p className="text-sm text-[#475569]">
+                <p className="text-xs leading-4 text-[#4A5565]">
                   {formatEmployeeCode(employee.id)}
                 </p>
 
                 <div className="min-w-0">
-                  <p className="truncate text-sm text-[#334155]">
+                  <p className="truncate text-xs leading-4 text-[#101828]">
                     {employee.department ?? 'No department'}
                   </p>
-                  <p className="text-sm text-[#94A3B8]">
+                  {/* <p className="text-sm text-[#94A3B8]">
+                    {formatDate(employee.hireDate)}
+                  </p> */}
+                </div>
+                <div>
+                  <p className="text-xs leading-4 text-[#4A5565]">
                     {formatDate(employee.hireDate)}
                   </p>
                 </div>
 
                 <div>
                   <span
-                    className={`inline-flex rounded-full px-3 py-1 text-xs font-medium ${getStatusStyles(employee.employmentStatus)}`}
+                    className={`inline-flex rounded-full px-3 py-1 text-[10px] font-normal ${getStatusStyles(employee.employmentStatus)}`}
                   >
                     {employee.employmentStatus?.toLowerCase() ?? 'unknown'}
                   </span>

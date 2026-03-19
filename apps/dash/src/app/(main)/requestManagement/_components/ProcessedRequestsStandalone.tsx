@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { ProcessedRequests } from './ProcessedRequests';
 import {
   GetBenefitRequestsDocument,
   GetBenefitsDocument,
@@ -12,6 +11,7 @@ import {
 } from 'apps/dash/src/graphql/generated/graphql';
 import { ProcessedRequestsSkeleton } from './skeletonComp/ProcessedRequestsSkeleton';
 import { gqlRequest } from 'apps/dash/src/graphql/helpers/graphql-client';
+import { RecentActivities } from '../../_components/RecentActivities';
 
 type BenefitRequest = GetBenefitRequestsQuery['benefitRequests'][number];
 type Benefit = GetBenefitsQuery['benefits'][number];
@@ -60,7 +60,7 @@ export const ProcessedRequestsStandalone = ({ variant = 'table' }: Props) => {
   if (error) return <p className="text-red-500">{error}</p>;
 
   return (
-    <ProcessedRequests
+    <RecentActivities
       requests={requests}
       benefits={benefits}
       employees={employees}

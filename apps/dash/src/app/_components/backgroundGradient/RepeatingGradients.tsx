@@ -18,6 +18,7 @@ export const RepeatingGradient = () => {
 
   return (
     <div className="fixed inset-0 -z-10 w-full h-screen overflow-hidden bg-white">
+      {/* <div className="absolute inset-0 -z-10 w-full h-full overflow-hidden bg-white"> */}
       <div className="flex w-full h-full opacity-30">
         {[...Array(count)].map((_, i) => (
           <div

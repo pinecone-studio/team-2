@@ -35,10 +35,10 @@ const heroStats = [
 export default function Page() {
   return (
     <Suspense fallback={<DashboardSkeleton />}>
-      <div className="relative isolate min-h-screen">
+      <div className="relative isolate min-h-screen ">
         <RepeatingGradient />
 
-        <div className="relative z-10 mx-auto max-w-7xl px-4 pt-8 pb-10">
+        <div className="relative z-10 mx-auto max-w-7xl px-4 pt-8 ">
           <div className="flex flex-col gap-10">
             <section className="flex flex-col gap-8">
               <div className="max-w-[1215px]">
@@ -71,8 +71,14 @@ export default function Page() {
                 ))}
               </div>
             </section>
-<div className="bg-[#fafafa] py-10"><DashboardInsightsSection /></div>
-            
+            {/* <div className="bg-[#fafafa] py-10"> */}
+            <div className="relative left-1/2 right-1/2 w-screen -translate-x-1/2 bg-[#f5f5f5] py-10 pb-24 min-h-screen">
+              <div className="mx-auto max-w-[1215px] px-4">
+                <DashboardInsightsSection />
+              </div>
+            </div>
+
+            {/* </div> */}
           </div>
         </div>
       </div>
