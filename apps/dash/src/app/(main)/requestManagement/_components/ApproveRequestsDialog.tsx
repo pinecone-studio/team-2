@@ -10,12 +10,12 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@team/source-ui';
-import { gqlRequest } from '../../../graphql/helpers/graphql-client';
+import { gqlRequest } from 'apps/dash/src/graphql/helpers/graphql-client';
 import {
   UpdateBenefitRequestDocument,
   type GetBenefitRequestsQuery,
   RequestStatus,
-} from '../../../graphql/generated/graphql';
+} from 'apps/dash/src/graphql/generated/graphql';
 
 import { useState } from 'react';
 
@@ -51,7 +51,7 @@ export const ApproveRequestDialog = ({ request, onUpdated }: Props) => {
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <button className="px-5 py-2.5 bg-[#DCFCE7] text-[#166534] hover:bg-[#BBF7D0] rounded-xl transition-colors text-xs font-bold border border-[#BBF7D0]">
+        <button className="px-2.5 py-1 bg-[#EDF7EC] text-[#59AF4F] hover:bg-[#BBF7D0] rounded-lg transition-colors text-xs font-[500] border border-[#BBF7D0]">
           Approve
         </button>
       </AlertDialogTrigger>

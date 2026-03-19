@@ -6,7 +6,7 @@ import { RejectRequestDialog } from './RejectRequestDialog';
 import {
   type GetBenefitRequestsQuery,
   type GetEmployeesQuery,
-} from '../../../graphql/generated/graphql';
+} from 'apps/dash/src/graphql/generated/graphql';
 import { CheckCircle2, XCircle } from 'lucide-react';
 
 type BenefitRequest = GetBenefitRequestsQuery['benefitRequests'][number];
@@ -31,11 +31,12 @@ const formatDate = (date?: string | null) => {
 const getEmployeeName = (employee?: Employee) => employee?.name || '—';
 const getEmployeeEmail = (employee?: Employee) => employee?.email || '—';
 const getEmployeeRole = (employee?: Employee) => employee?.employeeRole || '—';
-const getEmployeeLates = (employee?: Employee) => employee?.lateArrivalCount || 0;
+const getEmployeeLates = (employee?: Employee) =>
+  employee?.lateArrivalCount || 0;
 const getEmployeeOkr = (employee?: Employee) => Boolean(employee?.okrSubmitted);
 const getAvatarUrl = (employee?: Employee) =>
   `https://ui-avatars.com/api/?name=${encodeURIComponent(
-    employee?.name || '?'
+    employee?.name || '?',
   )}&background=random`;
 
 const EmployeeCell = ({ employee }: { employee?: Employee }) => {
@@ -112,7 +113,9 @@ export const ActiveRequestRow = ({
   return (
     <tr className="border-b border-gray-50 last:border-0 hover:bg-gray-50/50 transition-colors">
       <EmployeeCell employee={employee} />
-      <td className="px-4 py-4 text-[#334155] text-sm">{getEmployeeRole(employee)}</td>
+      <td className="px-4 py-4 text-[#334155] text-sm">
+        {getEmployeeRole(employee)}
+      </td>
       <td className="px-4 py-4 text-[#334155] text-sm">{benefitName}</td>
       <OKRStatus submitted={getEmployeeOkr(employee)} />
       <td className="px-4 py-4 text-center">
@@ -120,7 +123,7 @@ export const ActiveRequestRow = ({
           {getEmployeeLates(employee)}
         </span>
       </td>
-      <td className="px-4 py-4 text-[#334155] text-sm">
+      <td className="px-4 py-4 text-[#334155] text-sm font-[300]">
         {formatDate(request.createdAt)}
       </td>
       <ActionButtons request={request} onUpdated={onUpdated} />

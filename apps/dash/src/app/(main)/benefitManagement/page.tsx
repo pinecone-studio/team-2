@@ -50,7 +50,7 @@ export default function BenefitsManagement() {
   if (error) return <p className="text-red-500">{error}</p>;
 
   return (
-    <div className="w-full min-h-screen bg-[#F9FAFB] py-8">
+    <div className="w-full min-h-screen py-8">
       {/* Header */}
       <div className="max-w-[1215px] mx-auto flex justify-between items-start mb-8">
         <div>

@@ -9,8 +9,8 @@ import {
   type GetBenefitsQuery,
   type GetEmployeesQuery,
 } from 'apps/dash/src/graphql/generated/graphql';
-} from '../../../graphql/generated/graphql';
-import { gqlRequest } from '../../../graphql/helpers/graphql-client';
+// } from '../../../graphql/generated/graphql';
+// import { gqlRequest } from '../../../graphql/helpers/graphql-client';
 import { ProcessedRequestsSkeleton } from './skeletonComp/ProcessedRequestsSkeleton';
 import { gqlRequest } from 'apps/dash/src/graphql/helpers/graphql-client';
 import { RecentActivities } from '../../_components/RecentActivities';
@@ -51,8 +51,8 @@ export const ProcessedRequestsStandalone = ({ variant = 'table' }: Props) => {
         setEmployees(employeesData.employees);
       } catch (error: unknown) {
         setError(error instanceof Error ? error.message : 'Failed to load');
-      } catch (e: unknown) {
-        setError(e instanceof Error ? e.message : 'Failed to load');
+        // } catch (e: unknown) {
+        //   setError(e instanceof Error ? e.message : 'Failed to load');
       } finally {
         setLoading(false);
       }

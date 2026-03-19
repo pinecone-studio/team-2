@@ -52,7 +52,9 @@ export const RejectRequestDialog = ({ request, onUpdated }: Props) => {
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <button className="px-5 py-2.5 bg-[#FFE4E6] text-[#991B1B] hover:bg-[#FECDD3] rounded-xl transition-colors text-xs font-bold border border-[#FECDD3]">
+        {/* <button className="px-5 py-2.5 bg-[#FFE4E6] text-[#991B1B] hover:bg-[#FECDD3] rounded-xl transition-colors text-xs font-bold border border-[#FECDD3]"> */}
+
+        <button className="px-2.5 py-1 bg-[#E851722E] text-[#E85172] hover:bg-[#FECDD3] rounded-lg transition-colors text-xs font-[500] border border-[#E85172]">
           Reject
         </button>
       </AlertDialogTrigger>

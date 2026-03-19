@@ -58,7 +58,7 @@ function TableSkeleton({ cols, rows = 6 }: { cols: number; rows?: number }) {
 
 export function ProcessedRequestsSkeletonNavbar() {
   return (
-    <div className="w-full min-h-screen bg-[#F9FAFB] py-8">
+    <div className="w-full min-h-screen  py-8">
       <div className="max-w-[1215px] mx-auto">
         <div className="flex flex-col justify-start items-start">
           {/* Real header, no skeleton */}
