@@ -8,33 +8,6 @@ export default function AuthLayout({
 }) {
   return (
     <div className="relative min-h-screen w-screen overflow-hidden bg-[#FAFAFA] font-sans select-none">
-      {/* <div className="absolute inset-x-0 top-0 z-0 flex justify-center pointer-events-none overflow-hidden h-[400px]">
-        <div
-          className="relative w-[180%] aspect-[2/1] rounded-[100%] border-t-[5px]"
-          style={{
-
-            borderImageSource: 'linear-gradient(180deg, #FB923C 0%, #FFFFFF 50%, #FB923C 100%)',
-            borderImageSlice: 1,
-
-
-            boxShadow: `
-        0 -20px 64px -10px rgba(253, 186, 116, 0.8),
-        0 -5px 16px -2px rgba(253, 186, 116, 0.4)
-      `,
-
-            marginTop: '-25%',
-          }}
-        >
-
-          <div
-            className="absolute inset-0 rounded-[100%]"
-            style={{
-              background: 'radial-gradient(50% 50% at 50% 0%, rgba(253, 186, 116, 0.15) 0%, rgba(255, 255, 255, 0) 100%)',
-            }}
-          />
-        </div>
-      </div> */}
-
       {/* 2. Content Layer */}
       <div className="relative z-10 mx-auto flex min-h-screen max-w-[1280px] flex-col items-center justify-between px-8 py-20 lg:flex-row lg:px-16">
         {/* Зүүн тал: Текст болон картууд */}

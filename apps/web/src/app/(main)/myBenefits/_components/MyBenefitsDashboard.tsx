@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useUser } from '@clerk/nextjs';
 
-import { Tabs, TabsList, TabsTrigger } from '@team/source-ui';
+import { Spinner, Tabs, TabsList, TabsTrigger } from '@team/source-ui';
 import {
   GetBenefitRequestsByEmployeeDocument,
   GetBenefitRequestsByEmployeeQuery,
@@ -90,7 +90,12 @@ export default function MyBenefitsDashboard() {
 
   if (loading) return <MyBenefitsDashboardSkeleton />;
   if (error) return <p className="text-red-500">{error}</p>;
-  if (!employee) return <p>Employee record not found.</p>;
+  if (!employee)
+    return (
+      <div className="w-[100vw] h-[100vh] flex items-center justify-center">
+        <Spinner className="w-16 h-16 opacity-30" />
+      </div>
+    );
 
   return (
     <div className="mx-auto px-20 py-2">

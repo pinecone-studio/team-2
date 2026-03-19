@@ -25,6 +25,7 @@ import {
 } from './_components/skeletonComp/QuickActionsSkeleton';
 
 import QuickActions from './_components/QuickActions';
+import { Spinner } from 'libs/ui/src/components/spinner';
 
 // Types
 type Employee = GetEmployeesQuery['employees'][number];
@@ -177,10 +178,14 @@ export default function BenefitsCardDashboard() {
 
   if (error) return <p className="p-6 text-red-500 font-medium">{error}</p>;
   if (!data.employee)
-    return <p className="p-6 text-gray-500">Employee record not found.</p>;
+    return (
+      <div className="w-[100vw] h-[100vh] flex items-center justify-center">
+        <Spinner className="w-16 h-16 opacity-30" />
+      </div>
+    );
 
   return (
-    <div className="flex flex-col lg:flex-row gap-12 items-start py-4 animate-in fade-in duration-500">
+    <div className="flex flex-col lg:flex-row gap-12 items-start py-6 animate-in fade-in duration-500">
       {/* LEFT SIDE: Benefits List */}
       <div className="flex-1 w-full order-2 lg:order-1">
         <BenefitFilter onChange={setFilter} counts={counts} />

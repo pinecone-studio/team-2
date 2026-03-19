@@ -28,9 +28,12 @@ export const TopNavBar = () => {
       <div className="flex items-center justify-between px-6 h-14">
         {/* Logo / Brand */}
         <div className="flex items-center space-x-2 shrink-0">
-          <div className="w-12 h-12 flex items-center justify-center">
-            <img src="/pinecone.svg" alt="Logo" width={60} height={60} />
-          </div>
+          <Link href={'/'}>
+            <div className="w-12 h-12 flex items-center justify-center">
+              <img src="/pinecone.svg" alt="Logo" width={60} height={60} />
+            </div>
+          </Link>
+
           <div>
             <h1 className="text-xl font-bold text-black leading-tight">EBMS</h1>
           </div>

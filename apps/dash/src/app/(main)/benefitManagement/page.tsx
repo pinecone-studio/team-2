@@ -6,12 +6,10 @@ import { AddBenefitDialog } from './_components/AddBenefitDialog';
 import { EditBenefitDialog } from './_components/EditBenefitDialog';
 import { DeleteBenefitDialog } from './_components/DeleteBenefitDialog';
 import { BenefitDetailsDialog } from './_components/BenefitDetailsDialog';
-import {
-  GetBenefitsDocument,
-  GetBenefitsQuery,
-} from '../../graphql/generated/graphql';
-import { gqlRequest } from '../../graphql/helpers/graphql-client';
+
 import { BenefitsManagementSkeleton } from './_components/skeletonComp/BenefitsManagementSkeleton';
+import { GetBenefitsDocument, GetBenefitsQuery } from 'apps/dash/src/graphql/generated/graphql';
+import { gqlRequest } from 'apps/dash/src/graphql/helpers/graphql-client';
 
 type Benefit = GetBenefitsQuery['benefits'][number];
 
@@ -131,11 +129,10 @@ export default function BenefitsManagement() {
                 </td>
                 <td className="p-4">
                   <span
-                    className={`px-[10px] py-1 rounded-lg text-[11px] font-semibold border shadow-none ${
-                      benefit.isActive
+                    className={`px-[10px] py-1 rounded-lg text-[11px] font-semibold border shadow-none ${benefit.isActive
                         ? 'bg-[#EDF7EC] text-[#59AF4F] border-[#D1E9CF]'
                         : 'bg-[#FEF2F2] text-[#EF4444] border-[#FEE2E2]'
-                    }`}
+                      }`}
                   >
                     {benefit.isActive ? 'Active' : 'Inactive'}
                   </span>

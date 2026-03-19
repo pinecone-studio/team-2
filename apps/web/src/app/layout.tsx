@@ -1,10 +1,7 @@
 import './global.css';
 import { ClerkProvider } from '@clerk/nextjs';
 import { SidebarProvider } from '@team/source-ui';
-import { TopNavBar } from './_components/main/topSideBar/TopSideBar';
 import { Toaster } from 'sonner';
-
-export const runtime = 'edge';
 
 export const metadata = {
   title: 'Welcome to web',
@@ -22,12 +19,13 @@ export default async function RootLayout({
         <body>
           <SidebarProvider>
             <div className=" h-screen">
-              <TopNavBar />
+              {/* <TopNavBar /> */}
               <main className="flex-1 overflow-y-auto  text-gray-900">
                 {children}
               </main>
             </div>
           </SidebarProvider>
+
           <Toaster position="top-center" />
         </body>
       </html>

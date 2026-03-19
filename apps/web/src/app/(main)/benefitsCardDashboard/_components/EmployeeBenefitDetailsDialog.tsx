@@ -112,6 +112,12 @@ export function EmployeeBenefitDetailsDialog({
     setApplying(true);
     setApplyError('');
     try {
+      const employeeId = Number.parseInt(employee.id, 10);
+
+      if (Number.isNaN(employeeId)) {
+        throw new Error('Invalid employee id');
+      }
+
       const data = await gqlRequest(CreateBenefitRequestDocument, {
         input: {
           benefitId: benefit.id,

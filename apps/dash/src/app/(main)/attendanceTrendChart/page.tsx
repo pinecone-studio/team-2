@@ -256,3 +256,5 @@ export function AttendanceTrendChart() {
     </Card>
   );
 }
+
+export default AttendanceTrendChart;
