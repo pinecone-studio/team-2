@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import type { Dispatch, SetStateAction } from 'react';
 import {
   type GetBenefitRequestsQuery,
   type GetBenefitsQuery,
@@ -17,6 +17,7 @@ type Props = {
   benefits: Benefit[];
   employees: Employee[];
   onUpdated: (updated: BenefitRequest) => void;
+  setActionLoading: Dispatch<SetStateAction<boolean>>;
 };
 
 const RequestTable = ({
@@ -24,37 +25,40 @@ const RequestTable = ({
   onUpdated,
   getBenefitName,
   getEmployee,
+  setActionLoading,
 }: {
   requests: BenefitRequest[];
   onUpdated: (updated: BenefitRequest) => void;
   getBenefitName: (id: number) => string;
   getEmployee: (id: number) => Employee | undefined;
+  setActionLoading: Dispatch<SetStateAction<boolean>>;
 }) => (
   <div className="overflow-x-auto w-full px-4 pb-4">
-    <table className="w-full text-left border-collapse min-w-[1000px]">
+    <table className="w-full min-w-[1000px] border-collapse text-left">
       <thead>
         <tr className="border-b border-gray-100">
-          <th className="px-4 py-1 text-[#0F172A] text-sm font-[600]">
+          <th className="px-4 py-1 text-sm font-[600] text-[#0F172A]">
             Employee Name
           </th>
-          <th className="px-4 py-1 text-[#0F172A] text-sm font-[600]">Role</th>
-          <th className="px-4 py-1 text-[#0F172A] text-sm font-[600]">
+          <th className="px-4 py-1 text-sm font-[600] text-[#0F172A]">Role</th>
+          <th className="px-4 py-1 text-sm font-[600] text-[#0F172A]">
             Benefit
           </th>
-          <th className="px-4 py-1 text-[#0F172A] text-sm font-[600] text-center">
+          <th className="px-4 py-1 text-center text-sm font-[600] text-[#0F172A]">
             OKR
           </th>
-          <th className="px-4 py-1 text-[#0F172A] text-sm font-[600] text-center">
+          <th className="px-4 py-1 text-center text-sm font-[600] text-[#0F172A]">
             Late Arrivals
           </th>
-          <th className="px-4 py-1 text-[#0F172A] text-sm font-[600]">
+          <th className="px-4 py-1 text-sm font-[600] text-[#0F172A]">
             Request Date
           </th>
-          <th className="px-4 py-1 text-[#0F172A] text-sm font-[600] text-center">
+          <th className="px-4 py-1 text-center text-sm font-[600] text-[#0F172A]">
             Actions
           </th>
         </tr>
       </thead>
+
       <tbody>
         {requests.length === 0 ? (
           <tr>
@@ -73,6 +77,7 @@ const RequestTable = ({
               benefitName={getBenefitName(request.benefitId)}
               employee={getEmployee(request.employeeId)}
               onUpdated={onUpdated}
+              setActionLoading={setActionLoading}
             />
           ))
         )}
@@ -86,6 +91,7 @@ export const ActiveRequests = ({
   benefits = [],
   employees = [],
   onUpdated,
+  setActionLoading,
 }: Props) => {
   const getBenefitName = (benefitId: number) =>
     benefits.find((b) => b.id === benefitId)?.name ?? '—';
@@ -94,18 +100,20 @@ export const ActiveRequests = ({
     employees.find((e) => e.id === employeeId);
 
   return (
-    <div className="bg-white rounded-lg w-full border border-gray-100 shadow-sm overflow-hidden mb-8">
-      <div className="pt-8 pb-6 px-8">
-        <h2 className="text-[#101828] text-xl font-[600]">Active requests</h2>
-        <p className="text-[#717182] font-[300] text-sm mt-1">
+    <div className="mb-8 w-full overflow-hidden rounded-lg border border-gray-100 bg-white shadow-sm">
+      <div className="px-8 pt-8 pb-6">
+        <h2 className="text-xl font-[600] text-[#101828]">Active requests</h2>
+        <p className="mt-1 text-sm font-[300] text-[#717182]">
           {requests.length} requests awaiting review
         </p>
       </div>
+
       <RequestTable
         requests={requests}
         onUpdated={onUpdated}
         getBenefitName={getBenefitName}
         getEmployee={getEmployee}
+        setActionLoading={setActionLoading}
       />
     </div>
   );

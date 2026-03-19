@@ -14,7 +14,6 @@ import {
   type UserProfilePageState,
 } from './profile-form.helpers';
 
-import { toast } from 'sonner';
 import { gqlRequest } from 'apps/web/src/graphql/helpers/graphql-client';
 import { CreateEmployeeDocument } from 'apps/web/src/graphql/generated/graphql';
 
@@ -150,12 +149,7 @@ async function submitProfile({
     });
 
     setCreated(true);
-    toast.success('Employee profile created successfully.', {
-      className: 'my-custom-class',
-      style: { background: '#66bb6a', color: '#ffffff', border: '0' },
-    });
 
-    // Brief delay so the user sees the success message before redirect
     setTimeout(() => {
       router.replace('/');
     }, 2000);

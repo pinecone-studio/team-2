@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import type { Dispatch, SetStateAction } from 'react';
 import { ApproveRequestDialog } from './ApproveRequestsDialog';
 import { RejectRequestDialog } from './RejectRequestDialog';
 import {
@@ -17,10 +17,12 @@ type RowProps = {
   benefitName: string;
   employee?: Employee;
   onUpdated: (updated: BenefitRequest) => void;
+  setActionLoading: Dispatch<SetStateAction<boolean>>;
 };
 
 const formatDate = (date?: string | null) => {
   if (!date) return '—';
+
   return new Date(date).toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
@@ -44,10 +46,10 @@ const EmployeeCell = ({ employee }: { employee?: Employee }) => {
     return (
       <td className="px-4 py-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-gray-200" />
+          <div className="h-10 w-10 rounded-full bg-gray-200" />
           <div className="flex flex-col">
-            <span className="text-[#0F172A] text-sm font-semibold">—</span>
-            <span className="text-[#64748B] text-xs">—</span>
+            <span className="text-sm font-semibold text-[#0F172A]">—</span>
+            <span className="text-xs text-[#64748B]">—</span>
           </div>
         </div>
       </td>
@@ -57,18 +59,19 @@ const EmployeeCell = ({ employee }: { employee?: Employee }) => {
   return (
     <td className="px-4 py-4">
       <div className="flex items-center gap-3">
-        <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden flex-shrink-0">
+        <div className="h-10 w-10 flex-shrink-0 overflow-hidden rounded-full bg-gray-200">
           <img
             src={getAvatarUrl(employee)}
             alt={getEmployeeName(employee)}
-            className="w-full h-full object-cover"
+            className="h-full w-full object-cover"
           />
         </div>
+
         <div className="flex flex-col">
-          <span className="text-[#0F172A] text-sm font-semibold">
+          <span className="text-sm font-semibold text-[#0F172A]">
             {getEmployeeName(employee)}
           </span>
-          <span className="text-[#64748B] text-xs">
+          <span className="text-xs text-[#64748B]">
             {getEmployeeEmail(employee)}
           </span>
         </div>
@@ -92,14 +95,24 @@ const OKRStatus = ({ submitted }: { submitted: boolean }) => (
 const ActionButtons = ({
   request,
   onUpdated,
+  setActionLoading,
 }: {
   request: BenefitRequest;
   onUpdated: (updated: BenefitRequest) => void;
+  setActionLoading: Dispatch<SetStateAction<boolean>>;
 }) => (
   <td className="px-4 py-4">
     <div className="flex items-center justify-center gap-3">
-      <ApproveRequestDialog request={request} onUpdated={onUpdated} />
-      <RejectRequestDialog request={request} onUpdated={onUpdated} />
+      <ApproveRequestDialog
+        request={request}
+        onUpdated={onUpdated}
+        setActionLoading={setActionLoading}
+      />
+      <RejectRequestDialog
+        request={request}
+        onUpdated={onUpdated}
+        setActionLoading={setActionLoading}
+      />
     </div>
   </td>
 );
@@ -109,16 +122,27 @@ export const ActiveRequestRow = ({
   benefitName,
   employee,
   onUpdated,
+  setActionLoading,
 }: RowProps) => {
   return (
-    <tr className="border-b border-gray-50 last:border-0 hover:bg-gray-50/50 transition-colors">
+    <tr className="border-b border-gray-50 transition-colors last:border-0 hover:bg-gray-50/50">
       <EmployeeCell employee={employee} />
-      <td className="px-4 py-4 text-[#334155] text-sm">
+
+      <td className="px-4 py-4 text-sm text-[#334155]">
         {getEmployeeRole(employee)}
       </td>
-      <td className="px-4 py-4 text-[#334155] text-sm">{benefitName}</td>
+
+      <td className="px-4 py-4 text-sm text-[#334155]">{benefitName}</td>
+
       <OKRStatus submitted={getEmployeeOkr(employee)} />
+
       <td className="px-4 py-4 text-center">
+        <span className="text-sm font-bold text-[#22C55E]">
+          {getEmployeeLates(employee)}
+        </span>
+      </td>
+
+      <td className="px-4 py-4 text-sm font-[300] text-[#334155]">
         <span className="text-[#22C55E] text-sm font-medium">
           {getEmployeeLates(employee)}
         </span>
@@ -126,7 +150,12 @@ export const ActiveRequestRow = ({
       <td className="px-4 py-4 text-[#334155] text-base font-[300]">
         {formatDate(request.createdAt)}
       </td>
-      <ActionButtons request={request} onUpdated={onUpdated} />
+
+      <ActionButtons
+        request={request}
+        onUpdated={onUpdated}
+        setActionLoading={setActionLoading}
+      />
     </tr>
   );
 };
