@@ -104,7 +104,7 @@ export function EmployeeSearchPanel() {
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Search"
-              className="h-8 w-70 rounded-lg border border-[#0000001A] bg-[#F3F3F5] pl-11 pr-4 text-xs text-slate-900 outline-none transition placeholder:text-[#00000080] focus:border-[#155DFC] focus:bg-white"
+              className="h-8 w-[253px] rounded-lg border border-[#0000001A] bg-[#F3F3F5] pl-11 pr-4 text-xs text-slate-900 outline-none transition placeholder:text-[#00000080] focus:border-[#155DFC] focus:bg-white"
             />
           </label>
           <button className="bg-[#F3F3F5] border border-[#0000001A] py-1.5 px-4 rounded-lg text-xs font-[400] flex gap-2.5 items-center">
@@ -144,13 +144,13 @@ export function EmployeeSearchPanel() {
                 key={employee.id}
                 className="grid grid-cols-[minmax(180px,2fr)_repeat(4,minmax(100px,1fr))] items-center gap-4 border-b border-slate-100 px-2 py-4"
               >
-                <div className="flex min-w-0 items-center gap-3">
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#D8ECFF] text-xs font-semibold text-[#155DFC]">
+                <div className="flex min-w-0 items-center gap-2.5">
+                  <div className="flex h-[41px] w-[41px] shrink-0 items-center justify-center rounded-full bg-[#D8ECFF] text-xs font-semibold text-[#155DFC]">
                     {getInitials(employee.name)}
                   </div>
 
                   <div className="min-w-0">
-                    <p className="truncate text-sm font-[500] leading-5 text-[#000000]">
+                    <p className="truncate text-xs font-lato font-[500] leading-5 text-[#000000]">
                       {employee.name ?? 'Unnamed employee'}
                     </p>
                     {/* <p className="truncate text-sm text-[#64748B]">
@@ -159,12 +159,12 @@ export function EmployeeSearchPanel() {
                   </div>
                 </div>
 
-                <p className="text-xs leading-4 text-[#4A5565]">
+                <p className="text-xs leading-4 font-normal text-[#4A5565]">
                   {formatEmployeeCode(employee.id)}
                 </p>
 
                 <div className="min-w-0">
-                  <p className="truncate text-xs leading-4 text-[#101828]">
+                  <p className="truncate text-xs tracking-[-0.116px] leading-4 text-[#101828]">
                     {employee.department ?? 'No department'}
                   </p>
                   {/* <p className="text-sm text-[#94A3B8]">
@@ -172,14 +172,14 @@ export function EmployeeSearchPanel() {
                   </p> */}
                 </div>
                 <div>
-                  <p className="text-xs leading-4 text-[#4A5565]">
+                  <p className="text-xs leading-4 font-normal text-[#4A5565]">
                     {formatDate(employee.hireDate)}
                   </p>
                 </div>
 
                 <div>
                   <span
-                    className={`inline-flex rounded-full px-3 py-1 text-[10px] font-normal ${getStatusStyles(employee.employmentStatus)}`}
+                    className={`inline-flex rounded-full px-2.5 py-1 text-[10px] leading-3 font-normal ${getStatusStyles(employee.employmentStatus)}`}
                   >
                     {employee.employmentStatus?.toLowerCase() ?? 'unknown'}
                   </span>

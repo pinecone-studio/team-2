@@ -119,11 +119,11 @@ export const ActiveRequestRow = ({
       <td className="px-4 py-4 text-[#334155] text-sm">{benefitName}</td>
       <OKRStatus submitted={getEmployeeOkr(employee)} />
       <td className="px-4 py-4 text-center">
-        <span className="text-[#22C55E] text-sm font-bold">
+        <span className="text-[#22C55E] text-sm font-medium">
           {getEmployeeLates(employee)}
         </span>
       </td>
-      <td className="px-4 py-4 text-[#334155] text-sm font-[300]">
+      <td className="px-4 py-4 text-[#334155] text-base font-[300]">
         {formatDate(request.createdAt)}
       </td>
       <ActionButtons request={request} onUpdated={onUpdated} />

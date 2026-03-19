@@ -1,6 +1,6 @@
 'use client';
 import { ClerkLoaded, ClerkLoading, UserButton } from '@clerk/nextjs';
-import { Bell, Settings } from 'lucide-react';
+// import { Bell, Settings } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import React from 'react';
@@ -29,7 +29,7 @@ export const TopNavBar = () => {
   };
 
   return (
-    <nav className="w-screen bg-white/50 sticky top-0 z-50 px-20 py-2 backdrop-blur-sm border-b border-white/20">
+    <nav className="w-screen bg-[#FAFAFAB2] sticky top-0 z-50 px-20 backdrop-blur-sm border-b border-white/20 ">
       <div className="flex items-center justify-between px-6 h-14">
         {/* Brand */}
         <div className="flex items-center space-x-2 shrink-0">
@@ -63,7 +63,7 @@ export const TopNavBar = () => {
 
         {/* User */}
         <div className="flex items-center gap-10 shrink-0">
-          <div className="text-right flex items-center">
+          {/* <div className="text-right flex items-center">
             <Link href={'/settings'}>
               <div className="text-sm font-medium px-2 py-2 rounded-xl text-black hover:bg-gray-200 hover:text-gray-900 transition-colors">
                 <Settings size={20} />
@@ -73,7 +73,7 @@ export const TopNavBar = () => {
             <div className="text-sm font-medium px-2 py-2 rounded-xl text-black hover:bg-gray-200 hover:text-gray-900 transition-colors cursor-pointer">
               <Bell size={20} />
             </div>
-          </div>
+          </div> */}
 
           {/* Clerk User Button with Skeleton */}
           <div className="relative flex items-center justify-center w-8 h-8">
@@ -87,7 +87,7 @@ export const TopNavBar = () => {
               <UserButton
                 appearance={{
                   elements: {
-                    userButtonAvatarBox: 'w-8 h-8', // Skeleton-той ижил хэмжээтэй байх
+                    userButtonAvatarBox: 'w-7 h-7', // Skeleton-той ижил хэмжээтэй байх
                   },
                 }}
               />
