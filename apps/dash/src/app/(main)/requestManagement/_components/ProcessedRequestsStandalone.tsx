@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { ProcessedRequests } from './ProcessedRequests';
 import {
   GetBenefitRequestsDocument,
   GetBenefitsDocument,
@@ -9,15 +8,22 @@ import {
   type GetBenefitRequestsQuery,
   type GetBenefitsQuery,
   type GetEmployeesQuery,
+} from 'apps/dash/src/graphql/generated/graphql';
 } from '../../../graphql/generated/graphql';
 import { gqlRequest } from '../../../graphql/helpers/graphql-client';
 import { ProcessedRequestsSkeleton } from './skeletonComp/ProcessedRequestsSkeleton';
+import { gqlRequest } from 'apps/dash/src/graphql/helpers/graphql-client';
+import { RecentActivities } from '../../_components/RecentActivities';
 
 type BenefitRequest = GetBenefitRequestsQuery['benefitRequests'][number];
 type Benefit = GetBenefitsQuery['benefits'][number];
 type Employee = GetEmployeesQuery['employees'][number];
 
-export const ProcessedRequestsStandalone = () => {
+type Props = {
+  variant?: 'table' | 'feed';
+};
+
+export const ProcessedRequestsStandalone = ({ variant = 'table' }: Props) => {
   const [requests, setRequests] = useState<BenefitRequest[]>([]);
   const [benefits, setBenefits] = useState<Benefit[]>([]);
   const [employees, setEmployees] = useState<Employee[]>([]);
@@ -43,6 +49,8 @@ export const ProcessedRequestsStandalone = () => {
         setRequests(processed);
         setBenefits(benefitsData.benefits);
         setEmployees(employeesData.employees);
+      } catch (error: unknown) {
+        setError(error instanceof Error ? error.message : 'Failed to load');
       } catch (e: unknown) {
         setError(e instanceof Error ? e.message : 'Failed to load');
       } finally {
@@ -56,10 +64,11 @@ export const ProcessedRequestsStandalone = () => {
   if (error) return <p className="text-red-500">{error}</p>;
 
   return (
-    <ProcessedRequests
+    <RecentActivities
       requests={requests}
       benefits={benefits}
       employees={employees}
+      variant={variant}
     />
   );
 };

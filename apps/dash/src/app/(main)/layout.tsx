@@ -8,7 +8,7 @@ export default function MainLayout({
 }) {
   return (
     <SidebarProvider>
-      <div className="h-screen flex flex-col w-full bg-gray-50">
+      <div className="h-screen flex flex-col w-full bg-[#f5f5f5]">
         <TopNavBar />
         <main className="flex-1 overflow-y-auto p-8 text-gray-900">
           {children}

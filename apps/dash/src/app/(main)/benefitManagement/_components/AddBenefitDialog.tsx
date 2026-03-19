@@ -215,7 +215,7 @@ export const AddBenefitDialog = ({ onCreated }: Props) => {
         onOpenChange={(v) => (v ? setOpen(true) : handleClose())}
       >
         <DialogTrigger asChild>
-          <Button className="flex-1 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-semibold h-12 border-0">
+          <Button className="flex-1 rounded-lg !bg-orange-500 hover:!bg-orange-600 text-white font-semibold h-12 border-0">
             <Plus />
             <span className="font-semibold text-sm">Add Benefit</span>
           </Button>
@@ -317,7 +317,7 @@ export const AddBenefitDialog = ({ onCreated }: Props) => {
                   <Button
                     type="submit"
                     disabled={loading}
-                    className="flex-1 rounded-lg bg-orange-400 hover:bg-orange-500 text-white font-semibold h-12 border-0"
+                    className="flex-1 rounded-lg !bg-orange-400 hover:!bg-orange-500 text-white font-semibold h-12 border-0"
                   >
                     {addRules
                       ? 'Next: Add Rules →'
@@ -340,7 +340,7 @@ export const AddBenefitDialog = ({ onCreated }: Props) => {
                   <Button
                     type="submit"
                     disabled={loading}
-                    className="flex-1 rounded-lg bg-orange-400 hover:bg-orange-500 text-white font-semibold h-12 border-0"
+                    className="flex-1 rounded-lg !bg-orange-400 hover:!bg-orange-500 text-white font-semibold h-12 border-0"
                   >
                     {loading ? 'Saving...' : 'Save Benefit & Rules'}
                   </Button>
