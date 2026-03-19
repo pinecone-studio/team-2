@@ -9,6 +9,12 @@ export default function Page() {
       forceRedirectUrl="/"
       transferable={false}
       withSignUp={false}
+      appearance={{
+        elements: {
+          footer: 'hidden',
+          footerAction: 'hidden',
+        },
+      }}
     />
   );
 }
