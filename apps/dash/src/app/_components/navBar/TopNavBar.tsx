@@ -1,6 +1,6 @@
 'use client';
 
-import { ClerkLoaded, ClerkLoading, UserButton } from '@clerk/nextjs';
+import { ClerkLoaded, ClerkLoading } from '@clerk/nextjs';
 import { Settings } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
@@ -18,6 +18,7 @@ import {
   NotificationBell,
   type PendingNotificationItem,
 } from './NotificationBell';
+import { AccountMenu } from '../AccountMenu';
 
 const menuItems = [
   { path: '/', label: 'Dashboard' },
@@ -207,13 +208,7 @@ export const TopNavBar = () => {
               </ClerkLoading>
 
               <ClerkLoaded>
-                <UserButton
-                  appearance={{
-                    elements: {
-                      userButtonAvatarBox: 'w-7 h-7',
-                    },
-                  }}
-                />
+                <AccountMenu avatarClassName="h-7 w-7" />
               </ClerkLoaded>
             </div>
           </div>

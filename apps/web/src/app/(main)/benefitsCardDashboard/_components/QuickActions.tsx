@@ -292,7 +292,7 @@ const QuickActions = ({ benefits, requests, counts }: QuickActionsProps) => {
           <div className="relative flex flex-col gap-9">
             {/* Vertical Line */}
             {timelineEvents.length > 0 && (
-              <div className="absolute left-[19px] top-2 bottom-2 w-[1px] bg-gray-100/80" />
+              <div className="absolute left-[19px] top-2 bottom-2 w-[2px] bg-[#25C196]" />
             )}
 
             {timelineEvents.length === 0 ? (

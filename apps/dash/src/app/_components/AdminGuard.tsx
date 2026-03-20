@@ -3,9 +3,9 @@
 import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 
+// eslint-disable-next-line complexity
 export function AdminGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  // const { signOut } = useClerk();
   const { user, isLoaded } = useUser();
 
   if (!isLoaded) {
@@ -32,7 +32,6 @@ export function AdminGuard({ children }: { children: React.ReactNode }) {
           <div className="mt-6">
             <button
               type="button"
-              // onClick={() => signOut({ redirectUrl: '/sign-in' })}
               onClick={() => router.push('/sign-in')}
               className="inline-flex h-11 items-center justify-center rounded-full bg-[#111827] px-5 text-sm font-medium text-white transition hover:bg-[#1F2937]"
             >

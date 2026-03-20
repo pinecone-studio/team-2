@@ -1,6 +1,10 @@
 'use client';
 
-import { UserButton, ClerkLoading, ClerkLoaded, useUser } from '@clerk/nextjs';
+import {
+  ClerkLoading,
+  ClerkLoaded,
+  useUser,
+} from '@clerk/nextjs';
 import { Skeleton } from '@team/source-ui';
 import { Bell, Settings, X } from 'lucide-react';
 import Link from 'next/link';
@@ -13,6 +17,7 @@ import {
   RequestStatus,
 } from 'apps/web/src/graphql/generated/graphql';
 import { gqlRequest } from 'apps/web/src/graphql/helpers/graphql-client';
+import { AccountMenu } from '../AccountMenu';
 
 const menuItems = [
   { path: '/', label: 'Dashboard' },
@@ -244,13 +249,7 @@ export const TopNavBar = () => {
             </ClerkLoading>
 
             <ClerkLoaded>
-              <UserButton
-                appearance={{
-                  elements: {
-                    userButtonAvatarBox: 'w-7 h-7', // Skeleton-той ижил хэмжээтэй байх
-                  },
-                }}
-              />
+              <AccountMenu avatarClassName="h-7 w-7" />
             </ClerkLoaded>
           </div>
         </div>

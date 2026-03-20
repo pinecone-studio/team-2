@@ -4,10 +4,10 @@ import React from 'react';
 import {
   SignInButton,
   SignUpButton,
-  UserButton,
   useUser,
   useAuth,
 } from '@clerk/nextjs';
+import { AccountMenu } from './AccountMenu';
 
 const getUserId = (
   isSignedIn: boolean | undefined,
@@ -35,7 +35,7 @@ export const Header = () => {
   return (
     <div className="py-2 px-6 bg-gray-200 w-screen flex justify-end">
       {!isSignedIn && <SignedOutButtons />}
-      {isSignedIn && <UserButton />}
+      {isSignedIn && <AccountMenu />}
     </div>
   );
 };
