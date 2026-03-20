@@ -2,6 +2,7 @@
 
 import { useClerk, useUser } from '@clerk/nextjs';
 import { LogOut, Settings } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useRef, useState } from 'react';
 
 type Props = {
@@ -12,7 +13,9 @@ type Props = {
 export function AccountMenu({ avatarClassName = 'h-8 w-8' }: Props) {
   const { openUserProfile, signOut } = useClerk();
   const { user, isSignedIn } = useUser();
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
+  const [isSigningOut, setIsSigningOut] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -27,6 +30,24 @@ export function AccountMenu({ avatarClassName = 'h-8 w-8' }: Props) {
   }, []);
 
   if (!isSignedIn || !user) return null;
+
+  const handleSignOut = async () => {
+    if (isSigningOut) return;
+
+    setIsOpen(false);
+    setIsSigningOut(true);
+
+    try {
+      await signOut();
+      router.replace('/sign-in');
+      router.refresh();
+    } catch (error) {
+      console.error('Failed to sign out from dash.', error);
+      window.location.assign('/sign-in');
+    } finally {
+      setIsSigningOut(false);
+    }
+  };
 
   const avatar = user.imageUrl ? (
     <img
@@ -84,13 +105,13 @@ export function AccountMenu({ avatarClassName = 'h-8 w-8' }: Props) {
           <button
             type="button"
             onClick={() => {
-              setIsOpen(false);
-              void signOut({ redirectUrl: '/sign-in' });
+              void handleSignOut();
             }}
+            disabled={isSigningOut}
             className="flex w-full items-center gap-3 px-5 py-4 text-left text-base text-gray-700 transition-colors hover:bg-gray-50"
           >
             <LogOut size={18} />
-            <span>Sign out</span>
+            <span>{isSigningOut ? 'Signing out...' : 'Sign out'}</span>
           </button>
         </div>
       )}

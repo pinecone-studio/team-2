@@ -7,6 +7,7 @@ export default function Page() {
     <SignIn
       fallbackRedirectUrl="/"
       forceRedirectUrl="/"
+      signUpUrl="/sign-up"
       // withSignUp={false}
       // appearance={{
       //   elements: {

@@ -1,7 +1,7 @@
-import { redirect } from 'next/navigation';
+import { SignUp } from '@clerk/nextjs';
 
 export const runtime = 'edge';
 
 export default function SignUpPage() {
-  redirect('/sign-in');
+  return <SignUp fallbackRedirectUrl="/" forceRedirectUrl="/" />;
 }
