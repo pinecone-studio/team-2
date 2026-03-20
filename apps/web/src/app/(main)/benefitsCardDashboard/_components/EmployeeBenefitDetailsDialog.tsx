@@ -93,7 +93,6 @@ export function EmployeeBenefitDetailsDialog({
 
   async function handleOpen(isOpen: boolean) {
     setOpen(isOpen);
-
     if (isOpen) {
       setLoadingData(true);
       try {
@@ -101,7 +100,6 @@ export function EmployeeBenefitDetailsDialog({
           GetEligibilityRulesByBenefitDocument,
           { benefitId: benefit.id },
         );
-
         setRules(rulesData.eligibilityRulesByBenefit);
         setEligibility(
           checkEligibility(employee, rulesData.eligibilityRulesByBenefit),
@@ -114,7 +112,6 @@ export function EmployeeBenefitDetailsDialog({
       }
     }
   }
-
   function handleOpenRequestDialog() {
     setOpen(false);
     setRequestOpen(true);
@@ -134,7 +131,7 @@ export function EmployeeBenefitDetailsDialog({
       <Dialog open={open} onOpenChange={handleOpen}>
         <DialogTrigger asChild>
           {children ?? (
-            <Button className="w-full !rounded-[8px] !bg-[#137FEC] transition-shadow duration-300 hover:shadow-[2px_4px_3.8px_rgba(19,127,236,0.25)]">
+            <Button className="w-full !bg-[#137FEC] !rounded-[8px] hover:shadow-[2px_4px_3.8px_rgba(19,127,236,0.25)] transition-shadow duration-300">
               View Details
             </Button>
           )}
@@ -151,9 +148,8 @@ export function EmployeeBenefitDetailsDialog({
             >
               {getModeLabel(dialogMode)}
             </p>
-
             {dialogMode === 'eligible' ? (
-              <Code2 className="h-4 w-4 text-[#66B3FF]" strokeWidth={2} />
+              <Code2 className="h-4 w-4 text-[#66B3FF]" strokeWidth={2}></Code2>
             ) : (
               <div className="h-4" />
             )}
@@ -163,7 +159,7 @@ export function EmployeeBenefitDetailsDialog({
             <BenefitDetailsDialogSkeleton />
           ) : (
             <div className="space-y-4">
-              <div className="mt-4 rounded-[8px] bg-[#F8F8F8] px-[16px] py-[18px]">
+              <div className="rounded-[8px] bg-[#F8F8F8] mt-4 px-[16px] py-[18px]">
                 <h2 className="text-[16px] font-normal leading-[1.2] text-[#0A0A0A]">
                   {benefit.name}
                 </h2>
@@ -189,6 +185,7 @@ export function EmployeeBenefitDetailsDialog({
                       : null
                   }
                 />
+
                 <DetailRow label="Vendor" value={benefit.vendorName} />
                 <DetailRow
                   label="Contract Required"
@@ -211,7 +208,6 @@ export function EmployeeBenefitDetailsDialog({
                         dialogMode,
                         eligibility,
                       );
-
                       return (
                         <EligibilityRuleCard
                           key={rule.id}
@@ -252,7 +248,7 @@ export function EmployeeBenefitDetailsDialog({
               <div className="flex gap-2">
                 <Button
                   variant="outline"
-                  className="flex-1 !h-[33px] !rounded-[6px] !border-[#D8DEE7] !bg-white !text-[#111827] !shadow-none font-normal hover:!bg-[#F8FAFC]"
+                  className="flex-1 !h-[33px] !rounded-[6px] !border-[#D8DEE7] font-normal !bg-white !text-[#111827] !shadow-none hover:!bg-[#F8FAFC]"
                   onClick={() => setOpen(false)}
                 >
                   {dialogMode === 'eligible' ? 'Cancel' : 'Close'}
@@ -263,7 +259,7 @@ export function EmployeeBenefitDetailsDialog({
                     className="flex-1 !h-[33px] !rounded-[6px] !bg-[#FB923C] font-normal text-white hover:!bg-[#F27E1E]"
                     onClick={handleOpenRequestDialog}
                   >
-                    Send request
+                    Send Request
                   </Button>
                 )}
               </div>
@@ -271,7 +267,6 @@ export function EmployeeBenefitDetailsDialog({
           )}
         </DialogContent>
       </Dialog>
-
       <BenefitRequestDialog
         open={requestOpen}
         onOpenChange={setRequestOpen}
@@ -310,7 +305,7 @@ function EligibilityRuleCard({
   return (
     <div
       className={`flex items-start gap-4 rounded-[12px] px-[14px] py-[10px] ${
-        passed ? 'bg-[#ECFDF5]' : 'bg-[#FEF2F2]'
+        passed ? ' bg-[#ECFDF5]' : ' bg-[#FEF2F2]'
       }`}
     >
       <div
@@ -326,19 +321,14 @@ function EligibilityRuleCard({
           <X size={16} strokeWidth={2} />
         )}
       </div>
-
       <div className="min-w-0">
         <p
-          className={`text-[14px] font-normal ${
-            passed ? 'text-[#064E3B]' : 'text-red-900'
-          }`}
+          className={`text-[14px] font-normal ${passed ? 'text-[#064E3B]' : 'text-red-900'}`}
         >
           {title}
         </p>
         <p
-          className={`text-[12px] font-normal ${
-            passed ? 'text-[#059669]' : 'text-red-600'
-          }`}
+          className={`text-[12px] font-normal ${passed ? 'text-[#059669]' : 'text-red-600'}`}
         >
           {description}
         </p>

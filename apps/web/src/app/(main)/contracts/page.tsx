@@ -726,7 +726,12 @@ export default function ContractsPage() {
             </div>
 
             <div className="h-[70vh] w-full bg-gray-50">
-              <iframe src={selectedContractUrl} className="h-full w-full" />
+              <iframe
+                key={contractUrl}
+                src={contractUrl}
+                title={`${benefit.name} contract`}
+                className="h-full w-full"
+              />
             </div>
 
             <div className="flex justify-end gap-2 border-t px-4 py-3">

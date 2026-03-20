@@ -9,7 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@team/source-ui';
-import { CheckCircle, ExternalLink, FileText, X } from 'lucide-react';
+import { CheckCircle, FileText, X } from 'lucide-react';
 
 import {
   CreateBenefitRequestDocument,
@@ -60,6 +60,14 @@ export function BenefitRequestDialog({
     setContractPreviewOpen(false);
   }
 
+  function handleDialogChange(nextOpen: boolean) {
+    onOpenChange(nextOpen);
+
+    if (!nextOpen) {
+      resetState();
+    }
+  }
+
   useEffect(() => {
     if (step !== 3 || !open) return;
 
@@ -68,14 +76,7 @@ export function BenefitRequestDialog({
     }, 3000);
 
     return () => window.clearTimeout(timer);
-  }, [step, open]);
-  function handleDialogChange(nextOpen: boolean) {
-    onOpenChange(nextOpen);
-
-    if (!nextOpen) {
-      resetState();
-    }
-  }
+  }, [step, open, onOpenChange]);
 
   async function handleSubmit() {
     setSubmitting(true);
@@ -148,7 +149,7 @@ export function BenefitRequestDialog({
                   Please review the contract agreement before proceeding.
                 </p>
 
-                {benefit.r2ObjectKey && (
+                {contractUrl && (
                   <button
                     type="button"
                     onClick={() => setContractPreviewOpen(true)}
@@ -359,6 +360,7 @@ export function BenefitRequestDialog({
 
           <div className="h-[70vh] w-full bg-gray-50">
             <iframe
+              key={contractUrl}
               src={contractUrl}
               title={`${benefit.name} contract`}
               className="h-full w-full"
@@ -387,16 +389,12 @@ function RequestStepper({ step }: { step: Step }) {
         number={1}
         variant={step === 1 ? 'blue' : step > 1 ? 'green' : 'gray'}
       />
-
       <StepLine active={step >= 2} />
-
       <StepCircle
         number={2}
         variant={step === 2 ? 'green' : step > 2 ? 'green' : 'gray'}
       />
-
       <StepLine active={step >= 3} />
-
       <StepCircle number={3} variant={step === 3 ? 'green' : 'gray'} />
     </div>
   );
