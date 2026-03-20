@@ -4,6 +4,8 @@ import type { Metadata } from 'next';
 import { SidebarProvider } from '@team/source-ui';
 import { Toaster } from 'sonner';
 
+export const runtime = 'edge';
+
 export const metadata: Metadata = {
   title: 'Employee',
   description: 'Employee Benefits Management System',

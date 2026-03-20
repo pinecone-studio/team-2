@@ -2,6 +2,8 @@ import './global.css';
 import { ClerkProvider } from '@clerk/nextjs';
 import { Toaster } from 'sonner';
 
+export const runtime = 'edge';
+
 export const metadata = {
   title: 'HR | EBMS',
   description: 'Platform for connecting HR and Employee to get a company benefit.',
