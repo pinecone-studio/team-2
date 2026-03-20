@@ -125,7 +125,7 @@ export const ProcessedRequestRow = ({
       <td className="px-4 py-4 text-[#334155] text-sm">{benefitName}</td>
       <OKRStatus submitted={getEmployeeOkr(employee)} />
       <td className="px-4 py-4 text-center">
-        <span className="text-[#22C55E]  text-sm font-medium">
+        <span className="text-[#22C55E]  text-base font-normal">
           {getEmployeeLates(employee)}
         </span>
       </td>
