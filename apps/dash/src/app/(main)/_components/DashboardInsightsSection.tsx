@@ -6,7 +6,7 @@ import { EmployeeSearchPanel } from './EmployeeSearchPanel';
 export function DashboardInsightsSection() {
   return (
     <div>
-      <section className="grid grid-cols-1 gap-12 xl:gap-[72px] xl:grid-cols-[minmax(0,1.65fr)_380px] xl:items-start">
+      <section className="grid grid-cols-1 gap-[50px]  xl:grid-cols-[minmax(0,1.65fr)_380px] xl:items-start">
         <div className="min-w-0">
           <EmployeeSearchPanel />
         </div>
