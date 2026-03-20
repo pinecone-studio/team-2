@@ -137,7 +137,7 @@ export const ActiveRequestRow = ({
       <OKRStatus submitted={getEmployeeOkr(employee)} />
 
       <td className="px-4 py-4 text-center">
-        <span className="text-sm font-bold text-[#22C55E]">
+        <span className="text-base font-normal text-[#22C55E]">
           {getEmployeeLates(employee)}
         </span>
       </td>
