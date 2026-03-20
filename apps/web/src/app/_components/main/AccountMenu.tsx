@@ -2,7 +2,6 @@
 
 import { useClerk, useUser } from '@clerk/nextjs';
 import { LogOut, Settings } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import React, { useEffect, useRef, useState } from 'react';
 
 type Props = {
@@ -13,7 +12,6 @@ type Props = {
 export function AccountMenu({ avatarClassName = 'h-8 w-8' }: Props) {
   const { openUserProfile, signOut } = useClerk();
   const { user, isSignedIn } = useUser();
-  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [isSigningOut, setIsSigningOut] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -38,9 +36,7 @@ export function AccountMenu({ avatarClassName = 'h-8 w-8' }: Props) {
     setIsSigningOut(true);
 
     try {
-      await signOut();
-      router.replace('/sign-in');
-      router.refresh();
+      await signOut({ redirectUrl: `${window.location.origin}/sign-in` });
     } catch (error) {
       console.error('Failed to sign out from web.', error);
       window.location.assign('/sign-in');
