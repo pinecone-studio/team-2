@@ -44,18 +44,22 @@ function getInitials(name?: string | null) {
     .join('');
 }
 
-function getStatusStyles(status?: string | null) {
-  switch (status?.toUpperCase()) {
+function getStatusDisplay(status?: string | null) {
+  const normalized = status?.toUpperCase() ?? '';
+  switch (normalized) {
     case 'ACTIVE':
-      return 'bg-[#EAF7EC] text-[#159947]';
+      return { label: 'Active', classes: 'bg-green-50 text-green-700' };
     case 'LEAVE':
-      return 'bg-[#FFF0E3] text-[#F17B2C]';
+      return { label: 'On Leave', classes: 'bg-orange-400/20 text-orange-400' };
+    case 'REMOTE':
+      return { label: 'Remote', classes: 'bg-blue-100/40 text-indigo-500' };
     case 'PROBATION':
-      return 'bg-[#EEF4FF] text-[#4B7BFF]';
+      return { label: 'Remote', classes: 'bg-blue-100/40 text-indigo-500' };
     case 'TERMINATED':
-      return 'bg-[#FFE7EC] text-[#E11D48]';
+    case 'INACTIVE':
+      return { label: 'Inactive', classes: 'bg-red-100 text-rose-500' };
     default:
-      return 'bg-slate-100 text-slate-500';
+      return { label: status || 'Unknown', classes: 'bg-slate-100 text-slate-500' };
   }
 }
 
@@ -120,105 +124,108 @@ export function EmployeeSearchPanel() {
   }, [employees, query, selectedDepartment]);
 
   return (
-    <section className="rounded-lg border border-white/70 bg-white/85 p-5 shadow-[0_4px_6px_0_rgba(0,0,0,0.09)] backdrop-blur-md">
-      <div className="mt-5 flex flex-col gap-4">
-        <div className="flex items-center justify-between gap-3">
-          <label className="relative block">
-            <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#00000099]" />
-            <input
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search"
-              className="h-8 w-[253px] rounded-lg border border-[#0000001A] bg-[#F3F3F5] pl-11 pr-4 text-xs text-slate-900 outline-none transition placeholder:text-[#00000080] focus:border-[#155DFC] focus:bg-white"
-            />
-          </label>
-
-          <Select
-            value={selectedDepartment}
-            onValueChange={setSelectedDepartment}
-          >
-            <SelectTrigger className="h-8 w-[170px] rounded-lg border border-[#0000001A] bg-[#F3F3F5] px-3 text-xs font-[400] text-[#616162] shadow-none">
-              <div className="flex items-center gap-2.5">
-                <SlidersHorizontal size={16} color="#616162" />
-                <SelectValue placeholder="Departments" />
-              </div>
-            </SelectTrigger>
-
-            <SelectContent className="bg-white">
-              <SelectItem value="all">All departments</SelectItem>
-
-              {departments.map((department) => (
-                <SelectItem key={department} value={department}>
-                  {department}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+    <section className="flex w-full flex-col self-stretch rounded-lg bg-white py-6 shadow-[0px_4px_6px_0px_rgba(0,0,0,0.09)]">
+      <div className="mb-4 flex w-full items-center justify-between px-6">
+        <div className="flex h-8 w-64 items-center justify-start gap-2 rounded-lg bg-zinc-100 px-4 py-2 outline outline-1 outline-offset-[-1px] outline-black/10">
+          <Search size={14} className="text-black/60" />
+          <input
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="Search"
+            className="w-full bg-transparent text-xs text-black outline-none placeholder:text-black"
+          />
         </div>
 
-        <div className="flex flex-col">
-          {loading ? (
-            <div className="space-y-3 py-2">
-              {Array.from({ length: 6 }).map((_, index) => (
-                <div
-                  key={index}
-                  className="h-16 animate-pulse rounded-2xl bg-slate-100"
-                />
-              ))}
+        <Select
+          value={selectedDepartment}
+          onValueChange={setSelectedDepartment}
+        >
+          <SelectTrigger className="flex h-8 w-max items-center justify-start gap-2 rounded-lg border-none bg-zinc-100 px-4 py-2 text-xs text-black outline outline-1 outline-offset-[-1px] outline-black/10 shadow-none hover:bg-zinc-200 focus:ring-0">
+            <div className="flex items-center gap-2">
+              <SlidersHorizontal size={14} className="text-zinc-600" />
+              <SelectValue placeholder="Departments" />
             </div>
-          ) : error ? (
-            <div className="rounded-2xl border border-red-100 bg-red-50 px-4 py-6 text-sm text-red-500">
-              {error}
-            </div>
-          ) : filteredEmployees.length === 0 ? (
-            <div className="rounded-2xl border border-dashed border-slate-200 px-4 py-10 text-center text-sm text-slate-500">
-              No employees matched your search.
-            </div>
-          ) : (
-            filteredEmployees.slice(0, 8).map((employee) => (
+          </SelectTrigger>
+
+          <SelectContent className="bg-white">
+            <SelectItem value="all">All departments</SelectItem>
+
+            {departments.map((department) => (
+              <SelectItem key={department} value={department}>
+                {department}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="flex min-h-[500px] w-full flex-col">
+        {loading ? (
+          <div className="space-y-3 px-6 py-2">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <div
+                key={index}
+                className="h-14 animate-pulse rounded-2xl bg-slate-100"
+              />
+            ))}
+          </div>
+        ) : error ? (
+          <div className="mx-6 rounded-2xl border border-red-100 bg-red-50 px-4 py-6 text-sm text-red-500">
+            {error}
+          </div>
+        ) : filteredEmployees.length === 0 ? (
+          <div className="mx-6 rounded-2xl border border-dashed border-slate-200 px-4 py-10 text-center text-sm text-slate-500">
+            No employees matched your search.
+          </div>
+        ) : (
+          filteredEmployees.slice(0, 8).map((employee) => {
+            const statusDisplay = getStatusDisplay(employee.employmentStatus);
+            return (
               <div
                 key={employee.id}
-                className="grid grid-cols-[minmax(180px,2fr)_repeat(4,minmax(100px,1fr))] items-center gap-4 border-b border-slate-100 px-2 py-4"
+                className="grid h-14 w-full grid-cols-[2fr_1.5fr_1.5fr_1fr_80px] items-center gap-4 border-b-[0.77px] border-gray-100 px-6"
               >
                 <div className="flex min-w-0 items-center gap-2.5">
-                  <div className="flex h-[41px] w-[41px] shrink-0 items-center justify-center rounded-full bg-[#D8ECFF] text-xs font-semibold text-[#155DFC]">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-slate-100 text-xs font-semibold text-slate-600">
                     {getInitials(employee.name)}
                   </div>
 
-                  <div className="min-w-0">
-                    <p className="truncate text-xs font-lato font-[500] leading-5 text-[#000000]">
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-xs font-semibold leading-5 text-black">
                       {employee.name ?? 'Unnamed employee'}
                     </p>
                   </div>
                 </div>
 
-                <p className="text-xs leading-4 font-normal text-[#4A5565]">
-                  {formatEmployeeCode(employee.id)}
-                </p>
+                <div className="min-w-0">
+                  <p className="truncate text-xs leading-4 text-gray-600">
+                    {formatEmployeeCode(employee.id)}
+                  </p>
+                </div>
 
                 <div className="min-w-0">
-                  <p className="truncate text-xs tracking-[-0.116px] leading-4 text-[#101828]">
+                  <p className="truncate text-xs leading-4 text-gray-900">
                     {employee.department ?? 'No department'}
                   </p>
                 </div>
 
-                <div>
-                  <p className="text-xs leading-4 font-normal text-[#4A5565]">
+                <div className="min-w-0">
+                  <p className="truncate text-xs leading-4 text-gray-600">
                     {formatDate(employee.hireDate)}
                   </p>
                 </div>
 
-                <div>
-                  <span
-                    className={`inline-flex rounded-full px-2.5 py-1 text-[10px] leading-3 font-normal ${getStatusStyles(employee.employmentStatus)}`}
-                  >
-                    {employee.employmentStatus?.toLowerCase() ?? 'unknown'}
-                  </span>
+                <div className="flex justify-end pr-2">
+                  <div className={`flex items-center justify-center gap-2.5 rounded-2xl px-2.5 py-[5px] ${statusDisplay.classes}`}>
+                    <span className="whitespace-nowrap text-[10px] leading-3">
+                      {statusDisplay.label}
+                    </span>
+                  </div>
                 </div>
               </div>
-            ))
-          )}
-        </div>
+            );
+          })
+        )}
       </div>
     </section>
   );
