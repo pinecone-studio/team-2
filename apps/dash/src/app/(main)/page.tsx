@@ -50,7 +50,7 @@ export default function Page() {
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4 xl:gap-8">
                 {heroStats.map((stat) => (
                   <div
                     key={stat.title}
