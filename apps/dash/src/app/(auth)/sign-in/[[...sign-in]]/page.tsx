@@ -7,13 +7,13 @@ export default function Page() {
     <SignIn
       fallbackRedirectUrl="/"
       forceRedirectUrl="/"
-      withSignUp={false}
-      appearance={{
-        elements: {
-          footer: 'hidden',
-          footerAction: 'hidden',
-        },
-      }}
+      // withSignUp={false}
+      // appearance={{
+      //   elements: {
+      //     footer: 'hidden',
+      //     footerAction: 'hidden',
+      //   },
+      // }}
     />
   );
 }
